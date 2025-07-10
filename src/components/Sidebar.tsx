@@ -35,16 +35,16 @@ export default function Sidebar() {
   return (
     <div className="w-64 h-screen bg-white/90 backdrop-blur-sm border-r border-pink-200 shadow-xl flex flex-col">
       {/* 로고 영역 */}
-      <div className="p-6 border-b border-pink-200">
+      <div className="bg-gradient-to-r from-pink-500 to-purple-600 p-6">
         <div className="flex items-center gap-3">
-          <div className="theme-gradient w-12 h-12 rounded-xl flex items-center justify-center shadow-lg">
+          <div className="bg-white/20 backdrop-blur-sm w-12 h-12 rounded-xl flex items-center justify-center shadow-lg">
             <span className="text-white font-bold text-xl korean-heading">F</span>
           </div>
           <div>
-            <h1 className="text-lg font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent korean-heading">
+            <h1 className="text-lg font-bold text-white korean-heading">
               Feple
             </h1>
-            <p className="text-sm text-pink-600 korean-text">대시보드</p>
+            <p className="text-sm text-pink-100 korean-text">대시보드</p>
           </div>
         </div>
       </div>
