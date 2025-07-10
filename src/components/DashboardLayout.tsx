@@ -11,18 +11,16 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children, title }: DashboardLayoutProps) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-purple-100">
-      <div className="flex">
-        <Sidebar />
-        <div className="flex-1 flex flex-col">
-          <Header title={title} />
-          <main className="flex-1 p-6 korean-text">
-            <div className="max-w-7xl mx-auto">
-              {children}
-            </div>
-          </main>
+    <div className="min-h-screen bg-white">
+      <Header title={title} />
+      <Sidebar />
+      <main className="korean-text overflow-y-auto text-gray-900" style={{ marginLeft: '256px', marginTop: '96px', height: 'calc(100vh - 96px)' }}>
+        <div className="p-6">
+          <div className="max-w-7xl mx-auto text-gray-900">
+            {children}
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   )
 } 

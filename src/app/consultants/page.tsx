@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useMemo } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Users, Search, Filter, Star, TrendingUp, TrendingDown, Minus } from "lucide-react";
 
@@ -86,6 +89,50 @@ const consultants = [
 ];
 
 export default function ConsultantsPage() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [departmentFilter, setDepartmentFilter] = useState("");
+  const [trendFilter, setTrendFilter] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
+
+  // 검색 및 필터링된 상담사 목록
+  const filteredConsultants = useMemo(() => {
+    return consultants.filter(consultant => {
+      const matchesSearch = searchTerm === "" || 
+        consultant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        consultant.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        consultant.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        consultant.position.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchesDepartment = departmentFilter === "" || consultant.department === departmentFilter;
+      const matchesTrend = trendFilter === "" || consultant.trend === trendFilter;
+
+      return matchesSearch && matchesDepartment && matchesTrend;
+    });
+  }, [searchTerm, departmentFilter, trendFilter]);
+
+  // 검색어 하이라이트 함수
+  const highlightText = (text: string, search: string) => {
+    if (!search || search.length === 0) return text;
+    
+    const parts = text.split(search);
+    if (parts.length === 1) return text;
+    
+    return (
+      <>
+        {parts.map((part, index) => 
+          index === parts.length - 1 ? (
+            part
+          ) : (
+            <span key={index}>
+              {part}
+              <span className="search-highlight">{search}</span>
+            </span>
+          )
+        )}
+      </>
+    );
+  };
+
   const getTrendIcon = (trend: string) => {
     switch (trend) {
       case "up":
@@ -97,9 +144,12 @@ export default function ConsultantsPage() {
     }
   };
 
+  // 고유 부서 목록
+  const departments = Array.from(new Set(consultants.map(c => c.department)));
+
   return (
     <DashboardLayout title="상담사 관리">
-      <div className="space-y-6">
+      <div className="space-y-6 text-gray-900">
         {/* 페이지 헤더 */}
         <div>
           <h1 className="text-2xl font-bold text-gray-900">상담사 관리</h1>
@@ -113,7 +163,7 @@ export default function ConsultantsPage() {
               <Users className="h-8 w-8 text-blue-600" />
               <div className="ml-4">
                 <p className="text-sm text-gray-600">전체 상담사</p>
-                <p className="text-2xl font-bold text-gray-900">{consultants.length}</p>
+                <p className="text-2xl font-bold text-gray-900">{filteredConsultants.length}</p>
               </div>
             </div>
           </div>
@@ -122,7 +172,12 @@ export default function ConsultantsPage() {
               <Star className="h-8 w-8 text-yellow-500" />
               <div className="ml-4">
                 <p className="text-sm text-gray-600">평균 평점</p>
-                <p className="text-2xl font-bold text-gray-900">4.6</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {filteredConsultants.length > 0 ? 
+                    (filteredConsultants.reduce((sum, c) => sum + c.rating, 0) / filteredConsultants.length).toFixed(1) : 
+                    "0.0"
+                  }
+                </p>
               </div>
             </div>
           </div>
@@ -131,7 +186,7 @@ export default function ConsultantsPage() {
               <TrendingUp className="h-8 w-8 text-green-600" />
               <div className="ml-4">
                 <p className="text-sm text-gray-600">활성 상담사</p>
-                <p className="text-2xl font-bold text-gray-900">{consultants.filter(c => c.status === 'active').length}</p>
+                <p className="text-2xl font-bold text-gray-900">{filteredConsultants.filter(c => c.status === 'active').length}</p>
               </div>
             </div>
           </div>
@@ -154,20 +209,73 @@ export default function ConsultantsPage() {
               <input
                 type="text"
                 placeholder="상담사 이름, 부서, 이메일로 검색..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-            <button className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50">
+            <button 
+              onClick={() => setShowFilters(!showFilters)}
+              className="filter-button flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50"
+            >
               <Filter className="h-4 w-4" />
               필터
             </button>
           </div>
+
+          {/* 확장 필터 */}
+          {showFilters && (
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">부서</label>
+                  <select
+                    value={departmentFilter}
+                    onChange={(e) => setDepartmentFilter(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">모든 부서</option>
+                    {departments.map(dept => (
+                      <option key={dept} value={dept}>{dept}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">성과 추세</label>
+                  <select
+                    value={trendFilter}
+                    onChange={(e) => setTrendFilter(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">모든 추세</option>
+                    <option value="up">상승</option>
+                    <option value="stable">안정</option>
+                    <option value="down">하락</option>
+                  </select>
+                </div>
+                <div className="flex items-end">
+                  <button
+                    onClick={() => {
+                      setSearchTerm("");
+                      setDepartmentFilter("");
+                      setTrendFilter("");
+                    }}
+                    className="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-200 rounded-lg hover:bg-gray-50"
+                  >
+                    초기화
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* 상담사 목록 */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200">
           <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-800">상담사 목록</h3>
+            <h3 className="text-lg font-semibold text-gray-800">
+              상담사 목록 ({filteredConsultants.length}명)
+            </h3>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -203,7 +311,7 @@ export default function ConsultantsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {consultants.map((consultant) => (
+                {filteredConsultants.map((consultant) => (
                   <tr key={consultant.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
@@ -211,17 +319,25 @@ export default function ConsultantsPage() {
                           {consultant.avatar}
                         </div>
                         <div className="ml-4">
-                          <div className="text-sm font-medium text-gray-900">{consultant.name}</div>
+                          <div className="text-sm font-medium text-gray-900">
+                            {highlightText(consultant.name, searchTerm)}
+                          </div>
                           <div className="text-sm text-gray-500">입사일: {consultant.joinDate}</div>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{consultant.department}</div>
-                      <div className="text-sm text-gray-500">{consultant.position}</div>
+                      <div className="text-sm text-gray-900">
+                        {highlightText(consultant.department, searchTerm)}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        {highlightText(consultant.position, searchTerm)}
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{consultant.email}</div>
+                      <div className="text-sm text-gray-900">
+                        {highlightText(consultant.email, searchTerm)}
+                      </div>
                       <div className="text-sm text-gray-500">{consultant.phone}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center">
@@ -256,6 +372,13 @@ export default function ConsultantsPage() {
               </tbody>
             </table>
           </div>
+          
+          {/* 검색 결과가 없을 때 */}
+          {filteredConsultants.length === 0 && (
+            <div className="px-6 py-8 text-center">
+              <p className="text-gray-500">검색 조건에 맞는 상담사가 없습니다.</p>
+            </div>
+          )}
         </div>
       </div>
     </DashboardLayout>
