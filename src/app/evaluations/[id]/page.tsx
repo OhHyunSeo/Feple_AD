@@ -1,51 +1,74 @@
 "use client";
 
+import React, { useState, useEffect } from 'react'
 import DashboardLayout from "@/components/DashboardLayout";
 import { ArrowLeft, User, Calendar, FileText, Target, Star, MessageSquare, Edit, Save, X } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
 
-// 평가 상세 데이터 (실제로는 API에서 가져와야 함)
+type Props = {
+  params: Promise<{ id: string }>
+}
+
+// 임시 데이터
 const evaluationDetail = {
-  id: 1,
-  title: "2024년 4분기 정기평가",
+  id: "1",
+  title: "2024년 1분기 성과평가",
   type: "정기평가",
-  consultant: {
-    id: 1,
-    name: "김민수",
-    department: "고객상담 1팀",
-    position: "선임 상담사",
-    email: "kim.minsu@company.com",
-    avatar: "김"
-  },
-  evaluator: "박부장",
+  consultant: "김상담",
+  evaluator: "박매니저",
   status: "completed",
-  dueDate: "2024-12-31",
-  completedDate: "2024-12-20",
-  score: 4.8,
-  progress: 100,
-  description: "2024년 4분기 정기 인사평가입니다. 올해 한 해 동안의 업무 성과와 역량 발전을 종합적으로 평가합니다.",
+  score: 4.2,
+  dueDate: "2024-03-15",
+  completedDate: "2024-03-10",
+  description: "2024년 1분기 정기 성과평가로, 고객 만족도와 목표 달성도를 종합적으로 평가합니다.",
   criteria: [
-    { name: "의사소통 능력", weight: 20, score: 4.9, feedback: "고객과의 소통에서 뛰어난 능력을 보여줍니다." },
-    { name: "업무 수행 능력", weight: 25, score: 4.7, feedback: "주어진 업무를 정확하고 신속하게 처리합니다." },
-    { name: "고객 서비스", weight: 25, score: 4.9, feedback: "고객 만족도가 매우 높으며, 친절한 서비스를 제공합니다." },
-    { name: "팀워크", weight: 15, score: 4.6, feedback: "동료들과 원활한 협업을 진행합니다." },
-    { name: "문제 해결 능력", weight: 15, score: 4.8, feedback: "복잡한 문제를 창의적으로 해결하는 능력이 우수합니다." }
+    {
+      name: "고객 서비스",
+      weight: 30,
+      score: 4.5,
+      description: "고객 응대 품질 및 만족도"
+    },
+    {
+      name: "업무 효율성",
+      weight: 25,
+      score: 4.0,
+      description: "업무 처리 속도 및 정확성"
+    },
+    {
+      name: "팀워크",
+      weight: 20,
+      score: 4.3,
+      description: "팀 내 협업 및 소통 능력"
+    },
+    {
+      name: "목표 달성",
+      weight: 25,
+      score: 4.0,
+      description: "설정된 목표 대비 달성률"
+    }
   ],
+  progress: 100,
   comments: [
     {
       id: 1,
-      author: "박부장",
-      date: "2024-12-20",
+      author: "박매니저",
+      date: "2024-03-10",
       content: "전반적으로 우수한 성과를 보여주셨습니다. 특히 고객 서비스 분야에서 탁월한 능력을 발휘하고 있습니다."
     }
   ]
 };
 
-export default function EvaluationDetailPage({ params }: { params: { id: string } }) {
+export default function EvaluationDetailPage({ params }: Props) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState(evaluationDetail);
   const [newComment, setNewComment] = useState("");
+
+  useEffect(() => {
+    // params에서 id를 받아와서 실제 API 호출 시 사용할 수 있습니다
+    params.then(resolvedParams => {
+      console.log('평가 ID:', resolvedParams.id)
+    })
+  }, [params])
 
   const handleSave = () => {
     // 여기서 API 호출하여 저장
@@ -252,7 +275,7 @@ export default function EvaluationDetailPage({ params }: { params: { id: string 
                         style={{ width: `${(criterion.score / 5) * 100}%` }}
                       ></div>
                     </div>
-                    <p className="text-sm text-gray-600">{criterion.feedback}</p>
+                    <p className="text-sm text-gray-600">{criterion.description}</p>
                   </div>
                 ))}
               </div>
@@ -308,12 +331,12 @@ export default function EvaluationDetailPage({ params }: { params: { id: string 
               
               <div className="text-center">
                 <div className="h-16 w-16 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-xl mx-auto mb-3">
-                  {editedData.consultant.avatar}
+                  {editedData.consultant.charAt(0)}
                 </div>
-                <h4 className="font-medium text-gray-900 mb-1">{editedData.consultant.name}</h4>
-                <p className="text-sm text-gray-600 mb-1">{editedData.consultant.department}</p>
-                <p className="text-sm text-gray-600 mb-2">{editedData.consultant.position}</p>
-                <p className="text-xs text-gray-500">{editedData.consultant.email}</p>
+                <h4 className="font-medium text-gray-900 mb-1">{editedData.consultant}</h4>
+                <p className="text-sm text-gray-600 mb-1">고객상담 1팀</p>
+                <p className="text-sm text-gray-600 mb-2">선임 상담사</p>
+                <p className="text-xs text-gray-500">kim.minsu@company.com</p>
               </div>
             </div>
 

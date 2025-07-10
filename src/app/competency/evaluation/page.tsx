@@ -1,7 +1,7 @@
 "use client";
 
 import DashboardLayout from "@/components/DashboardLayout";
-import { ArrowLeft, User, Target, Save, Clock, CheckSquare } from "lucide-react";
+import { ArrowLeft, CheckSquare } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -94,22 +94,12 @@ export default function CompetencyEvaluationPage() {
   const getSelectedScore = (competencyId: string) => {
     const rating = selectedRatings[competencyId];
     if (!rating) return 0;
-    
     const competency = competencyItems.find(item => item.id === competencyId);
     const level = competency?.levels.find(l => l.level === rating);
     return level?.score || 0;
   };
 
-  const getTotalScore = () => {
-    return competencyItems.reduce((total, item) => {
-      return total + getSelectedScore(item.id);
-    }, 0);
-  };
-
-  const getAverageScore = () => {
-    const total = getTotalScore();
-    return competencyItems.length > 0 ? (total / competencyItems.length).toFixed(1) : "0";
-  };
+  const progress = 75; // 임시 진행률
 
   return (
     <DashboardLayout title="역량 진단 평가">
@@ -120,23 +110,24 @@ export default function CompetencyEvaluationPage() {
             <Link href="/competency" className="text-gray-500 hover:text-gray-700">
               <ArrowLeft className="h-6 w-6" />
             </Link>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">역량 진단 평가</h1>
-              <p className="text-gray-600 mt-1">상담사의 핵심 역량을 평가합니다</p>
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-blue-500 text-white rounded-full flex items-center justify-center font-semibold">
+                김
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">김상담 역량 평가</h1>
+                <p className="text-gray-600">2024년도 상반기 역량 진단</p>
+              </div>
             </div>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="text-right">
-              <p className="text-sm text-gray-600">평균 점수</p>
-              <p className="text-2xl font-bold text-blue-600">{getAverageScore()}</p>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-500">평가 진행률: {progress}%</span>
+            <div className="w-32 bg-gray-200 rounded-full h-2">
+              <div 
+                className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+                style={{ width: `${progress}%` }}
+              ></div>
             </div>
-            <button
-              onClick={handleSubmit}
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2"
-            >
-              <Save className="h-4 w-4" />
-              저장
-            </button>
           </div>
         </div>
 
@@ -144,7 +135,7 @@ export default function CompetencyEvaluationPage() {
         <div className="bg-purple-50 rounded-lg border border-purple-200 p-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="bg-purple-600 text-white p-2 rounded-lg">
-              <img src="/api/placeholder/40/40" alt="LGU+" className="w-6 h-6" />
+              <div className="w-6 h-6 flex items-center justify-center text-sm font-bold">F</div>
             </div>
             <h2 className="text-xl font-bold text-purple-800">Feple 대시보드</h2>
           </div>
