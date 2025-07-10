@@ -2,6 +2,7 @@
 
 import DashboardLayout from "@/components/DashboardLayout";
 import { Target, BarChart3, Users, TrendingUp } from "lucide-react";
+import Link from "next/link";
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 
 // 역량 데이터
@@ -31,6 +32,10 @@ export default function CompetencyPage() {
             <h1 className="text-2xl font-bold text-gray-900">역량 진단</h1>
             <p className="text-gray-600 mt-1">상담사들의 핵심 역량을 분석하고 평가합니다</p>
           </div>
+          <Link href="/competency/evaluation" className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 flex items-center gap-2">
+            <Target className="h-4 w-4" />
+            역량 평가하기
+          </Link>
         </div>
 
         {/* 통계 카드 */}

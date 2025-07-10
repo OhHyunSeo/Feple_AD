@@ -1,5 +1,5 @@
 import DashboardLayout from "@/components/DashboardLayout";
-import { Users, Search, Filter, Plus, Star, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { Users, Search, Filter, Star, TrendingUp, TrendingDown, Minus } from "lucide-react";
 
 // 상담사 더미 데이터 (확장된 버전)
 const consultants = [
@@ -101,15 +101,9 @@ export default function ConsultantsPage() {
     <DashboardLayout title="상담사 관리">
       <div className="space-y-6">
         {/* 페이지 헤더 */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">상담사 관리</h1>
-            <p className="text-gray-600 mt-1">상담사 정보 및 평가 현황을 관리합니다</p>
-          </div>
-          <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2">
-            <Plus className="h-4 w-4" />
-            상담사 추가
-          </button>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">상담사 관리</h1>
+          <p className="text-gray-600 mt-1">상담사 정보 및 평가 현황을 관리합니다</p>
         </div>
 
         {/* 통계 카드 */}

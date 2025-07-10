@@ -1,5 +1,6 @@
 import DashboardLayout from "@/components/DashboardLayout";
 import { FileText, Search, Filter, Plus, Clock, CheckCircle, XCircle, AlertCircle } from "lucide-react";
+import Link from "next/link";
 
 // 평가 더미 데이터
 const evaluations = [
@@ -134,10 +135,10 @@ export default function EvaluationsPage() {
             <h1 className="text-2xl font-bold text-gray-900">평가 관리</h1>
             <p className="text-gray-600 mt-1">상담사 평가 생성, 진행, 완료 상황을 관리합니다</p>
           </div>
-          <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2">
+          <Link href="/evaluations/create" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2">
             <Plus className="h-4 w-4" />
             평가 생성
-          </button>
+          </Link>
         </div>
 
         {/* 통계 카드 */}
@@ -254,7 +255,9 @@ export default function EvaluationsPage() {
                 {evaluations.map((evaluation) => (
                   <tr key={evaluation.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
-                      <div className="text-sm font-medium text-gray-900">{evaluation.title}</div>
+                      <Link href={`/evaluations/${evaluation.id}`} className="text-sm font-medium text-blue-600 hover:text-blue-900 cursor-pointer">
+                        {evaluation.title}
+                      </Link>
                       <div className="text-sm text-gray-500">ID: {evaluation.id}</div>
                     </td>
                     <td className="px-6 py-4">
@@ -263,7 +266,9 @@ export default function EvaluationsPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm text-gray-900">{evaluation.consultant}</div>
+                      <Link href={`/evaluations/${evaluation.id}`} className="text-sm text-blue-600 hover:text-blue-900 cursor-pointer">
+                        {evaluation.consultant}
+                      </Link>
                       <div className="text-sm text-gray-500">{evaluation.department}</div>
                     </td>
                     <td className="px-6 py-4">
@@ -300,14 +305,9 @@ export default function EvaluationsPage() {
                     </td>
                     <td className="px-6 py-4 text-center">
                       <div className="flex justify-center gap-2">
-                        <button className="text-blue-600 hover:text-blue-900 text-sm font-medium">
-                          보기
-                        </button>
-                        {evaluation.status !== "completed" && (
-                          <button className="text-green-600 hover:text-green-900 text-sm font-medium">
-                            편집
-                          </button>
-                        )}
+                        <Link href={`/evaluations/${evaluation.id}`} className="text-blue-600 hover:text-blue-900 text-sm font-medium">
+                          상세보기
+                        </Link>
                       </div>
                     </td>
                   </tr>
