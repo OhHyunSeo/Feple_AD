@@ -77,7 +77,7 @@ export default function CompetencyEvaluationPage() {
   }
 
   return (
-    <DashboardLayout title="역량 평가하기">
+    <DashboardLayout>
       <div className="space-y-6">
         {/* 헤더 */}
         <div className="flex items-center justify-between">
@@ -283,7 +283,7 @@ function CompetencyEvaluationForm({ member, onBack }: { member: Member, onBack: 
   const progress = 75; // 임시 진행률
 
   return (
-    <DashboardLayout title="역량 평가">
+    <DashboardLayout>
       <div className="space-y-6">
         {/* 헤더 */}
         <div className="flex items-center justify-between">

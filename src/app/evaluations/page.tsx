@@ -181,7 +181,7 @@ export default function EvaluationsPage() {
   const evaluationTypes = Array.from(new Set(evaluations.map(e => e.type)));
 
   return (
-    <DashboardLayout title="평가 관리">
+    <DashboardLayout>
       <div className="space-y-6 text-gray-900">
         {/* 페이지 헤더 */}
         <div className="flex items-center justify-between">

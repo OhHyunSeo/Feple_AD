@@ -62,7 +62,7 @@ export default function CreateEvaluationPage() {
   const selectedConsultant = consultants.find(c => c.id === parseInt(formData.consultant));
 
   return (
-    <DashboardLayout title="평가 생성">
+    <DashboardLayout>
       <div className="space-y-6">
         {/* 헤더 */}
         <div className="flex items-center gap-4">

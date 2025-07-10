@@ -50,7 +50,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <DashboardLayout title="대시보드">
+    <DashboardLayout>
       <div className="space-y-6 text-gray-900">
         {/* 환영 메시지 */}
         <div className="bg-gradient-to-r from-pink-500 to-purple-600 rounded-2xl p-6 text-white shadow-xl">

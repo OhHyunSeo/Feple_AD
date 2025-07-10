@@ -148,7 +148,7 @@ export default function ConsultantsPage() {
   const departments = Array.from(new Set(consultants.map(c => c.department)));
 
   return (
-    <DashboardLayout title="상담사 관리">
+    <DashboardLayout>
       <div className="space-y-6 text-gray-900">
         {/* 페이지 헤더 */}
         <div>

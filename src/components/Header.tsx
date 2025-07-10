@@ -2,11 +2,7 @@
 
 import Image from 'next/image'
 
-interface HeaderProps {
-  title?: string
-}
-
-export default function Header({ title }: HeaderProps) {
+export default function Header() {
   return (
     <header className="bg-gradient-to-r from-pink-500 to-purple-600 shadow-lg w-full fixed top-0 left-0 z-50">
       <div className="flex">

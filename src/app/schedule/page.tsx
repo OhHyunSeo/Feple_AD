@@ -167,7 +167,7 @@ export default function SchedulePage() {
   const emptyDays = Array.from({ length: firstDay }, (_, i) => i);
 
   return (
-    <DashboardLayout title="평가 일정">
+    <DashboardLayout>
       <div className="space-y-6">
         {/* 페이지 헤더 */}
         <div className="flex items-center justify-between">

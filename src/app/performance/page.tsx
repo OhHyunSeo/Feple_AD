@@ -28,7 +28,7 @@ const achievementData = [
 
 export default function PerformancePage() {
   return (
-    <DashboardLayout title="성과 분석">
+    <DashboardLayout>
       <div className="space-y-6">
         {/* 페이지 헤더 */}
         <div className="flex items-center justify-between">

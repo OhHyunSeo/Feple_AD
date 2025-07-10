@@ -117,7 +117,7 @@ export default function EvaluationDetailPage({ params }: Props) {
   };
 
   return (
-    <DashboardLayout title="평가 상세">
+    <DashboardLayout>
       <div className="space-y-6">
         {/* 헤더 */}
         <div className="flex items-center justify-between">
