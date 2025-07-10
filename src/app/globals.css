@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -75,12 +76,138 @@
   }
 }
 
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+  
+  /* 새로운 테마 색상 */
+  --primary-pink: #EC4899;
+  --primary-purple: #8B5CF6;
+  --secondary-pink: #F3E8FF;
+  --secondary-purple: #EDE9FE;
+  --accent-pink: #BE185D;
+  --accent-purple: #7C3AED;
+  --light-pink: #FCE7F3;
+  --light-purple: #F5F3FF;
+  --dark-purple: #581C87;
+  --gradient-pink: linear-gradient(135deg, #EC4899 0%, #8B5CF6 100%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+  font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-weight: 400;
+}
+
+/* 커스텀 클래스 */
+.theme-gradient {
+  background: var(--gradient-pink);
+}
+
+.theme-primary {
+  background-color: var(--primary-pink);
+}
+
+.theme-secondary {
+  background-color: var(--secondary-pink);
+}
+
+.theme-text-primary {
+  color: var(--primary-pink);
+}
+
+.theme-text-purple {
+  color: var(--primary-purple);
+}
+
+.theme-border {
+  border-color: var(--primary-pink);
+}
+
+/* 한글 폰트 최적화 */
+.korean-text {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+}
+
+.korean-heading {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+/* 버튼 스타일 */
+.btn-theme-primary {
+  background: var(--gradient-pink);
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  color: white;
+  font-weight: 600;
+  font-family: 'Noto Sans KR', sans-serif;
+  transition: all 0.3s ease;
+}
+
+.btn-theme-primary:hover {
+  background: var(--accent-pink);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 25px rgba(236, 72, 153, 0.3);
+}
+
+/* 카드 스타일 */
+.card-theme {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(236, 72, 153, 0.1);
+  transition: all 0.3s ease;
+}
+
+.card-theme:hover {
+  box-shadow: 0 8px 30px rgba(139, 92, 246, 0.15);
+  border-color: rgba(236, 72, 153, 0.2);
+}
+
+/* 테이블 스타일 */
+.table-theme {
+  border-collapse: collapse;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.1);
+}
+
+.table-theme th {
+  background: var(--gradient-pink);
+  color: white;
+  font-weight: 600;
+  font-family: 'Noto Sans KR', sans-serif;
+  padding: 1rem;
+}
+
+.table-theme td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(236, 72, 153, 0.1);
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.table-theme tr:hover {
+  background-color: var(--light-pink);
 }
 
 * {

@@ -1,23 +1,28 @@
-import Sidebar from "@/components/Sidebar";
-import Header from "@/components/Header";
+'use client'
+
+import { ReactNode } from 'react'
+import Sidebar from './Sidebar'
+import Header from './Header'
 
 interface DashboardLayoutProps {
-  children: React.ReactNode;
-  title?: string;
+  children: ReactNode
+  title: string
 }
 
 export default function DashboardLayout({ children, title }: DashboardLayoutProps) {
   return (
-    <div className="min-h-screen flex">
-      <Sidebar />
-      
-      <div className="flex-1 ml-64">
-        <Header title={title} />
-        
-        <main className="p-6">
-          {children}
-        </main>
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-purple-100">
+      <div className="flex">
+        <Sidebar />
+        <div className="flex-1 flex flex-col">
+          <Header title={title} />
+          <main className="flex-1 p-6 korean-text">
+            <div className="max-w-7xl mx-auto">
+              {children}
+            </div>
+          </main>
+        </div>
       </div>
     </div>
-  );
+  )
 } 

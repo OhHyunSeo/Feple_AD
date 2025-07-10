@@ -18,37 +18,37 @@ export default function StatCard({
   value, 
   change, 
   icon: Icon, 
-  iconColor = "text-blue-600",
+  iconColor = "text-pink-500",
   description,
   href,
   onClick
 }: StatCardProps) {
   const cardContent = (
     <div className={cn(
-      "bg-white rounded-lg shadow-sm border border-gray-200 p-6 transition-all",
-      (href || onClick) && "hover:shadow-md hover:border-gray-300 cursor-pointer"
+      "card-theme p-6 transition-all duration-300",
+      (href || onClick) && "hover:shadow-xl hover:scale-105 cursor-pointer"
     )}>
       <div className="flex items-center justify-between">
         <div className="flex-1">
-          <p className="text-sm text-gray-600 mb-1">{title}</p>
-          <p className="text-2xl font-bold text-gray-900">{value}</p>
+          <p className="text-sm text-gray-600 mb-2 korean-text font-medium">{title}</p>
+          <p className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent korean-heading">{value}</p>
           {description && (
-            <p className="text-xs text-gray-500 mt-1">{description}</p>
+            <p className="text-xs text-gray-500 mt-2 korean-text">{description}</p>
           )}
           {change !== undefined && (
-            <div className="flex items-center gap-1 mt-2">
+            <div className="flex items-center gap-2 mt-3">
               <span className={cn(
-                "text-sm font-medium",
-                change >= 0 ? "text-green-600" : "text-red-600"
+                "text-sm font-semibold korean-text",
+                change >= 0 ? "text-green-500" : "text-red-500"
               )}>
                 {change >= 0 ? "+" : ""}{change}%
               </span>
-              <span className="text-xs text-gray-500">전월 대비</span>
+              <span className="text-xs text-gray-500 korean-text">전월 대비</span>
             </div>
           )}
         </div>
-        <div className="p-3 bg-gray-50 rounded-lg">
-          <Icon className={cn("h-6 w-6", iconColor)} />
+        <div className="bg-gradient-to-br from-pink-100 to-purple-100 p-4 rounded-2xl shadow-inner">
+          <Icon className={cn("h-8 w-8", iconColor)} />
         </div>
       </div>
     </div>
