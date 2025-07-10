@@ -1,202 +1,380 @@
-"use client";
+'use client'
 
-import DashboardLayout from "@/components/DashboardLayout";
-import { Target, BarChart3, Users, TrendingUp } from "lucide-react";
-import Link from "next/link";
-import { RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
+import React, { useState } from 'react'
+import DashboardLayout from '@/components/DashboardLayout'
+import StatCard from '@/components/StatCard'
+import EvaluationChart from '@/components/EvaluationChart'
+import { Target, TrendingUp, Users, Award, ChevronDown, ChevronUp, UserCheck } from 'lucide-react'
+import Link from 'next/link'
 
-// 역량 데이터
-const competencyData = [
-  { competency: "의사소통", score: 85, fullMark: 100 },
-  { competency: "문제해결", score: 78, fullMark: 100 },
-  { competency: "고객서비스", score: 92, fullMark: 100 },
-  { competency: "기술지식", score: 76, fullMark: 100 },
-  { competency: "팀워크", score: 88, fullMark: 100 },
-  { competency: "리더십", score: 65, fullMark: 100 },
-];
-
-const departmentScores = [
-  { department: "고객상담 1팀", score: 82 },
-  { department: "고객상담 2팀", score: 79 },
-  { department: "기술지원팀", score: 85 },
-  { department: "VIP상담팀", score: 91 },
+// 부서 및 담당자 데이터
+const departments = [
+  {
+    id: 'customer_service_1',
+    name: '고객상담 1팀',
+    members: [
+      { 
+        id: 'kim_sangdam', 
+        name: '김상담', 
+        position: '선임 상담사', 
+        avatar: '김',
+        competencyScores: {
+          communication: 4.5,
+          problemSolving: 4.2,
+          customerService: 4.8,
+          technicalKnowledge: 4.3
+        },
+        improvements: [
+          { area: '의사소통', current: 4.5, target: 4.8, priority: '중간' },
+          { area: '문제해결', current: 4.2, target: 4.5, priority: '높음' }
+        ]
+      },
+      { 
+        id: 'park_sangdam', 
+        name: '박상담', 
+        position: '주임 상담사', 
+        avatar: '박',
+        competencyScores: {
+          communication: 4.3,
+          problemSolving: 4.0,
+          customerService: 4.6,
+          technicalKnowledge: 4.1
+        },
+        improvements: [
+          { area: '기술지식', current: 4.1, target: 4.4, priority: '중간' },
+          { area: '문제해결', current: 4.0, target: 4.3, priority: '높음' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'customer_service_2',
+    name: '고객상담 2팀',
+    members: [
+      { 
+        id: 'choi_sangdam', 
+        name: '최상담', 
+        position: '선임 상담사', 
+        avatar: '최',
+        competencyScores: {
+          communication: 4.7,
+          problemSolving: 4.4,
+          customerService: 4.9,
+          technicalKnowledge: 4.5
+        },
+        improvements: [
+          { area: '의사소통', current: 4.7, target: 4.9, priority: '낮음' }
+        ]
+      }
+    ]
+  }
 ];
 
 export default function CompetencyPage() {
+  const [selectedDepartment, setSelectedDepartment] = useState('customer_service_1');
+  const [selectedMember, setSelectedMember] = useState('kim_sangdam');
+  const [showAnalysisDetails, setShowAnalysisDetails] = useState(false);
+  const [showImprovementDetails, setShowImprovementDetails] = useState(false);
+
+  const getCurrentDepartment = () => {
+    return departments.find(dept => dept.id === selectedDepartment);
+  };
+
+  const getCurrentMember = () => {
+    const dept = getCurrentDepartment();
+    return dept?.members.find(member => member.id === selectedMember);
+  };
+
+  const getCompetencyData = () => {
+    const member = getCurrentMember();
+    if (!member) return [];
+
+    return [
+      { name: '의사소통', value: member.competencyScores.communication },
+      { name: '문제해결', value: member.competencyScores.problemSolving },
+      { name: '고객서비스', value: member.competencyScores.customerService },
+      { name: '기술지식', value: member.competencyScores.technicalKnowledge },
+    ];
+  };
+
   return (
     <DashboardLayout title="역량 진단">
       <div className="space-y-6">
-        {/* 페이지 헤더 */}
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">역량 진단</h1>
             <p className="text-gray-600 mt-1">상담사들의 핵심 역량을 분석하고 평가합니다</p>
           </div>
-          <Link href="/competency/evaluation" className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 flex items-center gap-2">
+          <Link 
+            href="/competency/evaluation"
+            className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 flex items-center gap-2"
+          >
             <Target className="h-4 w-4" />
             역량 평가하기
           </Link>
         </div>
 
         {/* 통계 카드 */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center">
-              <Target className="h-8 w-8 text-purple-600" />
-              <div className="ml-4">
-                <p className="text-sm text-gray-600">평균 역량 점수</p>
-                <p className="text-2xl font-bold text-gray-900">82.3</p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center">
-              <TrendingUp className="h-8 w-8 text-green-600" />
-              <div className="ml-4">
-                <p className="text-sm text-gray-600">최고 역량 영역</p>
-                <p className="text-2xl font-bold text-gray-900">고객서비스</p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center">
-              <BarChart3 className="h-8 w-8 text-blue-600" />
-              <div className="ml-4">
-                <p className="text-sm text-gray-600">개선 필요 영역</p>
-                <p className="text-2xl font-bold text-gray-900">리더십</p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center">
-              <Users className="h-8 w-8 text-orange-600" />
-              <div className="ml-4">
-                <p className="text-sm text-gray-600">진단 완료자</p>
-                <p className="text-2xl font-bold text-gray-900">128명</p>
-              </div>
-            </div>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <StatCard
+            title="평균 역량 점수"
+            value="82.3"
+            icon={Target}
+            iconColor="text-purple-600"
+          />
+          <StatCard
+            title="최고 역량 영역"
+            value="고객서비스"
+            icon={TrendingUp}
+            iconColor="text-green-600"
+          />
+          <StatCard
+            title="개선 필요 영역"
+            value="리더십"
+            icon={Users}
+            iconColor="text-blue-600"
+          />
+          <StatCard
+            title="진단 완료자"
+            value="128명"
+            icon={Award}
+            iconColor="text-orange-600"
+          />
         </div>
 
-        {/* 차트 섹션 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* 역량 레이더 차트 */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          {/* 전체 역량 분석 */}
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">전체 역량 분석</h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <RadarChart data={competencyData}>
-                <PolarGrid />
-                <PolarAngleAxis dataKey="competency" />
-                <PolarRadiusAxis angle={90} domain={[0, 100]} />
-                <Radar
-                  name="역량 점수"
-                  dataKey="score"
-                  stroke="#8884d8"
-                  fill="#8884d8"
-                  fillOpacity={0.6}
-                />
-              </RadarChart>
-            </ResponsiveContainer>
+            <EvaluationChart type="pie" />
           </div>
 
-          {/* 부서별 평균 점수 */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          {/* 부서별 평균 역량 점수 */}
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">부서별 평균 역량 점수</h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={departmentScores}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="department" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="score" fill="#3B82F6" />
-              </BarChart>
-            </ResponsiveContainer>
+            <EvaluationChart type="bar" />
           </div>
         </div>
 
         {/* 역량별 상세 분석 */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-800">역량별 상세 분석</h3>
-          </div>
-          <div className="p-6">
-            <div className="space-y-6">
-              {competencyData.map((item, index) => (
-                <div key={index} className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-900">{item.competency}</span>
-                      <span className="text-sm text-gray-500">{item.score}/100</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div
-                        className="bg-blue-600 h-2 rounded-full"
-                        style={{ width: `${item.score}%` }}
-                      ></div>
-                    </div>
-                  </div>
-                  <div className="ml-4 flex items-center">
-                    {item.score >= 80 ? (
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                        우수
-                      </span>
-                    ) : item.score >= 70 ? (
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                        보통
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                        개선필요
-                      </span>
-                    )}
-                  </div>
-                </div>
-              ))}
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <UserCheck className="h-5 w-5 text-blue-600" />
+                <h3 className="text-lg font-semibold text-gray-800">역량별 상세 분석</h3>
+              </div>
+              <button
+                onClick={() => setShowAnalysisDetails(!showAnalysisDetails)}
+                className="flex items-center gap-2 text-blue-600 hover:text-blue-700"
+              >
+                <span className="text-sm">상세보기</span>
+                {showAnalysisDetails ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+              </button>
             </div>
+            
+            {showAnalysisDetails && (
+              <div className="mt-4 space-y-4">
+                {/* 부서 선택 */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">부서 선택</label>
+                  <select
+                    value={selectedDepartment}
+                    onChange={(e) => {
+                      setSelectedDepartment(e.target.value);
+                      const newDept = departments.find(d => d.id === e.target.value);
+                      if (newDept && newDept.members.length > 0) {
+                        setSelectedMember(newDept.members[0].id);
+                      }
+                    }}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    {departments.map(dept => (
+                      <option key={dept.id} value={dept.id}>{dept.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* 담당자 선택 */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">담당자 선택</label>
+                  <select
+                    value={selectedMember}
+                    onChange={(e) => setSelectedMember(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    {getCurrentDepartment()?.members.map(member => (
+                      <option key={member.id} value={member.id}>{member.name} ({member.position})</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            )}
           </div>
+          
+          {showAnalysisDetails && (
+            <div className="p-6">
+              <div className="mb-4">
+                <h4 className="font-medium text-gray-900 mb-2">
+                  {getCurrentMember()?.name}님의 역량 분석
+                </h4>
+                <p className="text-sm text-gray-600">
+                  {getCurrentDepartment()?.name} | {getCurrentMember()?.position}
+                </p>
+              </div>
+              
+              <div className="space-y-4">
+                {getCompetencyData().map((item, index) => (
+                  <div key={index} className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-gray-700">{item.name}</span>
+                    <div className="flex items-center gap-3">
+                      <div className="w-32 bg-gray-200 rounded-full h-2">
+                        <div
+                          className="bg-blue-600 h-2 rounded-full"
+                          style={{ width: `${(item.value / 5) * 100}%` }}
+                        ></div>
+                      </div>
+                      <span className="text-sm font-semibold text-blue-600 w-8">
+                        {item.value.toFixed(1)}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* 개선 권장사항 */}
+        {/* 개선 사항 */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-800">개선 권장사항</h3>
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <TrendingUp className="h-5 w-5 text-green-600" />
+                <h3 className="text-lg font-semibold text-gray-800">개선 사항</h3>
+              </div>
+              <button
+                onClick={() => setShowImprovementDetails(!showImprovementDetails)}
+                className="flex items-center gap-2 text-green-600 hover:text-green-700"
+              >
+                <span className="text-sm">상세보기</span>
+                {showImprovementDetails ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+              </button>
+            </div>
+            
+            {showImprovementDetails && (
+              <div className="mt-4 space-y-4">
+                {/* 부서 선택 */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">부서 선택</label>
+                  <select
+                    value={selectedDepartment}
+                    onChange={(e) => {
+                      setSelectedDepartment(e.target.value);
+                      const newDept = departments.find(d => d.id === e.target.value);
+                      if (newDept && newDept.members.length > 0) {
+                        setSelectedMember(newDept.members[0].id);
+                      }
+                    }}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                  >
+                    {departments.map(dept => (
+                      <option key={dept.id} value={dept.id}>{dept.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* 담당자 선택 */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">담당자 선택</label>
+                  <select
+                    value={selectedMember}
+                    onChange={(e) => setSelectedMember(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                  >
+                    {getCurrentDepartment()?.members.map(member => (
+                      <option key={member.id} value={member.id}>{member.name} ({member.position})</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            )}
           </div>
-          <div className="p-6">
-            <div className="space-y-4">
-              <div className="border-l-4 border-yellow-400 bg-yellow-50 p-4">
-                <div className="flex">
-                  <div className="ml-3">
-                    <h4 className="text-sm font-medium text-yellow-800">리더십 역량 강화 필요</h4>
-                    <p className="mt-1 text-sm text-yellow-700">
-                      평균 점수가 65점으로 다른 역량 대비 낮습니다. 리더십 교육 프로그램 참여를 권장합니다.
-                    </p>
-                  </div>
-                </div>
+          
+          {showImprovementDetails && (
+            <div className="p-6">
+              <div className="mb-4">
+                <h4 className="font-medium text-gray-900 mb-2">
+                  {getCurrentMember()?.name}님의 개선 계획
+                </h4>
               </div>
-              <div className="border-l-4 border-blue-400 bg-blue-50 p-4">
-                <div className="flex">
-                  <div className="ml-3">
-                    <h4 className="text-sm font-medium text-blue-800">기술지식 업데이트</h4>
-                    <p className="mt-1 text-sm text-blue-700">
-                      기술지식 점수가 76점입니다. 최신 기술 트렌드 교육이 필요합니다.
-                    </p>
+              
+              <div className="space-y-4">
+                {getCurrentMember()?.improvements.map((improvement, index) => (
+                  <div key={index} className="border border-gray-200 rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <h5 className="font-medium text-gray-900">{improvement.area}</h5>
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        improvement.priority === '높음' 
+                          ? 'bg-red-100 text-red-800'
+                          : improvement.priority === '중간'
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : 'bg-green-100 text-green-800'
+                      }`}>
+                        우선순위: {improvement.priority}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <div className="text-sm text-gray-600">
+                        현재: <span className="font-medium">{improvement.current}</span>
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        목표: <span className="font-medium">{improvement.target}</span>
+                      </div>
+                      <div className="flex-1">
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div
+                            className="bg-green-600 h-2 rounded-full"
+                            style={{ width: `${(improvement.current / improvement.target) * 100}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                ))}
               </div>
-              <div className="border-l-4 border-green-400 bg-green-50 p-4">
-                <div className="flex">
-                  <div className="ml-3">
-                    <h4 className="text-sm font-medium text-green-800">고객서비스 우수</h4>
-                    <p className="mt-1 text-sm text-green-700">
-                      고객서비스 역량이 92점으로 매우 우수합니다. 모범 사례로 활용 가능합니다.
-                    </p>
-                  </div>
-                </div>
+            </div>
+          )}
+        </div>
+
+        {/* 역량 등급별 현황 */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">역량 등급별 현황</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-green-600 mb-1">45명</div>
+              <div className="text-sm text-gray-600">우수 (85점 이상)</div>
+              <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                <div className="bg-green-600 h-2 rounded-full" style={{ width: '85%' }}></div>
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-blue-600 mb-1">68명</div>
+              <div className="text-sm text-gray-600">보통 (70-84점)</div>
+              <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                <div className="bg-blue-600 h-2 rounded-full" style={{ width: '78%' }}></div>
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-orange-600 mb-1">15명</div>
+              <div className="text-sm text-gray-600">개선 필요 (70점 미만)</div>
+              <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                <div className="bg-orange-600 h-2 rounded-full" style={{ width: '15%' }}></div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </DashboardLayout>
-  );
+  )
 } 

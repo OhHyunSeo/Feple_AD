@@ -1,69 +1,249 @@
-"use client";
+'use client'
 
+import React, { useState } from 'react'
 import DashboardLayout from "@/components/DashboardLayout";
-import { ArrowLeft, CheckSquare } from "lucide-react";
+import { ArrowLeft, CheckSquare, Users, User } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
 
-// 역량 평가 항목
-const competencyItems = [
+// 부서 및 담당자 데이터
+interface Member {
+  id: string;
+  name: string;
+  position: string;
+  avatar: string;
+}
+
+interface Department {
+  id: string;
+  name: string;
+  members: Member[];
+}
+
+const departments: Department[] = [
   {
-    id: "communication",
-    category: "공통역량",
-    name: "커뮤니케이션",
-    description: "고객 안전에게 명확하고 친절하게 설명하며 어려운 용어는 쉽게 설명",
-    criteria: "인사, 반말 금지, 어려운 용어의 쉬운 설명",
-    expectation: "S : (Outstanding) 상기 3개 기준 만족",
-    levels: [
-      { level: "S", score: 90, description: "Outstanding", color: "bg-green-500" },
-      { level: "A", score: 80, description: "Exceeds Expectations", color: "bg-blue-500" },
-      { level: "B", score: 70, description: "Meets Expectations", color: "bg-yellow-500" },
-      { level: "C", score: 60, description: "Below Expectations", color: "bg-orange-500" },
-      { level: "D", score: 50, description: "Unsatisfactory", color: "bg-red-500" }
+    id: 'customer_service_1',
+    name: '고객상담 1팀',
+    members: [
+      { id: 'kim_sangdam', name: '김상담', position: '선임 상담사', avatar: '김' },
+      { id: 'park_sangdam', name: '박상담', position: '주임 상담사', avatar: '박' },
+      { id: 'lee_sangdam', name: '이상담', position: '상담사', avatar: '이' }
     ]
   },
   {
-    id: "teamwork", 
-    category: "공통역량",
-    name: "공감능력",
-    description: "고객의 감정을 이해하고 표현은 모두는 능력",
-    criteria: "고객 불만, 감정 표현시 이해받다니 능력 사용",
-    expectation: "눈의 접촉 후, 환인 될때 - 대를 받아 2시간 이상 세심",
-    levels: [
-      { level: "S", score: 100, description: "Outstanding", color: "bg-green-500" },
-      { level: "A", score: 90, description: "Exceeds Expectations", color: "bg-blue-500" },
-      { level: "B", score: 80, description: "Meets Expectations", color: "bg-yellow-500" },
-      { level: "C", score: 70, description: "Below Expectations", color: "bg-orange-500" },
-      { level: "D", score: 60, description: "Unsatisfactory", color: "bg-red-500" }
+    id: 'customer_service_2',
+    name: '고객상담 2팀',
+    members: [
+      { id: 'choi_sangdam', name: '최상담', position: '선임 상담사', avatar: '최' },
+      { id: 'jung_sangdam', name: '정상담', position: '주임 상담사', avatar: '정' },
+      { id: 'kang_sangdam', name: '강상담', position: '상담사', avatar: '강' }
     ]
   },
   {
-    id: "problemsolving",
-    category: "직무역량", 
-    name: "문제해결능력",
-    description: "고객 문제를 정확히 파악하고 단계별로 해결하는 능력",
-    criteria: "문제를 빨리 다양한 방법으로 해결하기 위해 노력한다",
-    expectation: "1.문제인파 빠른 후 - 방고 단계다영 대한 모의인앤 해결해옴 수 있다.",
-    levels: [
-      { level: "S", score: 94, description: "Outstanding", color: "bg-green-500" },
-      { level: "A", score: 84, description: "Exceeds Expectations", color: "bg-blue-500" },
-      { level: "B", score: 80, description: "Meets Expectations", color: "bg-yellow-500" },
-      { level: "C", score: 70, description: "Below Expectations", color: "bg-orange-500" },
-      { level: "D", score: 60, description: "Unsatisfactory", color: "bg-red-500" }
+    id: 'tech_support',
+    name: '기술지원팀',
+    members: [
+      { id: 'oh_tech', name: '오기술', position: '선임 엔지니어', avatar: '오' },
+      { id: 'yoon_tech', name: '윤기술', position: '엔지니어', avatar: '윤' }
     ]
   }
 ];
 
-// 평가 대상자 정보
-const evaluatee = {
-  name: "최이하빙",
-  position: "(직위:팀장/직급:상담팀)",
-  period: "24년 / 4000byte"
-};
-
 export default function CompetencyEvaluationPage() {
+  const [selectedDepartment, setSelectedDepartment] = useState('');
+  const [selectedMember, setSelectedMember] = useState<Member | null>(null);
+  const [showEvaluation, setShowEvaluation] = useState(false);
+
+  const handleDepartmentChange = (deptId: string) => {
+    setSelectedDepartment(deptId);
+    setSelectedMember(null);
+  };
+
+  const handleMemberSelect = (member: Member) => {
+    setSelectedMember(member);
+  };
+
+  const handleStartEvaluation = () => {
+    if (selectedMember) {
+      setShowEvaluation(true);
+    }
+  };
+
+  const getSelectedDepartment = () => {
+    return departments.find(dept => dept.id === selectedDepartment);
+  };
+
+  if (showEvaluation && selectedMember) {
+    return <CompetencyEvaluationForm member={selectedMember} onBack={() => setShowEvaluation(false)} />;
+  }
+
+  return (
+    <DashboardLayout title="역량 평가하기">
+      <div className="space-y-6">
+        {/* 헤더 */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Link href="/competency" className="text-gray-500 hover:text-gray-700">
+              <ArrowLeft className="h-6 w-6" />
+            </Link>
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">역량 평가하기</h1>
+              <p className="text-gray-600">평가할 부서와 담당자를 선택하세요</p>
+            </div>
+          </div>
+        </div>
+
+        {/* 부서 선택 */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Users className="h-5 w-5 text-blue-600" />
+            <h3 className="text-lg font-semibold text-gray-800">부서 선택</h3>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {departments.map((dept) => (
+              <div
+                key={dept.id}
+                onClick={() => handleDepartmentChange(dept.id)}
+                className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                  selectedDepartment === dept.id
+                    ? 'border-blue-500 bg-blue-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                <h4 className="font-medium text-gray-900">{dept.name}</h4>
+                <p className="text-sm text-gray-600">{dept.members.length}명</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 담당자 선택 */}
+        {selectedDepartment && (
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <User className="h-5 w-5 text-green-600" />
+              <h3 className="text-lg font-semibold text-gray-800">담당자 선택</h3>
+              <span className="text-sm text-gray-500">({getSelectedDepartment()?.name})</span>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {getSelectedDepartment()?.members.map((member) => (
+                <div
+                  key={member.id}
+                  onClick={() => handleMemberSelect(member)}
+                  className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                    selectedMember?.id === member.id
+                      ? 'border-green-500 bg-green-50'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-blue-500 text-white rounded-full flex items-center justify-center font-semibold">
+                      {member.avatar}
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-gray-900">{member.name}</h4>
+                      <p className="text-sm text-gray-600">{member.position}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 평가 시작 버튼 */}
+        {selectedMember && (
+          <div className="flex justify-center">
+            <button
+              onClick={handleStartEvaluation}
+              className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 flex items-center gap-2 text-lg font-medium"
+            >
+              <CheckSquare className="h-5 w-5" />
+              {selectedMember.name} 역량 평가 시작
+            </button>
+          </div>
+        )}
+      </div>
+    </DashboardLayout>
+  );
+}
+
+// 실제 평가 폼 컴포넌트
+function CompetencyEvaluationForm({ member, onBack }: { member: Member, onBack: () => void }) {
+  // 기존 평가 폼 코드를 여기로 이동
   const [selectedRatings, setSelectedRatings] = useState<{[key: string]: string}>({});
   const [comments, setComments] = useState<{[key: string]: string}>({});
+
+  const evaluatee = {
+    name: member.name,
+    position: member.position,
+    period: "2024년도 상반기 역량 진단"
+  };
+
+  // 역량 데이터 (기존과 동일)
+  const competencyItems = [
+    {
+      id: "communication",
+      category: "공통역량",
+      name: "의사소통",
+      description: "원활한 소통 능력",
+      criteria: "고객 및 동료와의 효과적인 의사소통 능력을 평가합니다.",
+      expectation: "명확하고 정확한 의사전달이 가능해야 합니다.",
+      levels: [
+        { level: "S", score: 5, description: "탁월함", color: "bg-purple-600" },
+        { level: "A", score: 4, description: "우수함", color: "bg-blue-600" },
+        { level: "B", score: 3, description: "보통", color: "bg-green-600" },
+        { level: "C", score: 2, description: "미흡", color: "bg-yellow-600" },
+        { level: "D", score: 1, description: "개선필요", color: "bg-red-600" }
+      ]
+    },
+    {
+      id: "problem_solving",
+      category: "공통역량", 
+      name: "문제해결",
+      description: "창의적 해결 능력",
+      criteria: "업무 중 발생하는 문제를 창의적이고 효과적으로 해결하는 능력을 평가합니다.",
+      expectation: "다양한 관점에서 문제를 분석하고 해결책을 제시할 수 있어야 합니다.",
+      levels: [
+        { level: "S", score: 5, description: "탁월함", color: "bg-purple-600" },
+        { level: "A", score: 4, description: "우수함", color: "bg-blue-600" },
+        { level: "B", score: 3, description: "보통", color: "bg-green-600" },
+        { level: "C", score: 2, description: "미흡", color: "bg-yellow-600" },
+        { level: "D", score: 1, description: "개선필요", color: "bg-red-600" }
+      ]
+    },
+    {
+      id: "customer_service",
+      category: "직무역량",
+      name: "고객서비스",
+      description: "고객 만족 서비스",
+      criteria: "고객의 요구사항을 정확히 파악하고 만족스러운 서비스를 제공하는 능력을 평가합니다.",
+      expectation: "고객 중심의 사고와 서비스 마인드를 가지고 있어야 합니다.",
+      levels: [
+        { level: "S", score: 5, description: "탁월함", color: "bg-purple-600" },
+        { level: "A", score: 4, description: "우수함", color: "bg-blue-600" },
+        { level: "B", score: 3, description: "보통", color: "bg-green-600" },
+        { level: "C", score: 2, description: "미흡", color: "bg-yellow-600" },
+        { level: "D", score: 1, description: "개선필요", color: "bg-red-600" }
+      ]
+    },
+    {
+      id: "technical_knowledge",
+      category: "직무역량",
+      name: "전문지식",
+      description: "업무 전문성",
+      criteria: "담당 업무 영역의 전문지식과 기술적 이해도를 평가합니다.",
+      expectation: "업무에 필요한 전문지식을 충분히 보유하고 있어야 합니다.",
+      levels: [
+        { level: "S", score: 5, description: "탁월함", color: "bg-purple-600" },
+        { level: "A", score: 4, description: "우수함", color: "bg-blue-600" },
+        { level: "B", score: 3, description: "보통", color: "bg-green-600" },
+        { level: "C", score: 2, description: "미흡", color: "bg-yellow-600" },
+        { level: "D", score: 1, description: "개선필요", color: "bg-red-600" }
+      ]
+    }
+  ];
 
   const handleRatingChange = (competencyId: string, level: string) => {
     setSelectedRatings(prev => ({
@@ -81,14 +261,15 @@ export default function CompetencyEvaluationPage() {
 
   const handleSubmit = () => {
     const evaluationData = {
-      evaluatee,
+      evaluatee: member,
       ratings: selectedRatings,
-      comments,
-      submittedAt: new Date().toISOString()
+      comments: comments,
+      timestamp: new Date().toISOString()
     };
     
-    console.log("평가 제출:", evaluationData);
-    alert("역량 진단 평가가 제출되었습니다!");
+    console.log("평가 결과:", evaluationData);
+    alert(`${member.name}님의 역량 평가가 완료되었습니다!`);
+    onBack();
   };
 
   const getSelectedScore = (competencyId: string) => {
@@ -102,21 +283,21 @@ export default function CompetencyEvaluationPage() {
   const progress = 75; // 임시 진행률
 
   return (
-    <DashboardLayout title="역량 진단 평가">
+    <DashboardLayout title="역량 평가">
       <div className="space-y-6">
         {/* 헤더 */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/competency" className="text-gray-500 hover:text-gray-700">
+            <button onClick={onBack} className="text-gray-500 hover:text-gray-700">
               <ArrowLeft className="h-6 w-6" />
-            </Link>
+            </button>
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-blue-500 text-white rounded-full flex items-center justify-center font-semibold">
-                김
+                {member.avatar}
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">김상담 역량 평가</h1>
-                <p className="text-gray-600">2024년도 상반기 역량 진단</p>
+                <h1 className="text-2xl font-bold text-gray-900">{member.name} 역량 평가</h1>
+                <p className="text-gray-600">{evaluatee.period}</p>
               </div>
             </div>
           </div>
@@ -149,7 +330,7 @@ export default function CompetencyEvaluationPage() {
               <p className="text-purple-800 font-bold">{evaluatee.name} {evaluatee.position}</p>
             </div>
             <div>
-              <p className="text-sm text-purple-600 font-medium">조이아빙 달림에 대한 평가의견</p>
+              <p className="text-sm text-purple-600 font-medium">평가 기간</p>
               <p className="text-purple-800">{evaluatee.period}</p>
             </div>
           </div>
