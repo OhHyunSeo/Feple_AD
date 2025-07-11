@@ -37,14 +37,14 @@ export default function Sidebar() {
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null)
 
   // 현재 경로가 서브메뉴에 포함되어 있는지 확인
-  const isSubmenuActive = (item: any) => {
-    return item.submenu && item.submenu.some((sub: any) => pathname === sub.href)
+  const isSubmenuActive = (item: typeof menuItems[0]) => {
+    return item.submenu && item.submenu.some((sub) => pathname === sub.href)
   }
 
   // 서브메뉴가 활성화된 경우 해당 메뉴를 자동으로 열어둠
   const shouldShowSubmenu = (href: string) => {
     const item = menuItems.find(item => item.href === href)
-    return openSubmenu === href || isSubmenuActive(item)
+    return openSubmenu === href || (item && isSubmenuActive(item))
   }
 
   const handleSubmenuToggle = (href: string) => {

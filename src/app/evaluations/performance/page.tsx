@@ -1,7 +1,7 @@
 "use client";
 
 import DashboardLayout from "@/components/DashboardLayout";
-import { TrendingUp, Users, FileText, Award, Target, Calendar } from "lucide-react";
+import { TrendingUp, Users, Award, Target } from "lucide-react";
 
 export default function PerformanceEvaluationPage() {
   return (

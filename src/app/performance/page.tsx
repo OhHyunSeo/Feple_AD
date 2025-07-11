@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
-import { Calendar, Filter, TrendingUp, TrendingDown, Activity, Clock, Award, AlertCircle } from "lucide-react";
+import { Calendar, TrendingUp, TrendingDown, Activity, Clock, Award, AlertCircle } from "lucide-react";
 
 export default function MonitoringPage() {
   const [selectedPeriod, setSelectedPeriod] = useState("2025-07-06");
