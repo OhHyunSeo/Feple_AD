@@ -29,6 +29,11 @@
   }
 }
 
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
 body {
   color: #1f2937 !important; /* 명시적으로 검정색 설정 */
   background: white !important;
@@ -213,8 +218,13 @@ td, th {
 }
 
 /* 포괄적 텍스트 가독성 개선 */
-button, a, td, th, span, div, p, h1, h2, h3, h4, h5, h6 {
+td, th, span, div, p, h1, h2, h3, h4, h5, h6 {
   color: #1f2937 !important; /* 명시적으로 검정색 설정 */
+}
+
+/* 링크 텍스트 개선 */
+a {
+  color: inherit;
 }
 
 /* 흰색 배경에 검정 텍스트가 필요한 영역들 */

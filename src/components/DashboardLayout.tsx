@@ -10,7 +10,7 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="h-screen overflow-hidden bg-white">
       <Header />
       <Sidebar />
       <main className="korean-text overflow-y-auto text-gray-900" style={{ marginLeft: '256px', marginTop: '96px', height: 'calc(100vh - 96px)' }}>
