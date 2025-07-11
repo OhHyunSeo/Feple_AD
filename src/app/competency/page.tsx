@@ -109,7 +109,7 @@ export default function CompetencyPage() {
             href="/competency/evaluation"
             className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 flex items-center gap-2"
           >
-            <Target className="h-4 w-4" />
+            <Target className="h-4 w-4 text-white" />
             역량 평가하기
           </Link>
         </div>
