@@ -247,3 +247,51 @@ a:hover {
   padding: 0;
   margin: 0;
 }
+
+/* 드롭다운 애니메이션 */
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-down {
+  animation: slide-down 0.2s ease-out;
+}
+
+/* 사이드바 활성화된 메뉴 텍스트 강제 흰색 */
+.sidebar-active-text {
+  color: white !important;
+}
+
+.sidebar-active-text * {
+  color: white !important;
+}
+
+/* 서브메뉴 활성화된 텍스트 */
+.submenu-active-text {
+  color: #BE185D !important;
+}
+
+.submenu-active-text * {
+  color: #BE185D !important;
+}
+
+/* 헤더 Feple 텍스트 강제 흰색 */
+.header-white-text {
+  color: white !important;
+}
+
+/* 환영 메시지 텍스트 강제 흰색 */
+.welcome-white-text {
+  color: white !important;
+}
+
+.welcome-white-text * {
+  color: white !important;
+}

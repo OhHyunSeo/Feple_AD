@@ -5,7 +5,6 @@ import Link from "next/link";
 import DashboardLayout from "@/components/DashboardLayout";
 import StatCard from "@/components/StatCard";
 import EvaluationChart from "@/components/EvaluationChart";
-import ConsultantTable from "@/components/ConsultantTable";
 import { Users, FileText, Target, TrendingUp, Calendar, Award, Search, Filter } from "lucide-react";
 
 export default function DashboardPage() {
@@ -53,11 +52,11 @@ export default function DashboardPage() {
     <DashboardLayout>
       <div className="space-y-6 text-gray-900">
         {/* 환영 메시지 */}
-        <div className="bg-gradient-to-r from-pink-500 to-purple-600 rounded-2xl p-6 text-white shadow-xl">
+        <div className="bg-gradient-to-r from-pink-500 to-purple-600 rounded-2xl p-6 text-white shadow-xl welcome-white-text">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold mb-2">안녕하세요, 관리자님! 👋</h2>
-              <p className="text-pink-100">오늘도 효율적인 인사 관리를 위해 함께하겠습니다.</p>
+              <p className="text-white">오늘도 효율적인 인사 관리를 위해 함께하겠습니다.</p>
             </div>
             <div className="hidden md:block">
               <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center">
@@ -172,16 +171,11 @@ export default function DashboardPage() {
         </div>
 
         {/* 빠른 액션 */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Link href="/schedule" className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-center hover:shadow-md transition-shadow cursor-pointer">
             <Calendar className="w-8 h-8 text-pink-500 mx-auto mb-2" />
             <h3 className="font-semibold text-gray-900">평가 일정</h3>
             <p className="text-sm text-gray-600">오늘 3건의 평가가 예정되어 있습니다</p>
-          </Link>
-          <Link href="/consultants" className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-center hover:shadow-md transition-shadow cursor-pointer">
-            <Users className="w-8 h-8 text-purple-500 mx-auto mb-2" />
-            <h3 className="font-semibold text-gray-900">새 상담사</h3>
-            <p className="text-sm text-gray-600">이번 주 신규 등록 5명</p>
           </Link>
           <Link href="/competency" className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-center hover:shadow-md transition-shadow cursor-pointer">
             <Target className="w-8 h-8 text-pink-600 mx-auto mb-2" />
@@ -210,13 +204,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 상담사 테이블 섹션 */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-          <div className="p-6 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-800">상담사 현황</h3>
-          </div>
-          <ConsultantTable />
-        </div>
+
       </div>
     </DashboardLayout>
   );

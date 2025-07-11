@@ -16,7 +16,7 @@ export default function Header() {
               height={22}
               className="h-6 w-auto"
             />
-            <span className="text-2xl font-bold text-white korean-heading">
+            <span className="text-2xl font-bold text-white korean-heading header-white-text">
               Feple
             </span>
           </div>
