@@ -123,161 +123,241 @@ export default function MonitoringPage() {
       result: "미흡",
       feedback: {
         strengths: [
-          "대화흐름(A): 원활한 대화 진행 능력이 뛰어남",
-          "구체적인 사례를 통한 설명으로 상황설명 효과적"
+          "대화흐름(A): 원활한 대화 진행 능력이 뛰어나며 고객과의 소통이 자연스럽습니다.",
+          "구체적인 사례를 통한 설명으로 상황 전달이 효과적이고 이해하기 쉽게 설명합니다."
         ],
         improvements: [
-          "정중함(F): 대화에서 예의나 존중을 표현하는 대 부족함이 있음",
-          "톤톤, 자동응답 능력이 위험 대상 사람하는 언어나 태도를 주의하시길 바랍니다."
+          "정중함(F): 대화에서 예의나 존중을 표현하는 데 부족함이 있어 개선이 필요합니다.",
+          "공감적 소통(G): 고객의 감정을 이해하고 공감하는 표현이 부족하여 개선이 요구됩니다."
         ],
         coaching: [
-          "대화 시작부터 정중한 인사와 친근한 톤을 사용해보세요",
-          "고객의 입장에서 생각하는 공감 표현을 늘려보시기 바랍니다"
+          "대화 시작부터 정중한 인사말과 친근한 톤을 사용하여 고객과의 첫인상을 개선해보세요.",
+          "고객의 입장에서 생각하며 '그러셨군요', '이해됩니다' 등의 공감 표현을 적극 활용하시기 바랍니다."
         ]
       }
     },
     { 
       id: 19, 
       datetime: "2025-07-07 13:11:05", 
-      finalScore: 70, 
-      politeness: "F", 
-      empathy: "G", 
-      problemSolving: "C", 
-      emotionalStability: "G", 
+      finalScore: 75, 
+      politeness: "C", 
+      empathy: "B", 
+      problemSolving: "B", 
+      emotionalStability: "A", 
       conversationFlow: "A", 
-      result: "미흡",
+      result: "양호",
       feedback: {
-        strengths: ["대화 흐름 관리 능력", "안정적인 감정 조절"],
-        improvements: ["언어 예의 개선", "공감 표현 증대"],
-        coaching: ["고객 중심 사고로 접근하세요"]
+        strengths: [
+          "감정 안정성(A): 어려운 상황에서도 침착하게 대응하며 안정된 응대 태도를 보여줍니다.",
+          "대화 흐름 관리 능력이 우수하며 체계적으로 상담을 진행합니다."
+        ],
+        improvements: [
+          "정중함(C): 기본적인 예의는 갖추었으나 더욱 정중한 언어 사용이 필요합니다.",
+          "문제 해결 역량을 더욱 발전시켜 다양한 해결책을 제시할 수 있도록 노력이 필요합니다."
+        ],
+        coaching: [
+          "고객 중심적 사고로 접근하여 고객의 니즈를 정확히 파악하는 연습을 해보세요.",
+          "다양한 상황별 해결 방안을 미리 준비하여 즉석에서 적절한 대안을 제시할 수 있도록 준비하세요."
+        ]
       }
     },
     { 
       id: 18, 
       datetime: "2025-07-07 13:08:09", 
-      finalScore: 70, 
-      politeness: "F", 
-      empathy: "G", 
-      problemSolving: "C", 
-      emotionalStability: "G", 
+      finalScore: 82, 
+      politeness: "B", 
+      empathy: "A", 
+      problemSolving: "A", 
+      emotionalStability: "B", 
       conversationFlow: "A", 
-      result: "미흡",
+      result: "양호",
       feedback: {
-        strengths: ["일관된 응대 태도", "문제 상황 파악"],
-        improvements: ["정중한 언어 사용", "해결 방안 다양화"],
-        coaching: ["더 많은 해결 옵션을 제시해보세요"]
+        strengths: [
+          "공감적 소통(A): 고객의 감정을 잘 이해하고 적절한 공감 표현을 사용합니다.",
+          "문제 해결 역량(A): 고객의 문제를 신속하고 정확하게 파악하여 효과적인 해결책을 제시합니다."
+        ],
+        improvements: [
+          "정중함(B): 양호한 수준이지만 더욱 세련된 언어 사용으로 고급스러운 서비스를 제공할 수 있습니다.",
+          "감정 안정성: 간헐적으로 감정 기복이 나타나므로 일정한 톤 유지가 필요합니다."
+        ],
+        coaching: [
+          "이미 우수한 공감 능력을 보유하고 계시니, 이를 더욱 발전시켜 고객 만족도를 높여보세요.",
+          "정중한 언어 사용에 더해 전문적인 용어 사용으로 신뢰감을 더할 수 있습니다."
+        ]
       }
     },
     { 
       id: 17, 
       datetime: "2025-07-07 12:56:36", 
-      finalScore: 70, 
-      politeness: "F", 
-      empathy: "G", 
-      problemSolving: "C", 
-      emotionalStability: "G", 
-      conversationFlow: "A", 
-      result: "미흡",
+      finalScore: 55, 
+      politeness: "D", 
+      empathy: "F", 
+      problemSolving: "D", 
+      emotionalStability: "C", 
+      conversationFlow: "C", 
+      result: "추가 상담 필요",
       feedback: {
-        strengths: ["체계적인 상담 진행", "감정 안정성"],
-        improvements: ["언어 품질 향상", "고객 공감도"],
-        coaching: ["고객의 감정을 먼저 인정해주세요"]
+        strengths: [
+          "대화 흐름(C): 기본적인 상담 진행 순서는 이해하고 있습니다.",
+          "문제 인식 능력: 고객의 기본적인 문제 상황은 파악할 수 있습니다."
+        ],
+        improvements: [
+          "공감적 소통(F): 고객의 감정을 이해하고 공감하는 능력이 현저히 부족합니다.",
+          "정중함(D): 기본적인 예의가 부족하며 고객 응대 태도 전반적인 개선이 필요합니다."
+        ],
+        coaching: [
+          "고객의 상황과 감정을 먼저 인정하고 공감하는 표현을 연습해보세요.",
+          "기본적인 고객 서비스 매뉴얼을 다시 숙지하고 정중한 언어 사용 연습이 필요합니다."
+        ]
       }
     },
     { 
       id: 16, 
       datetime: "2025-07-07 12:52:18", 
-      finalScore: 70, 
+      finalScore: 45, 
       politeness: "F", 
-      empathy: "G", 
-      problemSolving: "C", 
-      emotionalStability: "G", 
-      conversationFlow: "A", 
-      result: "미흡",
+      empathy: "F", 
+      problemSolving: "F", 
+      emotionalStability: "D", 
+      conversationFlow: "D", 
+      result: "해결 불가",
       feedback: {
-        strengths: ["논리적 설명", "차분한 응대"],
-        improvements: ["친근감 표현", "적극적 해결책"],
-        coaching: ["더 따뜻한 어조로 대화해보세요"]
+        strengths: [
+          "출근 및 업무 참여 의지: 기본적인 업무 참여 자세는 보여줍니다."
+        ],
+        improvements: [
+          "전반적인 고객 서비스 스킬: 모든 영역에서 기본 수준에 미달하여 종합적인 개선이 필요합니다.",
+          "의사소통 능력: 고객과의 기본적인 소통 능력부터 다시 학습이 필요합니다."
+        ],
+        coaching: [
+          "기초적인 고객 서비스 교육부터 다시 시작하는 것을 권장합니다.",
+          "멘토와 함께 1:1 집중 코칭을 통해 기본기부터 차근차근 개선해나가세요."
+        ]
       }
     },
     { 
       id: 15, 
       datetime: "2025-07-07 12:51:19", 
-      finalScore: 70, 
-      politeness: "F", 
-      empathy: "G", 
-      problemSolving: "C", 
-      emotionalStability: "G", 
-      conversationFlow: "A", 
-      result: "미흡",
+      finalScore: 78, 
+      politeness: "B", 
+      empathy: "A", 
+      problemSolving: "B", 
+      emotionalStability: "A", 
+      conversationFlow: "B", 
+      result: "양호",
       feedback: {
-        strengths: ["일관된 서비스", "안정적 진행"],
-        improvements: ["예의 표현", "감정적 교감"],
-        coaching: ["고객의 니즈를 더 깊이 파악해보세요"]
+        strengths: [
+          "감정 안정성(A): 매우 안정적인 감정 상태로 일관된 서비스를 제공합니다.",
+          "공감적 소통(A): 고객의 마음을 잘 헤아리고 적절한 위로와 격려를 제공합니다."
+        ],
+        improvements: [
+          "대화 흐름(B): 양호하지만 더욱 매끄러운 대화 진행을 위한 연습이 도움될 것입니다.",
+          "문제 해결 창의성: 기본적인 해결책 외에 창의적인 대안 제시 능력을 기를 수 있습니다."
+        ],
+        coaching: [
+          "이미 우수한 감정 관리 능력을 가지고 계시니, 이를 바탕으로 더욱 발전된 상담 기술을 익혀보세요.",
+          "다양한 사례 연구를 통해 문제 해결의 폭을 넓혀보시기 바랍니다."
+        ]
       }
     },
     { 
       id: 14, 
       datetime: "2025-07-07 12:48:01", 
-      finalScore: 70, 
-      politeness: "F", 
-      empathy: "G", 
-      problemSolving: "C", 
-      emotionalStability: "G", 
-      conversationFlow: "A", 
+      finalScore: 68, 
+      politeness: "C", 
+      empathy: "C", 
+      problemSolving: "B", 
+      emotionalStability: "B", 
+      conversationFlow: "C", 
       result: "미흡",
       feedback: {
-        strengths: ["체계적 접근", "침착한 대응"],
-        improvements: ["정중함 개선", "공감 능력"],
-        coaching: ["고객의 상황을 더 이해하려 노력하세요"]
+        strengths: [
+          "문제 해결 역량(B): 고객의 문제를 체계적으로 분석하고 적절한 해결책을 찾는 능력이 양호합니다.",
+          "감정 안정성(B): 대체로 안정된 마음가짐으로 상담에 임합니다."
+        ],
+        improvements: [
+          "정중함(C): 평균 수준이지만 더욱 정중하고 친근한 접근이 필요합니다.",
+          "공감적 소통(C): 고객의 감정에 더욱 세심하게 반응하는 연습이 필요합니다."
+        ],
+        coaching: [
+          "문제 해결 능력은 우수하니, 여기에 더 따뜻한 감성을 더해보세요.",
+          "고객의 입장에서 한 번 더 생각해보는 습관을 기르시면 더 좋은 상담사가 될 수 있습니다."
+        ]
       }
     },
     { 
       id: 13, 
       datetime: "2025-07-07 12:58:04", 
-      finalScore: 70, 
-      politeness: "F", 
-      empathy: "G", 
-      problemSolving: "C", 
-      emotionalStability: "G", 
+      finalScore: 85, 
+      politeness: "A", 
+      empathy: "A", 
+      problemSolving: "A", 
+      emotionalStability: "B", 
       conversationFlow: "A", 
-      result: "미흡",
+      result: "양호",
       feedback: {
-        strengths: ["대화 주도권", "상황 판단"],
-        improvements: ["언어 매너", "고객 배려"],
-        coaching: ["더 세심한 배려를 보여주세요"]
+        strengths: [
+          "정중함(A): 매우 정중하고 세련된 언어 사용으로 고객에게 좋은 인상을 줍니다.",
+          "공감적 소통(A): 탁월한 공감 능력으로 고객의 마음을 편안하게 해줍니다.",
+          "문제 해결 역량(A): 신속하고 정확한 문제 파악과 효과적인 해결책 제시가 뛰어납니다."
+        ],
+        improvements: [
+          "감정 안정성(B): 대체로 좋으나 스트레스 상황에서 더욱 일관된 응대를 유지하면 좋겠습니다."
+        ],
+        coaching: [
+          "이미 우수한 상담 능력을 보유하고 계십니다. 이 수준을 지속적으로 유지하세요.",
+          "다른 동료들에게도 노하우를 공유하여 팀 전체의 역량 향상에 기여해보시기 바랍니다."
+        ]
       }
     },
     { 
       id: 12, 
       datetime: "2025-07-07 10:54:55", 
-      finalScore: 70, 
-      politeness: "F", 
-      empathy: "G", 
+      finalScore: 62, 
+      politeness: "D", 
+      empathy: "C", 
       problemSolving: "C", 
-      emotionalStability: "G", 
-      conversationFlow: "A", 
-      result: "미흡",
+      emotionalStability: "C", 
+      conversationFlow: "D", 
+      result: "추가 상담 필요",
       feedback: {
-        strengths: ["명확한 전달", "안정감"],
-        improvements: ["친절함", "해결 의지"],
-        coaching: ["고객이 만족할 수 있는 해결책을 찾아보세요"]
+        strengths: [
+          "문제 인식: 고객의 기본적인 문제 상황은 파악할 수 있습니다.",
+          "업무 의지: 상담을 완료하려는 기본적인 의지를 보여줍니다."
+        ],
+        improvements: [
+          "정중함(D): 고객에 대한 기본적인 예의와 정중함이 부족합니다.",
+          "대화 흐름(D): 체계적이지 못한 상담 진행으로 개선이 시급합니다."
+        ],
+        coaching: [
+          "기본적인 고객 응대 매뉴얼을 다시 학습하고 실습을 통해 체화하세요.",
+          "선배 상담사의 우수 사례를 관찰하고 모방하는 연습을 권장합니다."
+        ]
       }
     },
     { 
       id: 11, 
       datetime: "2025-07-07 10:06:29", 
-      finalScore: 70, 
-      politeness: "F", 
-      empathy: "G", 
-      problemSolving: "C", 
-      emotionalStability: "G", 
-      conversationFlow: "A", 
-      result: "미흡",
+      finalScore: 73, 
+      politeness: "B", 
+      empathy: "B", 
+      problemSolving: "A", 
+      emotionalStability: "B", 
+      conversationFlow: "B", 
+      result: "양호",
       feedback: {
-        strengths: ["차근차근 설명", "차분함"],
-        improvements: ["정중한 태도", "적극성"],
-        coaching: ["고객의 입장에서 먼저 생각해보세요"]
+        strengths: [
+          "문제 해결 역량(A): 복잡한 문제도 차근차근 분석하여 적절한 해결책을 제시합니다.",
+          "전반적인 밸런스: 모든 영역에서 고른 수준의 역량을 보여줍니다."
+        ],
+        improvements: [
+          "정중함과 공감적 소통: 양호한 수준이지만 A등급으로 향상시킬 여지가 있습니다.",
+          "세부적인 디테일: 고객 서비스의 세밀한 부분에서 더욱 신경쓸 필요가 있습니다."
+        ],
+        coaching: [
+          "이미 좋은 기본기를 갖추고 계시니, 한 단계 더 나아가는 정교함을 기르세요.",
+          "고객 만족도를 최상급으로 끌어올리기 위한 세심한 배려를 연습해보시기 바랍니다."
+        ]
       }
     }
   ];
@@ -300,22 +380,23 @@ export default function MonitoringPage() {
 
   const getGradeColor = (grade: string) => {
     switch(grade) {
-      case 'A': return 'bg-green-100 text-green-800';
-      case 'B': return 'bg-blue-100 text-blue-800';
-      case 'C': return 'bg-yellow-100 text-yellow-800';
-      case 'D': return 'bg-orange-100 text-orange-800';
-      case 'F': return 'bg-red-100 text-red-800';
-      case 'G': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'A': return 'bg-emerald-100 text-emerald-800 border border-emerald-200';
+      case 'B': return 'bg-blue-100 text-blue-800 border border-blue-200';
+      case 'C': return 'bg-amber-100 text-amber-800 border border-amber-200';
+      case 'D': return 'bg-orange-100 text-orange-800 border border-orange-200';
+      case 'F': return 'bg-red-100 text-red-800 border border-red-200';
+      case 'G': return 'bg-red-100 text-red-800 border border-red-200';
+      default: return 'bg-gray-100 text-gray-800 border border-gray-200';
     }
   };
 
   const getResultColor = (result: string) => {
     switch(result) {
-      case '우수': return 'bg-green-100 text-green-800';
-      case '보통': return 'bg-yellow-100 text-yellow-800';
-      case '미흡': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case '양호': return 'bg-emerald-100 text-emerald-800 border border-emerald-200';
+      case '미흡': return 'bg-red-100 text-red-800 border border-red-200';
+      case '추가 상담 필요': return 'bg-amber-100 text-amber-800 border border-amber-200';
+      case '해결 불가': return 'bg-gray-100 text-gray-800 border border-gray-200';
+      default: return 'bg-gray-100 text-gray-800 border border-gray-200';
     }
   };
 
@@ -506,74 +587,135 @@ export default function MonitoringPage() {
           </div>
 
           {/* 중앙 패널 - 상담 세션 테이블 */}
-          <div className="col-span-2 bg-white rounded-lg shadow-sm border border-gray-200 p-4 overflow-hidden">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                <PhoneCall className="h-5 w-5 text-blue-500" />
-                총 결과 건수 {sessionData.length}건
-              </h3>
-            </div>
-            
-            <div className="overflow-auto h-[calc(100%-60px)]">
-              <table className="w-full text-sm">
-                <thead className="sticky top-0 bg-gray-50">
-                  <tr className="border-b border-gray-200">
-                    <th className="text-left py-2 px-3 text-xs font-medium text-gray-600">No</th>
-                    <th className="text-left py-2 px-3 text-xs font-medium text-gray-600">상담일시</th>
-                    <th className="text-left py-2 px-3 text-xs font-medium text-gray-600">최종점수</th>
-                    <th className="text-left py-2 px-3 text-xs font-medium text-gray-600">정중함 및 언어 품질</th>
-                    <th className="text-left py-2 px-3 text-xs font-medium text-gray-600">공감적 소통</th>
-                    <th className="text-left py-2 px-3 text-xs font-medium text-gray-600">문제 해결 역량</th>
-                    <th className="text-left py-2 px-3 text-xs font-medium text-gray-600">감정 안정성</th>
-                    <th className="text-left py-2 px-3 text-xs font-medium text-gray-600">대화 흐름 및 응대 태도</th>
-                    <th className="text-left py-2 px-3 text-xs font-medium text-gray-600">종합 피드백</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {sessionData.map((session) => (
-                    <tr 
-                      key={session.id} 
-                      className={`border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors ${selectedSession?.id === session.id ? 'bg-pink-50' : ''}`}
-                      onClick={() => setSelectedSession(session)}
-                    >
-                      <td className="py-2 px-3 text-xs">{session.id}</td>
-                      <td className="py-2 px-3 text-xs">{session.datetime}</td>
-                      <td className="py-2 px-3 text-xs font-medium">{session.finalScore}</td>
-                      <td className="py-2 px-3">
-                        <span className={`px-1.5 py-0.5 rounded-full text-xs font-medium ${getGradeColor(session.politeness)}`}>
-                          {session.politeness}
-                        </span>
-                      </td>
-                      <td className="py-2 px-3">
-                        <span className={`px-1.5 py-0.5 rounded-full text-xs font-medium ${getGradeColor(session.empathy)}`}>
-                          {session.empathy}
-                        </span>
-                      </td>
-                      <td className="py-2 px-3">
-                        <span className={`px-1.5 py-0.5 rounded-full text-xs font-medium ${getGradeColor(session.problemSolving)}`}>
-                          {session.problemSolving}
-                        </span>
-                      </td>
-                      <td className="py-2 px-3">
-                        <span className={`px-1.5 py-0.5 rounded-full text-xs font-medium ${getGradeColor(session.emotionalStability)}`}>
-                          {session.emotionalStability}
-                        </span>
-                      </td>
-                      <td className="py-2 px-3">
-                        <span className={`px-1.5 py-0.5 rounded-full text-xs font-medium ${getGradeColor(session.conversationFlow)}`}>
-                          {session.conversationFlow}
-                        </span>
-                      </td>
-                      <td className="py-2 px-3">
-                        <span className={`px-1.5 py-0.5 rounded-full text-xs font-medium ${getResultColor(session.result)}`}>
-                          {session.result}
-                        </span>
-                      </td>
+          <div className="col-span-2 space-y-4">
+            {/* 상담 세션 테이블 */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 overflow-hidden">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                  <PhoneCall className="h-5 w-5 text-blue-500" />
+                  총 결과 건수 {sessionData.length}건
+                </h3>
+              </div>
+              
+              <div className="overflow-auto h-80">
+                <table className="w-full text-sm">
+                  <thead className="sticky top-0 bg-gray-50">
+                    <tr className="border-b border-gray-200">
+                      <th className="text-left py-2 px-3 text-xs font-medium text-gray-600">No</th>
+                      <th className="text-left py-2 px-3 text-xs font-medium text-gray-600">상담일시</th>
+                      <th className="text-left py-2 px-3 text-xs font-medium text-gray-600">최종점수</th>
+                      <th className="text-left py-2 px-3 text-xs font-medium text-gray-600">정중함 및 언어 품질</th>
+                      <th className="text-left py-2 px-3 text-xs font-medium text-gray-600">공감적 소통</th>
+                      <th className="text-left py-2 px-3 text-xs font-medium text-gray-600">문제 해결 역량</th>
+                      <th className="text-left py-2 px-3 text-xs font-medium text-gray-600">감정 안정성</th>
+                      <th className="text-left py-2 px-3 text-xs font-medium text-gray-600">대화 흐름 및 응대 태도</th>
+                      <th className="text-left py-2 px-3 text-xs font-medium text-gray-600">상담 결과</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {sessionData.map((session) => (
+                      <tr 
+                        key={session.id} 
+                        className={`border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors ${selectedSession?.id === session.id ? 'bg-pink-50' : ''}`}
+                        onClick={() => setSelectedSession(session)}
+                      >
+                        <td className="py-2 px-3 text-xs">{session.id}</td>
+                        <td className="py-2 px-3 text-xs">{session.datetime}</td>
+                        <td className="py-2 px-3 text-xs font-medium">{session.finalScore}</td>
+                        <td className="py-2 px-3">
+                          <span className={`px-1.5 py-0.5 rounded-full text-xs font-medium ${getGradeColor(session.politeness)}`}>
+                            {session.politeness}
+                          </span>
+                        </td>
+                        <td className="py-2 px-3">
+                          <span className={`px-1.5 py-0.5 rounded-full text-xs font-medium ${getGradeColor(session.empathy)}`}>
+                            {session.empathy}
+                          </span>
+                        </td>
+                        <td className="py-2 px-3">
+                          <span className={`px-1.5 py-0.5 rounded-full text-xs font-medium ${getGradeColor(session.problemSolving)}`}>
+                            {session.problemSolving}
+                          </span>
+                        </td>
+                        <td className="py-2 px-3">
+                          <span className={`px-1.5 py-0.5 rounded-full text-xs font-medium ${getGradeColor(session.emotionalStability)}`}>
+                            {session.emotionalStability}
+                          </span>
+                        </td>
+                        <td className="py-2 px-3">
+                          <span className={`px-1.5 py-0.5 rounded-full text-xs font-medium ${getGradeColor(session.conversationFlow)}`}>
+                            {session.conversationFlow}
+                          </span>
+                        </td>
+                        <td className="py-2 px-3">
+                          <span className={`px-1.5 py-0.5 rounded-full text-xs font-medium ${getResultColor(session.result)}`}>
+                            {session.result}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
+
+            {/* 세션 상세 정보 - 선택된 세션이 있을 때만 표시 */}
+            {selectedSession && (
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                  {selectedSession.id}번 상담에 대한 특징 (LLM 기반 분석)
+                </h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="font-medium text-green-600 mb-3 flex items-center gap-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      강점
+                    </h4>
+                    <div className="space-y-2">
+                      {selectedSession.feedback.strengths.map((strength: string, index: number) => (
+                        <div key={index} className="flex items-start gap-2">
+                          <div className="w-1.5 h-1.5 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                          <p className="text-sm text-gray-700">{strength}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-medium text-red-600 mb-3 flex items-center gap-2">
+                      <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                      개선점
+                    </h4>
+                    <div className="space-y-2">
+                      {selectedSession.feedback.improvements.map((improvement: string, index: number) => (
+                        <div key={index} className="flex items-start gap-2">
+                          <div className="w-1.5 h-1.5 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
+                          <p className="text-sm text-gray-700">{improvement}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="mt-6">
+                  <h4 className="font-medium text-blue-600 mb-3 flex items-center gap-2">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                    AI 코칭 멘트
+                  </h4>
+                  <div className="bg-blue-50 rounded-lg p-4">
+                    <div className="space-y-2">
+                      {selectedSession.feedback.coaching.map((coaching: string, index: number) => (
+                        <p key={index} className="text-sm text-blue-700 flex items-start gap-2">
+                          <span className="text-blue-400 font-bold">•</span>
+                          {coaching}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* 우측 패널 */}
