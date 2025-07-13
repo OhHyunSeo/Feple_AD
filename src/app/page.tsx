@@ -3,23 +3,51 @@
 import { useState } from "react";
 import Link from "next/link";
 import DashboardLayout from "@/components/DashboardLayout";
-import StatCard from "@/components/StatCard";
-import EvaluationChart from "@/components/EvaluationChart";
-import { Users, FileText, Target, TrendingUp, Calendar, Award, Search, Filter } from "lucide-react";
+import { Users, FileText, Target, TrendingUp, Search, Filter, Award, ChevronRight } from "lucide-react";
 
 export default function DashboardPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [showResults, setShowResults] = useState(false);
+  const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
 
-  // 검색 데이터 (정적 데이터)
+  // 검색 데이터 (업데이트된 정적 데이터)
   const searchData = [
     { type: "consultant", title: "김민수", subtitle: "고객상담 1팀 - 선임 상담사", link: "/consultants", score: 4.8 },
     { type: "consultant", title: "이영희", subtitle: "고객상담 2팀 - 상담사", link: "/consultants", score: 4.5 },
-    { type: "evaluation", title: "2024년 4분기 정기평가", subtitle: "정기평가 - 김민수", link: "/evaluations/1", score: null },
-    { type: "evaluation", title: "신입사원 역량진단", subtitle: "역량진단 - 이영희", link: "/evaluations/2", score: null },
-    { type: "competency", title: "고객응대 역량", subtitle: "공통역량", link: "/competency", score: null },
-    { type: "competency", title: "문제해결 역량", subtitle: "직무역량", link: "/competency", score: null },
+    { type: "consultant", title: "박성호", subtitle: "고객상담 1팀 - 상담사", link: "/consultants", score: 4.2 },
+    { type: "consultant", title: "최미연", subtitle: "고객상담 3팀 - 팀장", link: "/consultants", score: 4.9 },
   ];
+
+  // 팀 데이터
+  const teams = [
+    { id: "team1", name: "고객상담 1팀", memberCount: 12, teamLead: "김팀장" },
+    { id: "team2", name: "고객상담 2팀", memberCount: 15, teamLead: "이팀장" },
+    { id: "team3", name: "고객상담 3팀", memberCount: 10, teamLead: "박팀장" },
+    { id: "team4", name: "기술지원팀", memberCount: 8, teamLead: "최팀장" },
+  ];
+
+  // 팀별 상담원 데이터
+  const teamMembers = {
+    team1: [
+      { id: "c1", name: "김민수", position: "선임 상담사", status: "활동", callsToday: 23, satisfactionScore: 4.8 },
+      { id: "c2", name: "박성호", position: "상담사", status: "활동", callsToday: 18, satisfactionScore: 4.2 },
+      { id: "c3", name: "임지원", position: "상담사", status: "휴식", callsToday: 15, satisfactionScore: 4.5 },
+    ],
+    team2: [
+      { id: "c4", name: "이영희", position: "상담사", status: "활동", callsToday: 20, satisfactionScore: 4.5 },
+      { id: "c5", name: "정다은", position: "상담사", status: "활동", callsToday: 16, satisfactionScore: 4.3 },
+      { id: "c6", name: "강현준", position: "선임 상담사", status: "활동", callsToday: 25, satisfactionScore: 4.7 },
+    ],
+    team3: [
+      { id: "c7", name: "최미연", position: "팀장", status: "활동", callsToday: 12, satisfactionScore: 4.9 },
+      { id: "c8", name: "한상욱", position: "상담사", status: "활동", callsToday: 19, satisfactionScore: 4.4 },
+      { id: "c9", name: "송예진", position: "상담사", status: "휴식", callsToday: 14, satisfactionScore: 4.6 },
+    ],
+    team4: [
+      { id: "c10", name: "윤진호", position: "기술지원", status: "활동", callsToday: 8, satisfactionScore: 4.8 },
+      { id: "c11", name: "조은실", position: "기술지원", status: "활동", callsToday: 10, satisfactionScore: 4.5 },
+    ],
+  };
 
   // 검색 결과 필터링
   const searchResults = searchTerm.length > 0 
@@ -36,16 +64,28 @@ export default function DashboardPage() {
 
   const getTypeIcon = (type: string) => {
     if (type === "consultant") return <Users className="h-4 w-4 text-blue-500" />;
-    if (type === "evaluation") return <FileText className="h-4 w-4 text-green-500" />;
-    if (type === "competency") return <Target className="h-4 w-4 text-purple-500" />;
     return <Search className="h-4 w-4 text-gray-500" />;
   };
 
   const getTypeName = (type: string) => {
     if (type === "consultant") return "상담사";
-    if (type === "evaluation") return "평가";
-    if (type === "competency") return "역량";
     return "기타";
+  };
+
+  const handleConsultantClick = (consultant: any) => {
+    // 상담 모니터링 페이지로 이동
+    window.location.href = `/performance?consultant=${consultant.id}`;
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "활동":
+        return "bg-green-100 text-green-800";
+      case "휴식":
+        return "bg-yellow-100 text-yellow-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
   };
 
   return (
@@ -56,11 +96,11 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold mb-2">안녕하세요, 관리자님! 👋</h2>
-              <p className="text-white">오늘도 효율적인 인사 관리를 위해 함께하겠습니다.</p>
+              <p className="text-white">팀별 상담원 모니터링을 통해 효율적인 관리를 도와드리겠습니다.</p>
             </div>
             <div className="hidden md:block">
               <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center">
-                <Award className="w-12 h-12 text-white" />
+                <Users className="w-12 h-12 text-white" />
               </div>
             </div>
           </div>
@@ -73,7 +113,7 @@ export default function DashboardPage() {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <input
                 type="text"
-                placeholder="상담사, 평가, 역량 등 전체 검색..."
+                placeholder="상담사 이름으로 검색..."
                 value={searchTerm}
                 onChange={(e) => handleSearchChange(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 text-lg"
@@ -92,11 +132,10 @@ export default function DashboardPage() {
               {searchResults.length > 0 ? (
                 <div className="space-y-2">
                   {searchResults.slice(0, 6).map((result, index) => (
-                    <Link
+                    <div
                       key={index}
-                      href={result.link}
-                      onClick={() => setShowResults(false)}
-                      className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                      onClick={() => result.type === "consultant" && handleConsultantClick(result)}
+                      className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
                     >
                       {getTypeIcon(result.type)}
                       <div className="flex-1">
@@ -113,15 +152,8 @@ export default function DashboardPage() {
                           ⭐ {result.score}
                         </div>
                       )}
-                    </Link>
-                  ))}
-                  {searchResults.length > 6 && (
-                    <div className="text-center pt-2">
-                      <button className="text-sm text-blue-600 hover:text-blue-800">
-                        더 보기 ({searchResults.length - 6}개 추가)
-                      </button>
                     </div>
-                  )}
+                  ))}
                 </div>
               ) : (
                 <p className="text-gray-500 text-center py-4">검색 결과가 없습니다.</p>
@@ -130,81 +162,66 @@ export default function DashboardPage() {
           )}
         </div>
 
-        {/* 통계 카드 섹션 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <StatCard
-            title="전체 상담사"
-            value={156}
-            change={5}
-            icon={Users}
-            iconColor="text-pink-500"
-            description="활동중인 상담사"
-            href="/consultants"
-          />
-          <StatCard
-            title="진행중 평가"
-            value={42}
-            change={-12}
-            icon={FileText}
-            iconColor="text-purple-500"
-            description="이번 달 평가"
-            href="/evaluations"
-          />
-          <StatCard
-            title="평균 역량 점수"
-            value="4.6"
-            change={3}
-            icon={Target}
-            iconColor="text-pink-600"
-            description="5점 만점"
-            href="/competency"
-          />
-          <StatCard
-            title="목표 달성률"
-            value="87%"
-            change={8}
-            icon={TrendingUp}
-            iconColor="text-purple-600"
-            description="분기 목표 대비"
-            href="/performance"
-          />
-        </div>
-
-        {/* 빠른 액션 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Link href="/schedule" className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-center hover:shadow-md transition-shadow cursor-pointer">
-            <Calendar className="w-8 h-8 text-pink-500 mx-auto mb-2" />
-            <h3 className="font-semibold text-gray-900">평가 일정</h3>
-            <p className="text-sm text-gray-600">오늘 3건의 평가가 예정되어 있습니다</p>
-          </Link>
-          <Link href="/competency" className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-center hover:shadow-md transition-shadow cursor-pointer">
-            <Target className="w-8 h-8 text-pink-600 mx-auto mb-2" />
-            <h3 className="font-semibold text-gray-900">역량 진단</h3>
-            <p className="text-sm text-gray-600">대기중인 진단 12건</p>
-          </Link>
-        </div>
-
-        {/* 차트 섹션 */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-            <div className="p-6 border-b border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-800">월별 평가 진행 현황</h3>
-            </div>
-            <div className="p-0">
-              <EvaluationChart type="bar" />
-            </div>
+        {/* 팀별 상담원 관리 */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">팀별 상담원 관리</h3>
+          
+          {/* 팀 선택 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            {teams.map((team) => (
+              <div
+                key={team.id}
+                onClick={() => setSelectedTeam(selectedTeam === team.id ? null : team.id)}
+                className={`p-4 rounded-lg border-2 cursor-pointer transition-all hover:shadow-md ${
+                  selectedTeam === team.id
+                    ? 'border-pink-500 bg-pink-50'
+                    : 'border-gray-200 hover:border-pink-300'
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-semibold text-gray-900">{team.name}</h4>
+                    <p className="text-sm text-gray-600">{team.teamLead}</p>
+                    <p className="text-xs text-gray-500 mt-1">{team.memberCount}명</p>
+                  </div>
+                  <ChevronRight className={`h-5 w-5 transition-transform ${
+                    selectedTeam === team.id ? 'rotate-90' : ''
+                  } text-pink-500`} />
+                </div>
+              </div>
+            ))}
           </div>
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-            <div className="p-6 border-b border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-800">평가 유형별 분포</h3>
+
+          {/* 선택된 팀의 상담원 목록 */}
+          {selectedTeam && (
+            <div className="border-t border-gray-200 pt-6">
+              <h4 className="text-md font-semibold text-gray-800 mb-4">
+                {teams.find(t => t.id === selectedTeam)?.name} 상담원 목록
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {teamMembers[selectedTeam as keyof typeof teamMembers]?.map((member) => (
+                  <div
+                    key={member.id}
+                    onClick={() => handleConsultantClick(member)}
+                    className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-all cursor-pointer hover:border-pink-300"
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <h5 className="font-semibold text-gray-900">{member.name}</h5>
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(member.status)}`}>
+                        {member.status}
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-2">{member.position}</p>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-500">오늘 통화: {member.callsToday}건</span>
+                      <span className="text-gray-500">⭐ {member.satisfactionScore}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="p-0">
-              <EvaluationChart type="pie" />
-            </div>
-          </div>
+          )}
         </div>
-
-
       </div>
     </DashboardLayout>
   );
