@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import DashboardLayout from "@/components/DashboardLayout";
-import { Users, FileText, Target, TrendingUp, Search, Filter, Award, ChevronRight } from "lucide-react";
+import { Users, Search, Filter, ChevronRight } from "lucide-react";
 
 export default function DashboardPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -72,9 +71,13 @@ export default function DashboardPage() {
     return "기타";
   };
 
-  const handleConsultantClick = (consultant: any) => {
+  const handleConsultantClick = (consultant: { id: string; name: string; position: string; status: string; callsToday: number; satisfactionScore: number } | { type: string; title: string; subtitle: string; link: string; score: number }) => {
     // 상담 모니터링 페이지로 이동
-    window.location.href = `/performance?consultant=${consultant.id}`;
+    if ('id' in consultant) {
+      window.location.href = `/performance?consultant=${consultant.id}`;
+    } else {
+      window.location.href = `/performance?consultant=${consultant.title}`;
+    }
   };
 
   const getStatusColor = (status: string) => {

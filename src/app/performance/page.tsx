@@ -1,22 +1,37 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
-import { Calendar, ArrowLeft, ChevronDown, MessageCircle, Edit3, BarChart3, TrendingUp, TrendingDown, Play, Pause, Clock, PhoneCall, Award } from "lucide-react";
+import { Calendar, ArrowLeft, ChevronDown, MessageCircle, BarChart3, Play, Pause, Clock, PhoneCall, Award } from "lucide-react";
+
+// Session 타입 정의
+interface SessionData {
+  id: number;
+  datetime: string;
+  finalScore: number;
+  politeness: string;
+  empathy: string;
+  problemSolving: string;
+  emotionalStability: string;
+  conversationFlow: string;
+  result: string;
+  feedback: {
+    strengths: string[];
+    improvements: string[];
+    coaching: string[];
+  };
+}
 
 export default function MonitoringPage() {
   const [selectedPeriod, setSelectedPeriod] = useState("1"); // 디폴트 1일
   const [selectedDepartment, setSelectedDepartment] = useState<string>("all");
   const [selectedConsultant, setSelectedConsultant] = useState<string>("all");
-  const [selectedSession, setSelectedSession] = useState<any>(null);
-  const [comment, setComment] = useState("");
+  const [selectedSession, setSelectedSession] = useState<SessionData | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
-  const [totalTime, setTotalTime] = useState(64); // 1:04
+  const [totalTime] = useState(64); // 1:04
 
-  const searchParams = useSearchParams();
-  const consultantId = searchParams.get("consultant");
+
 
   // 부서 데이터
   const departments = [
@@ -95,7 +110,7 @@ export default function MonitoringPage() {
   ];
 
   // 상담 세션 데이터
-  const sessionData = [
+  const sessionData: SessionData[] = [
     { 
       id: 20, 
       datetime: "2025-07-07 13:30:46", 
@@ -277,19 +292,7 @@ export default function MonitoringPage() {
     { time: "1분 04초", timestamp: 64, speaker: "상담사", message: "안녕하세요. 무엇을 도와드릴까요?" }
   ];
 
-  // 부서 변경 시 상담원 목록 업데이트
-  useEffect(() => {
-    if (selectedDepartment !== "all") {
-      setSelectedConsultant("all");
-    }
-  }, [selectedDepartment]);
 
-  // URL 파라미터에서 상담원 ID 확인
-  useEffect(() => {
-    if (consultantId) {
-      setSelectedConsultant(consultantId);
-    }
-  }, [consultantId]);
 
   const getCurrentConsultants = () => {
     return consultantsByDepartment[selectedDepartment as keyof typeof consultantsByDepartment] || consultantsByDepartment.all;
@@ -527,7 +530,7 @@ export default function MonitoringPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {sessionData.map((session, index) => (
+                  {sessionData.map((session) => (
                     <tr 
                       key={session.id} 
                       className={`border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors ${selectedSession?.id === session.id ? 'bg-pink-50' : ''}`}
