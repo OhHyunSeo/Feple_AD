@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
-import { Users, Search, Filter, ChevronRight } from "lucide-react";
+import { Users, Search, Filter, ChevronRight, AlertTriangle, ChevronDown, Clock, Calendar, ChevronLeft } from "lucide-react";
 
 export default function DashboardPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [showResults, setShowResults] = useState(false);
-  const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
+  const [selectedTeam, setSelectedTeam] = useState<string>("");
+  const [isTeamDropdownOpen, setIsTeamDropdownOpen] = useState(false);
+  const [riskAlertPage, setRiskAlertPage] = useState(0);
 
   // 검색 데이터 (업데이트된 정적 데이터)
   const searchData = [
@@ -15,6 +17,7 @@ export default function DashboardPage() {
     { type: "consultant", title: "이영희", subtitle: "고객상담 2팀 - 상담사", link: "/consultants", score: 4.5 },
     { type: "consultant", title: "박성호", subtitle: "고객상담 1팀 - 상담사", link: "/consultants", score: 4.2 },
     { type: "consultant", title: "최미연", subtitle: "고객상담 3팀 - 팀장", link: "/consultants", score: 4.9 },
+    { type: "consultant", title: "노준석", subtitle: "고객상담 1팀 - 상담사", link: "/consultants", score: 3.2 },
   ];
 
   // 팀 데이터
@@ -31,6 +34,7 @@ export default function DashboardPage() {
       { id: "c1", name: "김민수", position: "선임 상담사", status: "활동", callsToday: 23, satisfactionScore: 4.8 },
       { id: "c2", name: "박성호", position: "상담사", status: "활동", callsToday: 18, satisfactionScore: 4.2 },
       { id: "c3", name: "임지원", position: "상담사", status: "휴식", callsToday: 15, satisfactionScore: 4.5 },
+      { id: "c12", name: "노준석", position: "상담사", status: "활동", callsToday: 12, satisfactionScore: 3.2 },
     ],
     team2: [
       { id: "c4", name: "이영희", position: "상담사", status: "활동", callsToday: 20, satisfactionScore: 4.5 },
@@ -47,6 +51,93 @@ export default function DashboardPage() {
       { id: "c11", name: "조은실", position: "기술지원", status: "활동", callsToday: 10, satisfactionScore: 4.5 },
     ],
   };
+
+  // 점검 추천 상담사 데이터
+  const inspectionRecommendations = [
+    {
+      id: "c15",
+      name: "문지호",
+      team: "고객상담 1팀",
+      position: "상담사",
+      lastInspection: "2024-11-15",
+      daysSinceInspection: 38,
+      recommendationReason: "정기 점검 주기 초과",
+      priority: "high",
+      qcManager: "김QC"
+    },
+    {
+      id: "c16", 
+      name: "서민정",
+      team: "고객상담 2팀",
+      position: "선임 상담사",
+      lastInspection: "2024-12-01",
+      daysSinceInspection: 22,
+      recommendationReason: "성과 개선 모니터링",
+      priority: "medium",
+      qcManager: "이QC"
+    },
+    {
+      id: "c17",
+      name: "조현우",
+      team: "기술지원팀",
+      position: "기술지원",
+      lastInspection: "2024-10-28",
+      daysSinceInspection: 56,
+      recommendationReason: "장기 미점검",
+      priority: "high",
+      qcManager: "박QC"
+    },
+    {
+      id: "c18",
+      name: "배수진",
+      team: "고객상담 3팀",
+      position: "상담사",
+      lastInspection: "2024-12-10",
+      daysSinceInspection: 13,
+      recommendationReason: "신규 교육 후 점검",
+      priority: "low",
+      qcManager: "최QC"
+    }
+  ];
+
+  // 위험 등급 상담사 데이터
+  const riskAlerts = [
+    {
+      id: "c12",
+      name: "노준석",
+      team: "고객상담 1팀",
+      position: "상담사",
+      riskCategories: [
+        { category: "공감적 소통", grade: "F", severity: "critical" },
+        { category: "정중함", grade: "G", severity: "warning" }
+      ],
+      lastEvaluation: "2024-12-23 14:30",
+      actionRequired: true
+    },
+    {
+      id: "c13",
+      name: "김철호",
+      team: "고객상담 2팀", 
+      position: "상담사",
+      riskCategories: [
+        { category: "문제 해결", grade: "F", severity: "critical" }
+      ],
+      lastEvaluation: "2024-12-23 13:15",
+      actionRequired: true
+    },
+    {
+      id: "c14",
+      name: "이수정",
+      team: "기술지원팀",
+      position: "기술지원",
+      riskCategories: [
+        { category: "감정 안정성", grade: "G", severity: "warning" },
+        { category: "대화 흐름", grade: "F", severity: "critical" }
+      ],
+      lastEvaluation: "2024-12-23 12:45",
+      actionRequired: true
+    }
+  ];
 
   // 검색 결과 필터링
   const searchResults = searchTerm.length > 0 
@@ -80,6 +171,14 @@ export default function DashboardPage() {
     }
   };
 
+  const handleRiskAlertClick = (alert: typeof riskAlerts[0]) => {
+    window.location.href = `/performance?consultant=${alert.id}`;
+  };
+
+  const handleInspectionRecommendationClick = (recommendation: typeof inspectionRecommendations[0]) => {
+    window.location.href = `/performance?consultant=${recommendation.id}`;
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "활동":
@@ -89,6 +188,81 @@ export default function DashboardPage() {
       default:
         return "bg-gray-100 text-gray-800";
     }
+  };
+
+  const getGradeColor = (grade: string, severity: string) => {
+    if (severity === "critical") {
+      return "bg-red-500 text-white";
+    } else if (severity === "warning") {
+      return "bg-orange-500 text-white";
+    }
+    return "bg-gray-500 text-white";
+  };
+
+  const getSeverityIcon = (severity: string) => {
+    if (severity === "critical") {
+      return <AlertTriangle className="h-4 w-4 text-red-600" />;
+    } else if (severity === "warning") {
+      return <AlertTriangle className="h-4 w-4 text-orange-600" />;
+    }
+    return <AlertTriangle className="h-4 w-4 text-gray-600" />;
+  };
+
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case "high":
+        return "bg-red-100 text-red-800";
+      case "medium":
+        return "bg-yellow-100 text-yellow-800";
+      case "low":
+        return "bg-blue-100 text-blue-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const getPriorityText = (priority: string) => {
+    switch (priority) {
+      case "high":
+        return "높음";
+      case "medium":
+        return "보통";
+      case "low":
+        return "낮음";
+      default:
+        return "보통";
+    }
+  };
+
+  const handleTeamSelect = (teamId: string) => {
+    setSelectedTeam(teamId);
+    setIsTeamDropdownOpen(false);
+  };
+
+  const getSelectedTeamName = () => {
+    if (!selectedTeam) return "팀을 선택하세요";
+    return teams.find(team => team.id === selectedTeam)?.name || "팀을 선택하세요";
+  };
+
+  const getCurrentTeamMembers = () => {
+    if (!selectedTeam) return [];
+    return teamMembers[selectedTeam as keyof typeof teamMembers] || [];
+  };
+
+  // 위험 등급 알림 페이지네이션
+  const ITEMS_PER_PAGE = 2;
+  const totalPages = Math.ceil(riskAlerts.length / ITEMS_PER_PAGE);
+  const paginatedRiskAlerts = riskAlerts.slice(
+    riskAlertPage * ITEMS_PER_PAGE,
+    (riskAlertPage + 1) * ITEMS_PER_PAGE
+  );
+
+  const handlePrevPage = () => {
+    setRiskAlertPage(prev => Math.max(0, prev - 1));
+  };
+
+  const handleNextPage = () => {
+    setRiskAlertPage(prev => Math.min(totalPages - 1, prev + 1));
   };
 
   return (
@@ -165,65 +339,209 @@ export default function DashboardPage() {
           )}
         </div>
 
-        {/* 팀별 상담원 관리 */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">팀별 상담원 관리</h3>
+        {/* 3열 레이아웃 */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
-          {/* 팀 선택 */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            {teams.map((team) => (
-              <div
-                key={team.id}
-                onClick={() => setSelectedTeam(selectedTeam === team.id ? null : team.id)}
-                className={`p-4 rounded-lg border-2 cursor-pointer transition-all hover:shadow-md ${
-                  selectedTeam === team.id
-                    ? 'border-pink-500 bg-pink-50'
-                    : 'border-gray-200 hover:border-pink-300'
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="font-semibold text-gray-900">{team.name}</h4>
-                    <p className="text-sm text-gray-600">{team.teamLead}</p>
-                    <p className="text-xs text-gray-500 mt-1">{team.memberCount}명</p>
+          {/* 첫 번째: 점검 추천 상담사 */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Clock className="h-5 w-5 text-blue-500" />
+              <h3 className="text-lg font-semibold text-gray-800">점검 추천 상담사</h3>
+              <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full">
+                {inspectionRecommendations.length}건
+              </span>
+            </div>
+            
+            <div className="space-y-3 max-h-96 overflow-y-auto">
+              {inspectionRecommendations.map((recommendation) => (
+                <div 
+                  key={recommendation.id}
+                  onClick={() => handleInspectionRecommendationClick(recommendation)}
+                  className="border border-blue-200 rounded-lg p-4 hover:bg-blue-50 transition-colors cursor-pointer"
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <div>
+                      <h4 className="font-semibold text-gray-900">{recommendation.name}</h4>
+                      <p className="text-sm text-gray-600">{recommendation.team} - {recommendation.position}</p>
+                    </div>
+                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${getPriorityColor(recommendation.priority)}`}>
+                      {getPriorityText(recommendation.priority)}
+                    </span>
                   </div>
-                  <ChevronRight className={`h-5 w-5 transition-transform ${
-                    selectedTeam === team.id ? 'rotate-90' : ''
-                  } text-pink-500`} />
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* 선택된 팀의 상담원 목록 */}
-          {selectedTeam && (
-            <div className="border-t border-gray-200 pt-6">
-              <h4 className="text-md font-semibold text-gray-800 mb-4">
-                {teams.find(t => t.id === selectedTeam)?.name} 상담원 목록
-              </h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {teamMembers[selectedTeam as keyof typeof teamMembers]?.map((member) => (
-                  <div
-                    key={member.id}
-                    onClick={() => handleConsultantClick(member)}
-                    className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-all cursor-pointer hover:border-pink-300"
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <h5 className="font-semibold text-gray-900">{member.name}</h5>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(member.status)}`}>
-                        {member.status}
+                  
+                  <div className="space-y-1 mb-3">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600">마지막 점검</span>
+                      <span className="text-gray-800">{recommendation.lastInspection}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600">경과 일수</span>
+                      <span className={`font-medium ${recommendation.daysSinceInspection > 30 ? 'text-red-600' : 'text-gray-800'}`}>
+                        {recommendation.daysSinceInspection}일
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600 mb-2">{member.position}</p>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">오늘 통화: {member.callsToday}건</span>
-                      <span className="text-gray-500">⭐ {member.satisfactionScore}</span>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600">담당 QC</span>
+                      <span className="text-gray-800">{recommendation.qcManager}</span>
                     </div>
                   </div>
-                ))}
+                  
+                  <div className="text-xs text-gray-600 bg-gray-50 rounded p-2">
+                    {recommendation.recommendationReason}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 두 번째: 위험 등급 알림 (페이지네이션 적용) */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <AlertTriangle className="h-5 w-5 text-red-500" />
+              <h3 className="text-lg font-semibold text-gray-800">위험 등급 알림</h3>
+              <span className="bg-red-100 text-red-800 text-xs font-medium px-2 py-1 rounded-full">
+                {riskAlerts.length}건
+              </span>
+            </div>
+            
+            <div className="space-y-4 mb-4">
+              {paginatedRiskAlerts.map((alert) => (
+                <div 
+                  key={alert.id}
+                  onClick={() => handleRiskAlertClick(alert)}
+                  className="border border-red-200 rounded-lg p-4 hover:bg-red-50 transition-colors cursor-pointer"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <h4 className="font-semibold text-gray-900">{alert.name}</h4>
+                      <p className="text-sm text-gray-600">{alert.team} - {alert.position}</p>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      {getSeverityIcon(alert.riskCategories[0].severity)}
+                      <span className="text-xs text-gray-500">긴급</span>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2 mb-3">
+                    {alert.riskCategories.map((risk, index) => (
+                      <div key={index} className="flex items-center justify-between">
+                        <span className="text-sm text-gray-700">{risk.category}</span>
+                        <span className={`px-2 py-1 text-xs font-bold rounded ${getGradeColor(risk.grade, risk.severity)}`}>
+                          {risk.grade}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div className="flex items-center justify-between text-xs text-gray-500">
+                    <span>최근 평가: {alert.lastEvaluation}</span>
+                    <ChevronRight className="h-3 w-3" />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* 페이지네이션 */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between">
+                <button
+                  onClick={handlePrevPage}
+                  disabled={riskAlertPage === 0}
+                  className="flex items-center gap-1 px-3 py-1 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <ChevronLeft className="h-3 w-3" />
+                  이전
+                </button>
+                <span className="text-sm text-gray-600">
+                  {riskAlertPage + 1} / {totalPages}
+                </span>
+                <button
+                  onClick={handleNextPage}
+                  disabled={riskAlertPage === totalPages - 1}
+                  className="flex items-center gap-1 px-3 py-1 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  다음
+                  <ChevronRight className="h-3 w-3" />
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* 세 번째: 팀별 상담원 관리 */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">팀별 상담원 관리</h3>
+            
+            {/* 팀 선택 드롭다운 */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">팀 선택</label>
+              <div className="relative">
+                <button
+                  onClick={() => setIsTeamDropdownOpen(!isTeamDropdownOpen)}
+                  className="w-full flex items-center justify-between px-4 py-3 border border-gray-200 rounded-lg hover:border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors"
+                >
+                  <span className="text-gray-900">{getSelectedTeamName()}</span>
+                  <ChevronDown className={`h-4 w-4 text-gray-500 transition-transform ${isTeamDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+                
+                {isTeamDropdownOpen && (
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                    {teams.map((team) => (
+                      <div
+                        key={team.id}
+                        onClick={() => handleTeamSelect(team.id)}
+                        className="px-4 py-3 hover:bg-pink-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <span className="font-medium text-gray-900">{team.name}</span>
+                            <p className="text-sm text-gray-600">{team.teamLead}</p>
+                          </div>
+                          <span className="text-xs text-gray-500">{team.memberCount}명</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
-          )}
+
+            {/* 선택된 팀의 상담원 목록 */}
+            {selectedTeam && (
+              <div className="space-y-3">
+                <h4 className="text-md font-semibold text-gray-800">
+                  {getSelectedTeamName()} 상담원 목록 ({getCurrentTeamMembers().length}명)
+                </h4>
+                <div className="grid grid-cols-1 gap-3 max-h-96 overflow-y-auto">
+                  {getCurrentTeamMembers().map((member) => (
+                    <div
+                      key={member.id}
+                      onClick={() => handleConsultantClick(member)}
+                      className="p-3 border border-gray-200 rounded-lg hover:shadow-md transition-all cursor-pointer hover:border-pink-300"
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <h5 className="font-semibold text-gray-900">{member.name}</h5>
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(member.status)}`}>
+                          {member.status}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-2">{member.position}</p>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-500">오늘 통화: {member.callsToday}건</span>
+                        <span className="text-gray-500">⭐ {member.satisfactionScore}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {!selectedTeam && (
+              <div className="text-center py-8 text-gray-500">
+                <Users className="h-12 w-12 mx-auto mb-3 text-gray-400" />
+                <p>팀을 선택하여 상담원 목록을 확인하세요</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </DashboardLayout>
