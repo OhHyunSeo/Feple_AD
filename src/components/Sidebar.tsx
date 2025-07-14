@@ -9,12 +9,6 @@ import {
   BarChart3
 } from 'lucide-react'
 
-const menuItems = [
-  { href: '/', icon: LayoutDashboard, label: '대시보드' },
-  { href: '/consultants', icon: Users, label: '상담사 관리' },
-  { href: '/performance', icon: BarChart3, label: '상담 모니터링' },
-]
-
 interface SidebarProps {
   onWidthChange?: (width: number) => void
 }
@@ -22,6 +16,19 @@ interface SidebarProps {
 export default function Sidebar({ onWidthChange }: SidebarProps) {
   const pathname = usePathname()
   const [isHovered, setIsHovered] = useState(false)
+
+  // 현재 경로가 상담사용 대시보드인지 확인 (정확한 매칭)
+  const isConsultantMode = pathname === '/consultant' || pathname.startsWith('/consultant/')
+  
+  // 역할에 따른 메뉴 아이템 설정
+  const menuItems = isConsultantMode ? [
+    { href: '/consultant', icon: LayoutDashboard, label: '대시보드' },
+    { href: '/consultant/performance', icon: BarChart3, label: '상담 모니터링' },
+  ] : [
+    { href: '/qc', icon: LayoutDashboard, label: '대시보드' },
+    { href: '/consultants', icon: Users, label: '상담사 관리' },
+    { href: '/qc/performance', icon: BarChart3, label: '상담 모니터링' },
+  ]
 
   const shouldShowContent = isHovered
   const sidebarWidth = shouldShowContent ? 256 : 80
@@ -93,7 +100,9 @@ export default function Sidebar({ onWidthChange }: SidebarProps) {
           shouldShowContent ? 'flex-row' : 'flex-col'
         }`}>
           <div className="w-8 h-8 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
-            <span className="text-white font-semibold text-sm korean-text">관</span>
+            <span className="text-white font-semibold text-sm korean-text">
+              {isConsultantMode ? '상' : '관'}
+            </span>
           </div>
           
           {/* 사용자 정보 텍스트 */}
@@ -102,8 +111,12 @@ export default function Sidebar({ onWidthChange }: SidebarProps) {
               ? 'opacity-100 translate-x-0 flex-1' 
               : 'opacity-0 translate-x-4 w-0 overflow-hidden'
           }`}>
-            <p className="text-sm font-medium text-gray-900 korean-text whitespace-nowrap">관리자</p>
-            <p className="text-xs text-pink-600 korean-text whitespace-nowrap">admin@company.com</p>
+            <p className="text-sm font-medium text-gray-900 korean-text whitespace-nowrap">
+              {isConsultantMode ? '상담사' : '관리자'}
+            </p>
+            <p className="text-xs text-pink-600 korean-text whitespace-nowrap">
+              {isConsultantMode ? 'consultant@company.com' : 'admin@company.com'}
+            </p>
           </div>
         </div>
       </div>

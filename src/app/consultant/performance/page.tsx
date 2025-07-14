@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { usePathname } from "next/navigation";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Calendar, ArrowLeft, ChevronDown, MessageCircle, BarChart3, Play, Pause, Clock, PhoneCall, Award } from "lucide-react";
 
@@ -23,18 +22,21 @@ interface SessionData {
   };
 }
 
-export default function MonitoringPage() {
+export default function ConsultantMonitoringPage() {
   const [selectedPeriod, setSelectedPeriod] = useState("1"); // 디폴트 1일
-  const [selectedDepartment, setSelectedDepartment] = useState<string>("all");
-  const [selectedConsultant, setSelectedConsultant] = useState<string>("all");
   const [selectedSession, setSelectedSession] = useState<SessionData | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [totalTime] = useState(64); // 1:04
 
-
-
-
+  // 상담사 모드로 강제 설정 및 필요한 변수들 기본값 설정
+  const isConsultantMode = true;
+  const selectedDepartment = "all";
+  const selectedConsultant = "all";
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const setSelectedDepartment = (_value: string) => {}; // 빈 함수
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const setSelectedConsultant = (_value: string) => {}; // 빈 함수
 
   // 부서 데이터
   const departments = [
@@ -377,8 +379,9 @@ export default function MonitoringPage() {
 
 
 
+  // 상담사 모드에서는 본인 데이터만 표시
   const getCurrentConsultants = () => {
-    return consultantsByDepartment[selectedDepartment as keyof typeof consultantsByDepartment] || consultantsByDepartment.all;
+    return consultantsByDepartment.all.slice(0, 1); // 첫 번째 상담사만 (본인)
   };
 
   const getGradeColor = (grade: string) => {
@@ -413,10 +416,6 @@ export default function MonitoringPage() {
     setCurrentTime(timestamp);
     setIsPlaying(true);
   };
-
-  // 현재 경로가 상담사용 대시보드인지 정확히 확인
-  const pathname = usePathname();
-  const isConsultantMode = pathname === '/consultant' || pathname.startsWith('/consultant/');
 
   return (
     <DashboardLayout>

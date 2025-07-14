@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { usePathname } from "next/navigation";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Calendar, ArrowLeft, ChevronDown, MessageCircle, BarChart3, Play, Pause, Clock, PhoneCall, Award } from "lucide-react";
 
@@ -23,7 +22,7 @@ interface SessionData {
   };
 }
 
-export default function MonitoringPage() {
+export default function QCMonitoringPage() {
   const [selectedPeriod, setSelectedPeriod] = useState("1"); // 디폴트 1일
   const [selectedDepartment, setSelectedDepartment] = useState<string>("all");
   const [selectedConsultant, setSelectedConsultant] = useState<string>("all");
@@ -32,9 +31,8 @@ export default function MonitoringPage() {
   const [currentTime, setCurrentTime] = useState(0);
   const [totalTime] = useState(64); // 1:04
 
-
-
-
+  // QC 모드로 강제 설정
+  const isConsultantMode = false;
 
   // 부서 데이터
   const departments = [
@@ -413,10 +411,6 @@ export default function MonitoringPage() {
     setCurrentTime(timestamp);
     setIsPlaying(true);
   };
-
-  // 현재 경로가 상담사용 대시보드인지 정확히 확인
-  const pathname = usePathname();
-  const isConsultantMode = pathname === '/consultant' || pathname.startsWith('/consultant/');
 
   return (
     <DashboardLayout>

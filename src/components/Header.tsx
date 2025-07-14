@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import Link from 'next/link'
 
 export default function Header() {
   return (
@@ -8,7 +9,7 @@ export default function Header() {
       <div className="flex">
         {/* 로고 영역 (사이드바 너비와 동일) */}
         <div className="w-64 px-6 py-6">
-          <div className="flex items-center gap-4">
+          <Link href="/" className="flex items-center gap-4 hover:opacity-80 transition-opacity">
             <Image
               src="/logo.svg"
               alt="LGU+ Logo"
@@ -19,7 +20,7 @@ export default function Header() {
             <span className="text-2xl font-bold text-white korean-heading header-white-text">
               Feple
             </span>
-          </div>
+          </Link>
         </div>
 
         {/* 메인 헤더 영역 */}
