@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
-import { Users, Search, Filter, ChevronRight, AlertTriangle, ChevronDown, Clock, Calendar, ChevronLeft } from "lucide-react";
+import { Users, Search, Filter, ChevronRight, AlertTriangle, ChevronDown, Clock, ChevronLeft } from "lucide-react";
 
 export default function DashboardPage() {
   const [searchTerm, setSearchTerm] = useState("");
