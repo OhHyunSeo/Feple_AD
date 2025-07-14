@@ -8,7 +8,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        'noto': ['Noto Sans KR', 'sans-serif'],
+        sans: ['LGEIText', 'sans-serif'],
+        headline: ['LGEIHeadline', 'sans-serif'],
       },
     },
   },
