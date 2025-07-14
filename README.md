@@ -252,11 +252,3 @@ const handleAction = async () => {
 이 프로젝트는 MIT 라이선스 하에 제공됩니다.
 
 ---
-
-<div align="center">
-
-**🎯 Feple Dashboard** - 상담사 평가의 새로운 표준
-
-Made with ❤️ by Development Team
-
-</div>
