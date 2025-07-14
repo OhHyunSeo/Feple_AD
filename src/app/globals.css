@@ -1,7 +1,48 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: 'LGEIText';
+  src: url('/fonts/LGEITextTTF-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'LGEIText';
+  src: url('/fonts/LGEITextTTF-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'LGEIText';
+  src: url('/fonts/LGEITextTTF-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'LGEIHeadline';
+  src: url('/fonts/LGEIHeadlineTTF-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'LGEIHeadline';
+  src: url('/fonts/LGEIHeadlineTTF-Semibold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'LGEIHeadline';
+  src: url('/fonts/LGEIHeadlineTTF-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
 
 :root {
   --foreground-rgb: 0, 0, 0;
@@ -37,8 +78,11 @@ html, body {
 body {
   color: #1f2937 !important; /* 명시적으로 검정색 설정 */
   background: white !important;
-  font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   font-weight: 400;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: theme('fontFamily.headline');
 }
 
 /* 입력 필드 가독성 개선 */
