@@ -380,6 +380,23 @@ export const mockWeeklyPerformance: WeeklyPerformance = {
   rankInTeam: 2
 };
 
+// ===== 차트 데이터 =====
+export const monthlyEvaluationData = [
+  { month: "1월", completed: 65, inProgress: 20, notStarted: 15 },
+  { month: "2월", completed: 78, inProgress: 15, notStarted: 7 },
+  { month: "3월", completed: 82, inProgress: 12, notStarted: 6 },
+  { month: "4월", completed: 71, inProgress: 18, notStarted: 11 },
+  { month: "5월", completed: 89, inProgress: 8, notStarted: 3 },
+  { month: "6월", completed: 85, inProgress: 10, notStarted: 5 },
+];
+
+export const evaluationTypeDistribution = [
+  { name: "정기평가", value: 45, color: "#EC4899" },
+  { name: "수시평가", value: 30, color: "#8B5CF6" },
+  { name: "역량진단", value: 15, color: "#F59E0B" },
+  { name: "자기평가", value: 10, color: "#EF4444" },
+];
+
 // ===== 부서별 상담원 데이터 (기존 구조 호환) =====
 export const consultantsByDepartment = {
   all: [

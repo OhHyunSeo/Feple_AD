@@ -175,6 +175,17 @@ export interface CardProps extends BaseComponentProps {
   hoverable?: boolean;
 }
 
+export interface StatCardProps extends BaseComponentProps {
+  title: string;
+  value: string | number;
+  change?: number;
+  icon: React.ComponentType<{ className?: string }>; // LucideIcon type
+  iconColor?: string;
+  description?: string;
+  href?: string;
+  onClick?: () => void;
+}
+
 export interface BadgeProps extends BaseComponentProps {
   variant?: 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'info';
   size?: 'sm' | 'md' | 'lg';

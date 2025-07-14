@@ -105,6 +105,21 @@ export const GRADIENTS = {
   danger: 'from-red-400 to-pink-500'
 };
 
+export const COLORS = {
+  ICON: {
+    PRIMARY: 'text-pink-500',
+    SECONDARY: 'text-purple-500',
+    SUCCESS: 'text-green-500',
+    WARNING: 'text-yellow-500',
+    DANGER: 'text-red-500',
+  },
+  GRADIENT: {
+    PRIMARY: 'from-pink-600 to-purple-600',
+    SECONDARY: 'from-purple-600 to-blue-600',
+    SUCCESS: 'from-green-600 to-emerald-600',
+  }
+};
+
 // ===== 상태별 색상 매핑 =====
 export const STATUS_COLORS = {
   active: 'bg-green-100 text-green-800',
