@@ -1,0 +1,185 @@
+/* ===== BUTTON COMPONENTS ===== */
+
+.btn-theme-primary {
+  background: var(--gradient-pink);
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  color: white;
+  font-weight: 600;
+  font-family: 'Noto Sans KR', sans-serif;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-theme-primary:hover {
+  background: var(--accent-pink);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-theme-secondary {
+  background: var(--secondary-pink);
+  border: 1px solid var(--primary-pink);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  color: var(--primary-pink);
+  font-weight: 600;
+  font-family: 'Noto Sans KR', sans-serif;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-theme-secondary:hover {
+  background: var(--primary-pink);
+  color: white;
+  transform: translateY(-1px);
+}
+
+/* ===== CARD COMPONENTS ===== */
+
+.card-theme {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(236, 72, 153, 0.1);
+  transition: all 0.3s ease;
+}
+
+.card-theme:hover {
+  box-shadow: var(--shadow-md);
+  border-color: rgba(236, 72, 153, 0.2);
+  transform: translateY(-2px);
+}
+
+.card-theme-compact {
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(236, 72, 153, 0.08);
+  transition: all 0.2s ease;
+}
+
+/* ===== TABLE COMPONENTS ===== */
+
+.table-theme {
+  border-collapse: collapse;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  width: 100%;
+}
+
+.table-theme th {
+  background: var(--gradient-pink);
+  color: white;
+  font-weight: 600;
+  font-family: 'Noto Sans KR', sans-serif;
+  padding: 1rem;
+  text-align: left;
+}
+
+.table-theme td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(236, 72, 153, 0.1);
+  font-family: 'Noto Sans KR', sans-serif;
+  color: var(--text-primary);
+}
+
+.table-theme tbody tr:hover {
+  background-color: rgba(236, 72, 153, 0.05);
+}
+
+.table-theme tbody tr:nth-child(even) {
+  background-color: rgba(248, 250, 252, 0.5);
+}
+
+/* ===== FORM COMPONENTS ===== */
+
+.input-theme {
+  color: var(--text-primary) !important;
+  background-color: white !important;
+  border: 1px solid rgba(236, 72, 153, 0.2);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-family: 'Noto Sans KR', sans-serif;
+  transition: all 0.2s ease;
+}
+
+.input-theme:focus {
+  outline: none;
+  border-color: var(--primary-pink);
+  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
+}
+
+.input-theme::placeholder {
+  color: var(--text-muted) !important;
+}
+
+.select-theme {
+  color: var(--text-primary) !important;
+  background-color: white !important;
+  border: 1px solid rgba(236, 72, 153, 0.2);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.select-theme option {
+  color: var(--text-primary) !important;
+  background-color: white !important;
+}
+
+/* ===== FILTER COMPONENTS ===== */
+
+.filter-button {
+  color: var(--text-primary) !important;
+  background: white;
+  border: 1px solid rgba(236, 72, 153, 0.2);
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-family: 'Noto Sans KR', sans-serif;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.filter-button:hover {
+  background-color: rgba(236, 72, 153, 0.05) !important;
+  border-color: var(--primary-pink) !important;
+}
+
+.filter-button.active {
+  background: var(--gradient-pink);
+  color: white !important;
+  border-color: var(--primary-pink);
+}
+
+/* ===== DROPDOWN COMPONENTS ===== */
+
+.dropdown-item,
+.toggle-text,
+.menu-item,
+[role="menuitem"],
+[role="option"] {
+  color: var(--text-primary) !important;
+  background-color: white !important;
+  padding: 0.5rem 1rem;
+  font-family: 'Noto Sans KR', sans-serif;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover,
+.menu-item:hover,
+[role="menuitem"]:hover,
+[role="option"]:hover {
+  background-color: rgba(236, 72, 153, 0.05) !important;
+}
+
+/* ===== SEARCH HIGHLIGHT ===== */
+
+.search-highlight {
+  background-color: rgba(236, 72, 153, 0.2) !important;
+  padding: 1px 2px !important;
+  border-radius: 2px !important;
+  font-weight: 600;
+} 

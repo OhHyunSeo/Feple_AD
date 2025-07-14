@@ -1,0 +1,129 @@
+/* ===== THEME UTILITY CLASSES ===== */
+
+/* Background Themes */
+.theme-gradient {
+  background: var(--gradient-pink);
+}
+
+.theme-gradient-purple {
+  background: var(--gradient-purple);
+}
+
+.theme-primary {
+  background-color: var(--primary-pink);
+}
+
+.theme-primary-purple {
+  background-color: var(--primary-purple);
+}
+
+.theme-secondary {
+  background-color: var(--secondary-pink);
+}
+
+.theme-secondary-purple {
+  background-color: var(--secondary-purple);
+}
+
+/* Text Themes */
+.theme-text-primary {
+  color: var(--primary-pink);
+}
+
+.theme-text-purple {
+  color: var(--primary-purple);
+}
+
+.theme-text-accent {
+  color: var(--accent-pink);
+}
+
+.theme-text-accent-purple {
+  color: var(--accent-purple);
+}
+
+/* Border Themes */
+.theme-border {
+  border-color: var(--primary-pink);
+}
+
+.theme-border-purple {
+  border-color: var(--primary-purple);
+}
+
+/* Typography Themes */
+.korean-text {
+  font-family: 'Noto Sans KR', 'LGEIText', sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+}
+
+.korean-heading {
+  font-family: 'Noto Sans KR', 'LGEIHeadline', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+/* Text Color Utilities */
+.text-readable {
+  color: var(--text-primary) !important;
+}
+
+.text-secondary {
+  color: var(--text-secondary) !important;
+}
+
+.text-muted {
+  color: var(--text-muted) !important;
+}
+
+/* Forced white text for specific contexts */
+.text-white-force {
+  color: white !important;
+}
+
+.text-white-force * {
+  color: white !important;
+}
+
+/* Special context classes */
+.sidebar-active-text {
+  color: white !important;
+}
+
+.sidebar-active-text * {
+  color: white !important;
+}
+
+.submenu-active-text {
+  color: var(--accent-pink) !important;
+}
+
+.submenu-active-text * {
+  color: var(--accent-pink) !important;
+}
+
+.header-white-text {
+  color: white !important;
+}
+
+.welcome-white-text {
+  color: white !important;
+}
+
+.welcome-white-text * {
+  color: white !important;
+}
+
+/* Shadow utilities */
+.shadow-theme-sm {
+  box-shadow: var(--shadow-sm);
+}
+
+.shadow-theme-md {
+  box-shadow: var(--shadow-md);
+}
+
+.shadow-theme-lg {
+  box-shadow: var(--shadow-lg);
+} 

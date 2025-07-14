@@ -1,0 +1,11 @@
+/* ===== TAILWIND DIRECTIVES ===== */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== CUSTOM STYLE IMPORTS ===== */
+@import './base.css';
+@import './theme.css';
+@import './components.css';
+@import './animations.css';
+@import './utilities.css'; 
