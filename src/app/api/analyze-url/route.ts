@@ -16,7 +16,7 @@ async function startReplicatePrediction(fileUrl: string) {
       // 실제 사용하는 Replicate 모델의 버전으로 변경해야 합니다.
       version: "ohdurma/feple-ai-backend:aabfccaa466810596c17946b24c967767202dc921684cd141bdd943202aacad8", 
       input: {
-        audios: [fileUrl],
+        audio: fileUrl,
       },
       // 분석 완료 시 결과를 받을 웹훅 URL (선택 사항)
       webhook: `${process.env.NEXT_PUBLIC_VERCEL_URL}/api/webhook`,
