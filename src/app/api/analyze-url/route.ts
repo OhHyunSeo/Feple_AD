@@ -35,19 +35,18 @@ async function startReplicatePrediction(fileUrl: string) {
   
   console.log(`Using webhook URL: ${webhookUrl}`);
 
-  const response = await fetch("https://api.replicate.com/v1/predictions", {
+  // Deployments API 사용 (공식 문서 방식)
+  const response = await fetch("https://api.replicate.com/v1/deployments/ohdurma/feple-ai-generator/predictions", {
     method: "POST",
     headers: {
       "Authorization": `Token ${REPLICATE_API_TOKEN}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      // 실제 사용하는 Replicate 모델의 버전으로 변경해야 합니다.
-      version: "ohdurma/feple-ai-generator", 
       input: {
         audio: fileUrl,
       },
-      // 분석 완료 시 결과를 받을 웹훅 URL (선택 사항)
+      // 분석 완료 시 결과를 받을 웹훅 URL
       webhook: webhookUrl,
       webhook_events_filter: ["completed"]
     }),
