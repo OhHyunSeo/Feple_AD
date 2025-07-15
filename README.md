@@ -1,285 +1,228 @@
-# Feple Dashboard
+# 🎙️ Feple Dashboard
 
-Feple Dashboard는 고객 상담사 평가 및 관리를 위한 대시보드 시스템입니다.
+Feple Dashboard는 **AI 기반 음성 상담 분석 시스템**으로, 고객 상담사의 성과를 실시간으로 평가하고 관리할 수 있는 종합 대시보드입니다.
+
+## ✨ 주요 기능
+
+### 🤖 **AI 음성 분석**
+- **실시간 오디오 분석**: Replicate AI를 통한 상담 내용 실시간 분석
+- **감정 분석**: 고객과 상담사의 감정 변화 추적
+- **대화 품질 평가**: 존댓말 사용률, 공감 표현, 응답 속도 등 종합 평가
+- **자동 전사**: 음성을 텍스트로 변환하여 대화 내용 시각화
+
+### 📊 **성과 관리**
+- **개인 대시보드**: 상담사별 성과 지표 및 개선 포인트 제공
+- **팀 관리**: QC 담당자를 위한 팀 전체 성과 모니터링
+- **실시간 알림**: 위험 상황 및 개선 필요 사항 즉시 알림
+- **상세 리포트**: 상담 세션별 상세 분석 결과 제공
+
+### 🎯 **사용자 맞춤형 인터페이스**
+- **역할별 접근**: 상담사용/QC팀용 분리된 인터페이스
+- **반응형 디자인**: 데스크톱, 태블릿, 모바일 최적화
+- **실시간 업데이트**: 분석 결과 실시간 반영
 
 ## 🚀 기술 스택
 
-- **프론트엔드**: Next.js 15.3.5, React 19, TypeScript
-- **스타일링**: Tailwind CSS, Radix UI
-- **차트**: Recharts
-- **아이콘**: Lucide React
-- **백엔드**: Supabase (추가 예정)
-- **ORM**: Prisma (추가 예정)
+### **Frontend**
+- **Framework**: Next.js 15.3.5 (App Router)
+- **Language**: TypeScript 5.x
+- **UI Library**: React 19
+- **Styling**: Tailwind CSS + Radix UI
+- **Animation**: Framer Motion
+- **Icons**: Heroicons + Lucide React
+- **Charts**: Recharts
+- **HTTP Client**: Axios
 
-## 📋 Supabase + Prisma ORM 도입 계획
+### **Backend & AI**
+- **AI Platform**: Replicate (음성 분석 모델)
+- **Database**: Supabase (PostgreSQL)
+- **ORM**: Prisma
+- **File Storage**: Supabase Storage
+- **Real-time**: Webhook 기반 실시간 업데이트
 
-### 1단계: 환경 설정 및 패키지 설치
+### **DevOps & Deployment**
+- **Hosting**: Vercel
+- **Version Control**: Git + GitHub
+- **Package Manager**: npm
+- **Build Tool**: Turbopack
+- **Linting**: ESLint + Next.js Config
 
-#### 1.1 필요한 패키지 설치
-```bash
-# Supabase 관련 패키지
-npm install @supabase/supabase-js @supabase/auth-helpers-nextjs @supabase/auth-ui-react @supabase/auth-ui-shared
+## 📁 프로젝트 구조
 
-# Prisma 관련 패키지
-npm install prisma @prisma/client
-npm install -D prisma
-
-# 인증 및 보안 관련
-npm install jose
-npm install bcryptjs
-npm install -D @types/bcryptjs
-
-# 환경변수 관리
-npm install dotenv
+```
+src/
+├── app/                    # Next.js App Router
+│   ├── api/               # API Routes
+│   │   ├── analyze-url/   # 음성 분석 시작
+│   │   ├── webhook/       # Replicate 콜백 처리
+│   │   └── predictions/   # 분석 결과 조회
+│   ├── consultant/        # 상담사 전용 페이지
+│   │   ├── upload/        # 음성 파일 업로드
+│   │   └── performance/   # 개인 성과 조회
+│   ├── qc/               # QC팀 전용 페이지
+│   ├── layout.tsx        # 글로벌 레이아웃
+│   └── page.tsx          # 역할 선택 홈페이지
+├── components/           # 재사용 컴포넌트
+│   ├── ui/              # 기본 UI 컴포넌트
+│   │   ├── Button.tsx
+│   │   ├── Card.tsx
+│   │   ├── Select.tsx
+│   │   └── Badge.tsx
+│   ├── ResultsDisplay.tsx # 분석 결과 표시
+│   ├── DashboardLayout.tsx
+│   └── Sidebar.tsx
+├── hooks/               # Custom Hooks
+│   ├── useConsultants.ts
+│   ├── usePerformance.ts
+│   ├── usePagination.ts
+│   ├── useFilters.ts
+│   └── useModal.ts
+├── context/            # React Context
+│   └── AnalysisResultContext.tsx
+├── lib/               # 유틸리티 및 설정
+│   ├── supabaseClient.ts
+│   └── utils.ts
+├── types/             # TypeScript 타입 정의
+├── constants/         # 상수 및 설정
+└── styles/           # 스타일 관련
 ```
 
-#### 1.2 환경변수 설정
-```env
+## 🔧 설치 및 실행
+
+### **사전 요구사항**
+- Node.js 18+ 
+- npm 또는 yarn
+- Supabase 프로젝트
+- Replicate API 키
+
+### **환경 변수 설정**
+```bash
 # .env.local
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 DATABASE_URL=your_database_url
+REPLICATE_API_TOKEN=your_replicate_token
 ```
 
-### 2단계: 데이터베이스 스키마 설계
-
-#### 2.1 주요 테이블 구조
-- **users**: 사용자 정보 (관리자, QC 담당자)
-- **teams**: 팀 정보
-- **consultants**: 상담사 정보
-- **evaluations**: 평가 정보
-- **evaluation_categories**: 평가 카테고리
-- **performance_metrics**: 성과 지표
-- **inspections**: 점검 기록
-- **risk_alerts**: 위험 알림
-
-#### 2.2 Prisma 스키마 파일 생성
-```prisma
-// prisma/schema.prisma
-generator client {
-  provider = "prisma-client-js"
-}
-
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String
-  role      UserRole @default(ADMIN)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Team {
-  id          String       @id @default(cuid())
-  name        String
-  leaderId    String?
-  memberCount Int          @default(0)
-  consultants Consultant[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-}
-
-model Consultant {
-  id                String       @id @default(cuid())
-  name              String
-  email             String       @unique
-  position          String
-  status            ConsultantStatus @default(ACTIVE)
-  teamId            String
-  team              Team         @relation(fields: [teamId], references: [id])
-  satisfactionScore Float        @default(0)
-  evaluations       Evaluation[]
-  inspections       Inspection[]
-  riskAlerts        RiskAlert[]
-  createdAt         DateTime     @default(now())
-  updatedAt         DateTime     @updatedAt
-}
-
-// 추가 모델들...
-```
-
-### 3단계: 인증 시스템 구현
-
-#### 3.1 Supabase 클라이언트 설정
-```typescript
-// lib/supabase/client.ts
-// lib/supabase/server.ts
-// 클라이언트 및 서버 사이드 Supabase 클라이언트 설정
-```
-
-#### 3.2 인증 미들웨어 구현
-```typescript
-// middleware.ts
-// 인증 확인 및 리다이렉션 로직
-```
-
-#### 3.3 로그인/회원가입 페이지 구현
-```typescript
-// app/auth/login/page.tsx
-// app/auth/signup/page.tsx
-// 인증 UI 컴포넌트
-```
-
-### 4단계: 데이터베이스 연동
-
-#### 4.1 Prisma 클라이언트 설정
-```typescript
-// lib/prisma.ts
-// Prisma 클라이언트 싱글톤 설정
-```
-
-#### 4.2 API 라우트 구현
-```typescript
-// app/api/consultants/route.ts
-// app/api/teams/route.ts
-// app/api/evaluations/route.ts
-// REST API 엔드포인트
-```
-
-#### 4.3 데이터 액세스 레이어
-```typescript
-// lib/database/consultants.ts
-// lib/database/teams.ts
-// lib/database/evaluations.ts
-// 데이터베이스 쿼리 함수들
-```
-
-### 5단계: 기존 목데이터 마이그레이션
-
-#### 5.1 시드 데이터 생성
-```typescript
-// prisma/seed.ts
-// 기존 목데이터를 데이터베이스에 삽입
-```
-
-#### 5.2 데이터 마이그레이션 스크립트
-```bash
-# 데이터베이스 마이그레이션 실행
-npx prisma migrate dev --name init
-npx prisma db seed
-```
-
-### 6단계: 프론트엔드 연동
-
-#### 6.1 React Query/SWR 도입 (선택사항)
-```bash
-npm install @tanstack/react-query
-# 또는
-npm install swr
-```
-
-#### 6.2 커스텀 훅 구현
-```typescript
-// hooks/useConsultants.ts
-// hooks/useTeams.ts
-// hooks/useEvaluations.ts
-// 데이터 페칭 훅
-```
-
-#### 6.3 기존 컴포넌트 수정
-- 정적 데이터를 API 호출로 변경
-- 로딩 상태 및 에러 처리 추가
-- 실시간 업데이트 구현
-
-### 7단계: 보안 및 최적화
-
-#### 7.1 Row Level Security (RLS) 설정
-```sql
--- Supabase RLS 정책 설정
-ALTER TABLE consultants ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Users can view consultants" ON consultants FOR SELECT USING (true);
-```
-
-#### 7.2 타입 안전성 강화
-```typescript
-// types/database.ts
-// Prisma 타입 확장 및 커스텀 타입 정의
-```
-
-### 8단계: 테스트 및 배포
-
-#### 8.1 개발 환경 설정
-```bash
-# 개발 서버 실행
-npm run dev
-
-# 데이터베이스 스키마 확인
-npx prisma studio
-```
-
-#### 8.2 프로덕션 배포
-```bash
-# 프로덕션 빌드
-npm run build
-
-# 데이터베이스 마이그레이션 (프로덕션)
-npx prisma migrate deploy
-```
-
-## 📂 예상 프로젝트 구조
-
-```
-src/
-├── app/
-│   ├── api/
-│   │   ├── auth/
-│   │   ├── consultants/
-│   │   ├── teams/
-│   │   └── evaluations/
-│   ├── auth/
-│   │   ├── login/
-│   │   └── signup/
-│   └── (existing pages)
-├── lib/
-│   ├── supabase/
-│   ├── database/
-│   ├── auth/
-│   └── prisma.ts
-├── hooks/
-├── types/
-└── prisma/
-    ├── schema.prisma
-    ├── migrations/
-    └── seed.ts
-```
-
-## 🔧 개발 시작하기
-
+### **설치 및 실행**
 ```bash
 # 의존성 설치
 npm install
 
-# 환경변수 설정
-cp .env.example .env.local
-
-# 데이터베이스 마이그레이션
-npx prisma migrate dev
-
-# 시드 데이터 삽입
-npx prisma db seed
-
 # 개발 서버 실행
 npm run dev
+
+# 프로덕션 빌드
+npm run build
+npm start
+
+# 데이터베이스 시드
+npm run db:seed
 ```
 
-## 📝 작업 순서
+## 🎯 사용 방법
 
-1. **환경 설정**: 패키지 설치 및 환경변수 설정
-2. **데이터베이스 설계**: Prisma 스키마 작성
-3. **인증 시스템**: Supabase Auth 설정
-4. **API 구현**: REST API 엔드포인트 작성
-5. **데이터 마이그레이션**: 기존 목데이터 이전
-6. **프론트엔드 연동**: 컴포넌트 수정 및 훅 구현
-7. **테스트 및 최적화**: 성능 최적화 및 보안 강화
+### **1. 역할 선택**
+- 홈페이지에서 **상담사** 또는 **QC팀** 역할 선택
 
-각 단계는 순차적으로 진행하며, 각 단계 완료 후 테스트를 통해 정상 작동을 확인합니다.
+### **2. 상담사 워크플로우**
+1. **상담사 대시보드** 접속
+2. **음성 파일 업로드** (MP3, WAV 등)
+3. **AI 분석 대기** (실시간 진행 상황 표시)
+4. **분석 결과 확인** (성과 지표, 개선 포인트, 전사 내용)
+
+### **3. QC팀 워크플로우**
+1. **QC 대시보드** 접속
+2. **전체 상담사 성과** 모니터링
+3. **위험 알림** 확인 및 조치
+4. **상세 리포트** 생성 및 피드백
+
+## 📊 AI 분석 지표
+
+### **대화 품질 지표**
+- 존댓말 사용률
+- 긍정/부정 표현 비율
+- 공감 표현 비율
+- 완곡어 사용률
+- 사과 표현 비율
+
+### **상담 효율성 지표**
+- 평균 응답 속도
+- 대화 가로채기 횟수
+- 문제 해결 제안 수준
+- 고객 감정 변화 추이
+
+### **전체 평가**
+- 상담 주제 분류
+- 상담 결과 (해결/미해결)
+- 종합 점수
+- 개선 권장사항
+
+## 🔄 데이터 플로우
+
+```mermaid
+graph LR
+    A[음성 파일 업로드] --> B[Supabase Storage]
+    B --> C[Replicate AI 분석]
+    C --> D[Webhook 결과 수신]
+    D --> E[Supabase DB 저장]
+    E --> F[실시간 UI 업데이트]
+    F --> G[분석 결과 표시]
+```
+
+## 🔐 보안 및 권한
+
+- **역할 기반 접근 제어**: 상담사/QC팀 분리된 권한
+- **파일 업로드 검증**: 음성 파일 형식 및 크기 제한
+- **API 보안**: 환경 변수를 통한 인증 키 관리
+- **데이터 암호화**: Supabase 기본 암호화 적용
+
+## 🚀 배포
+
+### **Vercel 배포 (추천)**
+```bash
+# Vercel CLI 설치
+npm i -g vercel
+
+# 배포
+vercel --prod
+```
+
+### **환경 변수 설정**
+Vercel Dashboard에서 다음 환경 변수들을 설정해야 합니다:
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `DATABASE_URL`
+- `REPLICATE_API_TOKEN`
+
+## 🤝 기여 방법
+
+1. **Fork** 후 로컬에 클론
+2. **Feature branch** 생성 (`git checkout -b feature/amazing-feature`)
+3. **커밋** (`git commit -m 'Add amazing feature'`)
+4. **Push** (`git push origin feature/amazing-feature`)
+5. **Pull Request** 생성
+
+## 📝 라이센스
+
+이 프로젝트는 MIT 라이센스를 따릅니다.
+
+## 📞 지원
+
+- **이슈 리포팅**: GitHub Issues
+- **기능 요청**: GitHub Discussions
+- **문의사항**: 프로젝트 관리자에게 연락
 
 ---
 
-이 계획은 기존 프로젝트의 구조를 유지하면서 점진적으로 Supabase와 Prisma를 도입하는 것을 목표로 합니다.
+## 🔮 향후 계획
+
+- [ ] **실시간 모니터링**: WebSocket을 통한 실시간 상담 모니터링
+- [ ] **고급 분석**: 감정 변화 패턴, 고객 만족도 예측
+- [ ] **자동 코칭**: AI 기반 개인별 맞춤 코칭 제안
+- [ ] **다국어 지원**: 영어, 중국어 상담 분석 지원
+- [ ] **모바일 앱**: React Native 기반 모바일 앱 개발
+
+**Made with ❤️ for better customer service**
