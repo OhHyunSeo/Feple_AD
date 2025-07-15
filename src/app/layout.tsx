@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import '@/styles/index.css'
+import { AnalysisResultProvider } from '@/context/AnalysisResultContext'
 
 export const metadata: Metadata = {
   title: 'Feple Dashboard',
@@ -14,7 +15,9 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className="bg-white font-sans antialiased">
-        {children}
+        <AnalysisResultProvider>
+          {children}
+        </AnalysisResultProvider>
       </body>
     </html>
   );
