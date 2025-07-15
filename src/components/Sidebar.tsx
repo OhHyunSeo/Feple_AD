@@ -97,7 +97,7 @@ export default function Sidebar({ onWidthChange }: SidebarProps) {
       </nav>
 
       {/* 사용자 정보 */}
-      <div className="p-4 border-t border-pink-200 border-r border-pink-200">
+      <div className="p-4 border-t border-r border-pink-200">
         <div className={`flex items-center gap-3 p-3 bg-gradient-to-r from-pink-50 to-purple-50 rounded-xl transition-all duration-300 ${
           shouldShowContent ? 'flex-row' : 'flex-col'
         }`}>
