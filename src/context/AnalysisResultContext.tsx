@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useState, useContext, ReactNode, useEffect } from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { supabase } from '@/lib/supabaseClient';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -72,7 +72,19 @@ export const AnalysisResultProvider = ({ children }: { children: ReactNode }) =>
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : '분석 시작 요청에 실패했습니다.';
       console.error("An error occurred during the analysis process:", error);
-      setError(errorMessage);
+      if (axios.isAxiosError(error) && error.response) {
+        console.error("Server response data:", error.response.data);
+        // 서버에서 보낸 에러 메시지가 있다면 이를 사용
+        if (typeof error.response.data === 'object' && error.response.data !== null && 'message' in error.response.data) {
+          setError((error.response.data as { message: string }).message);
+        } else if (typeof error.response.data === 'string') {
+          setError(error.response.data);
+        } else {
+          setError(errorMessage);
+        }
+      } else {
+        setError(errorMessage);
+      }
       setIsLoading(false);
     }
   };
