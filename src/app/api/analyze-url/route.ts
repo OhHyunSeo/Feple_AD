@@ -6,6 +6,31 @@ async function startReplicatePrediction(fileUrl: string) {
     throw new Error("Missing REPLICATE_API_TOKEN environment variable");
   }
 
+  // Vercel에서 제공하는 URL 환경 변수 사용
+  let baseUrl = '';
+  
+  if (process.env.VERCEL_URL) {
+    // Vercel production/preview deployment
+    baseUrl = `https://${process.env.VERCEL_URL}`;
+  } else if (process.env.NEXT_PUBLIC_VERCEL_URL) {
+    // Custom environment variable
+    baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL.startsWith('http') 
+      ? process.env.NEXT_PUBLIC_VERCEL_URL
+      : `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`;
+  } else {
+    // Development fallback
+    baseUrl = 'http://localhost:3000';
+  }
+
+  const webhookUrl = `${baseUrl}/api/webhook`;
+  
+  // Validate webhook URL
+  if (!webhookUrl.startsWith('https://') && !webhookUrl.startsWith('http://localhost')) {
+    throw new Error(`Invalid webhook URL: ${webhookUrl}. Must be HTTPS or localhost.`);
+  }
+  
+  console.log(`Using webhook URL: ${webhookUrl}`);
+
   const response = await fetch("https://api.replicate.com/v1/predictions", {
     method: "POST",
     headers: {
@@ -19,7 +44,7 @@ async function startReplicatePrediction(fileUrl: string) {
         audio: fileUrl,
       },
       // 분석 완료 시 결과를 받을 웹훅 URL (선택 사항)
-      webhook: `${process.env.NEXT_PUBLIC_VERCEL_URL}/api/webhook`,
+      webhook: webhookUrl,
       webhook_events_filter: ["completed"]
     }),
   });
