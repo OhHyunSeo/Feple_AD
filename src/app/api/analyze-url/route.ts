@@ -24,8 +24,12 @@ async function startReplicatePrediction(fileUrl: string) {
 
   const webhookUrl = `${baseUrl}/api/webhook`;
   
-  // Validate webhook URL
-  if (!webhookUrl.startsWith('https://') && !webhookUrl.startsWith('http://localhost')) {
+  // 웹훅 URL 검증
+  if (process.env.NODE_ENV === 'production') {
+    if (!webhookUrl.startsWith('https://')) {
+      throw new Error(`Invalid webhook URL in production: ${webhookUrl}. Must be HTTPS.`);
+    }
+  } else if (!webhookUrl.startsWith('http://localhost')) {
     throw new Error(`Invalid webhook URL: ${webhookUrl}. Must be HTTPS or localhost.`);
   }
   
