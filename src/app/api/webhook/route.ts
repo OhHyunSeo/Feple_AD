@@ -37,7 +37,7 @@ export async function POST(request: Request) {
         });
 
       if (dbError) {
-        console.error(`Database insert error: ${dbError.message}`);
+        console.error("Database insert error:", dbError);
         // DB 저장 실패 시 에러 응답
         return NextResponse.json({ message: `Database error: ${dbError.message}` }, { status: 500 });
       }
