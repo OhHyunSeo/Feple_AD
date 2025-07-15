@@ -1,254 +1,285 @@
-# 🎯 Feple Dashboard
+# Feple Dashboard
 
-> 상담사 평가 및 QC 관리를 위한 종합 대시보드 시스템
+Feple Dashboard는 고객 상담사 평가 및 관리를 위한 대시보드 시스템입니다.
 
-[![Next.js](https://img.shields.io/badge/Next.js-15.3.5-black?logo=next.js)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue?logo=typescript)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.0+-06B6D4?logo=tailwindcss)](https://tailwindcss.com/)
-[![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-black?logo=vercel)](https://vercel.com/)
+## 🚀 기술 스택
 
-## 📋 목차
+- **프론트엔드**: Next.js 15.3.5, React 19, TypeScript
+- **스타일링**: Tailwind CSS, Radix UI
+- **차트**: Recharts
+- **아이콘**: Lucide React
+- **백엔드**: Supabase (추가 예정)
+- **ORM**: Prisma (추가 예정)
 
-- [프로젝트 개요](#-프로젝트-개요)
-- [주요 기능](#-주요-기능)
-- [시스템 구조](#-시스템-구조)
-- [기술 스택](#-기술-스택)
-- [시작하기](#-시작하기)
-- [프로젝트 구조](#-프로젝트-구조)
-- [역할별 기능](#-역할별-기능)
-- [개발 가이드](#-개발-가이드)
+## 📋 Supabase + Prisma ORM 도입 계획
 
-## 🎯 프로젝트 개요
+### 1단계: 환경 설정 및 패키지 설치
 
-Feple Dashboard는 **상담센터의 품질관리(QC)와 상담사 평가**를 위한 종합 관리 시스템입니다. 역할 기반 접근 제어를 통해 QC팀과 상담사에게 각각 최적화된 대시보드를 제공합니다.
-
-### 핵심 가치
-- 🎯 **데이터 기반 의사결정**: 실시간 성과 지표와 위험 알림
-- 👥 **역할별 맞춤 UI**: QC팀과 상담사를 위한 전용 대시보드
-- 📊 **직관적인 시각화**: 3열 레이아웃과 반응형 차트
-- ⚡ **실시간 모니터링**: 상담 품질과 성과의 즉시 추적
-
-## 🚀 주요 기능
-
-### 🔐 역할 기반 대시보드
-- **QC팀 대시보드**: 전체 상담사 모니터링 및 관리
-- **상담사 대시보드**: 개인 성과 조회 및 피드백 확인
-
-### 📊 QC팀 전용 기능
-- **3열 대시보드 레이아웃**
-  - 🔍 점검 추천 상담사 (우선순위별 정렬)
-  - ⚠️ 위험 등급 알림 (F/G 등급 자동 감지)
-  - 👥 팀별 상담원 관리 (드롭다운 선택)
-
-- **상담사 관리**
-  - 팀별 상담사 목록 및 현황
-  - 실시간 활동 상태 모니터링
-  - 만족도 점수 추적
-
-- **성과 모니터링**
-  - 부서별/상담사별 성과 분석
-  - 다기간 데이터 조회 (1일~1개월)
-  - 세부 평가 항목별 등급 확인
-
-### 👤 상담사 전용 기능
-- **개인 성과 대시보드**
-  - 오늘의 상담 건수 및 평균 시간
-  - 고객 만족도 점수
-  - 문제 해결율
-
-- **피드백 시스템**
-  - QC 평가 결과 확인
-  - 고객 후기 열람
-  - 개선 권장사항 확인
-
-### 🎨 UX/UI 기능
-- **확장형 사이드바**: 호버 시 슈르륵 확장되는 애니메이션
-- **반응형 레이아웃**: 모든 화면 크기 지원
-- **분홍-보라 그라데이션**: 브랜드 아이덴티티 반영
-- **다크/라이트 테마**: 사용자 선호도 대응
-
-## 🏗️ 시스템 구조
-
-```
-📱 역할 선택 페이지 (/)
-├── 🔧 QC팀 대시보드 (/qc)
-│   ├── 📊 메인 대시보드 (3열 레이아웃)
-│   ├── 👥 상담사 관리 (/consultants)
-│   └── 📈 성과 모니터링 (/qc/performance)
-└── 👤 상담사 대시보드 (/consultant)
-    ├── 🏠 개인 대시보드
-    └── 📊 개인 성과 조회 (/consultant/performance)
-```
-
-## 💻 기술 스택
-
-### Frontend
-- **Framework**: Next.js 15.3.5 (App Router)
-- **Language**: TypeScript 5.0+
-- **Styling**: Tailwind CSS 3.4+
-- **Icons**: Lucide React
-- **Charts**: Recharts
-
-### Development & Deployment
-- **Package Manager**: npm
-- **Deployment**: Vercel
-- **Version Control**: Git & GitHub
-- **Code Quality**: ESLint, TypeScript
-
-### Architecture
-- **Routing**: Next.js App Router
-- **State Management**: React useState/useEffect
-- **Component Structure**: 모듈화된 재사용 컴포넌트
-- **Responsive Design**: Mobile-first 접근법
-
-## 🚀 시작하기
-
-### 필수 요구사항
-- Node.js 18.0 이상
-- npm 9.0 이상
-
-### 설치 및 실행
-
-1. **저장소 클론**
+#### 1.1 필요한 패키지 설치
 ```bash
-git clone https://github.com/OhHyunSeo/Feple_AD.git
-cd Feple_dashboard
+# Supabase 관련 패키지
+npm install @supabase/supabase-js @supabase/auth-helpers-nextjs @supabase/auth-ui-react @supabase/auth-ui-shared
+
+# Prisma 관련 패키지
+npm install prisma @prisma/client
+npm install -D prisma
+
+# 인증 및 보안 관련
+npm install jose
+npm install bcryptjs
+npm install -D @types/bcryptjs
+
+# 환경변수 관리
+npm install dotenv
 ```
 
-2. **의존성 설치**
-```bash
-npm install
+#### 1.2 환경변수 설정
+```env
+# .env.local
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+DATABASE_URL=your_database_url
 ```
 
-3. **개발 서버 시작**
+### 2단계: 데이터베이스 스키마 설계
+
+#### 2.1 주요 테이블 구조
+- **users**: 사용자 정보 (관리자, QC 담당자)
+- **teams**: 팀 정보
+- **consultants**: 상담사 정보
+- **evaluations**: 평가 정보
+- **evaluation_categories**: 평가 카테고리
+- **performance_metrics**: 성과 지표
+- **inspections**: 점검 기록
+- **risk_alerts**: 위험 알림
+
+#### 2.2 Prisma 스키마 파일 생성
+```prisma
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  role      UserRole @default(ADMIN)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Team {
+  id          String       @id @default(cuid())
+  name        String
+  leaderId    String?
+  memberCount Int          @default(0)
+  consultants Consultant[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Consultant {
+  id                String       @id @default(cuid())
+  name              String
+  email             String       @unique
+  position          String
+  status            ConsultantStatus @default(ACTIVE)
+  teamId            String
+  team              Team         @relation(fields: [teamId], references: [id])
+  satisfactionScore Float        @default(0)
+  evaluations       Evaluation[]
+  inspections       Inspection[]
+  riskAlerts        RiskAlert[]
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+}
+
+// 추가 모델들...
+```
+
+### 3단계: 인증 시스템 구현
+
+#### 3.1 Supabase 클라이언트 설정
+```typescript
+// lib/supabase/client.ts
+// lib/supabase/server.ts
+// 클라이언트 및 서버 사이드 Supabase 클라이언트 설정
+```
+
+#### 3.2 인증 미들웨어 구현
+```typescript
+// middleware.ts
+// 인증 확인 및 리다이렉션 로직
+```
+
+#### 3.3 로그인/회원가입 페이지 구현
+```typescript
+// app/auth/login/page.tsx
+// app/auth/signup/page.tsx
+// 인증 UI 컴포넌트
+```
+
+### 4단계: 데이터베이스 연동
+
+#### 4.1 Prisma 클라이언트 설정
+```typescript
+// lib/prisma.ts
+// Prisma 클라이언트 싱글톤 설정
+```
+
+#### 4.2 API 라우트 구현
+```typescript
+// app/api/consultants/route.ts
+// app/api/teams/route.ts
+// app/api/evaluations/route.ts
+// REST API 엔드포인트
+```
+
+#### 4.3 데이터 액세스 레이어
+```typescript
+// lib/database/consultants.ts
+// lib/database/teams.ts
+// lib/database/evaluations.ts
+// 데이터베이스 쿼리 함수들
+```
+
+### 5단계: 기존 목데이터 마이그레이션
+
+#### 5.1 시드 데이터 생성
+```typescript
+// prisma/seed.ts
+// 기존 목데이터를 데이터베이스에 삽입
+```
+
+#### 5.2 데이터 마이그레이션 스크립트
 ```bash
+# 데이터베이스 마이그레이션 실행
+npx prisma migrate dev --name init
+npx prisma db seed
+```
+
+### 6단계: 프론트엔드 연동
+
+#### 6.1 React Query/SWR 도입 (선택사항)
+```bash
+npm install @tanstack/react-query
+# 또는
+npm install swr
+```
+
+#### 6.2 커스텀 훅 구현
+```typescript
+// hooks/useConsultants.ts
+// hooks/useTeams.ts
+// hooks/useEvaluations.ts
+// 데이터 페칭 훅
+```
+
+#### 6.3 기존 컴포넌트 수정
+- 정적 데이터를 API 호출로 변경
+- 로딩 상태 및 에러 처리 추가
+- 실시간 업데이트 구현
+
+### 7단계: 보안 및 최적화
+
+#### 7.1 Row Level Security (RLS) 설정
+```sql
+-- Supabase RLS 정책 설정
+ALTER TABLE consultants ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can view consultants" ON consultants FOR SELECT USING (true);
+```
+
+#### 7.2 타입 안전성 강화
+```typescript
+// types/database.ts
+// Prisma 타입 확장 및 커스텀 타입 정의
+```
+
+### 8단계: 테스트 및 배포
+
+#### 8.1 개발 환경 설정
+```bash
+# 개발 서버 실행
 npm run dev
+
+# 데이터베이스 스키마 확인
+npx prisma studio
 ```
 
-4. **브라우저에서 확인**
-```
-http://localhost:3000
-```
-
-### 빌드 및 배포
-
+#### 8.2 프로덕션 배포
 ```bash
 # 프로덕션 빌드
 npm run build
 
-# 빌드 미리보기
-npm run start
-
-# 린트 검사
-npm run lint
+# 데이터베이스 마이그레이션 (프로덕션)
+npx prisma migrate deploy
 ```
 
-## 📁 프로젝트 구조
+## 📂 예상 프로젝트 구조
 
 ```
 src/
-├── app/                          # App Router 페이지
-│   ├── page.tsx                 # 역할 선택 페이지
-│   ├── consultant/              # 상담사 전용 영역
-│   │   ├── page.tsx            # 상담사 메인 대시보드
-│   │   └── performance/        # 상담사 성과 조회
-│   ├── qc/                     # QC팀 전용 영역
-│   │   ├── page.tsx           # QC 메인 대시보드 (3열)
-│   │   └── performance/       # QC 성과 모니터링
-│   ├── consultants/           # 상담사 관리 (QC 전용)
-│   ├── performance/           # 레거시 성과 페이지
-│   └── layout.tsx            # 루트 레이아웃
-├── components/               # 재사용 컴포넌트
-│   ├── DashboardLayout.tsx  # 메인 레이아웃
-│   ├── Sidebar.tsx          # 확장형 사이드바
-│   ├── Header.tsx           # 상단 헤더
-│   └── [기타 컴포넌트들]
-└── lib/                     # 유틸리티 함수
-    └── utils.ts
+├── app/
+│   ├── api/
+│   │   ├── auth/
+│   │   ├── consultants/
+│   │   ├── teams/
+│   │   └── evaluations/
+│   ├── auth/
+│   │   ├── login/
+│   │   └── signup/
+│   └── (existing pages)
+├── lib/
+│   ├── supabase/
+│   ├── database/
+│   ├── auth/
+│   └── prisma.ts
+├── hooks/
+├── types/
+└── prisma/
+    ├── schema.prisma
+    ├── migrations/
+    └── seed.ts
 ```
 
-## 👥 역할별 기능
+## 🔧 개발 시작하기
 
-### 🔧 QC팀 (품질관리팀)
-| 기능 | 설명 | 경로 |
-|------|------|------|
-| 메인 대시보드 | 3열 레이아웃 종합 모니터링 | `/qc` |
-| 상담사 관리 | 팀별 상담사 현황 및 관리 | `/consultants` |
-| 성과 모니터링 | 부서/상담사별 상세 분석 | `/qc/performance` |
-| 점검 추천 | 우선순위별 점검 대상 관리 | `/qc` (좌측 컬럼) |
-| 위험 알림 | F/G 등급 상담사 즉시 확인 | `/qc` (중앙 컬럼) |
+```bash
+# 의존성 설치
+npm install
 
-### 👤 상담사
-| 기능 | 설명 | 경로 |
-|------|------|------|
-| 개인 대시보드 | 오늘의 성과 및 통계 | `/consultant` |
-| 성과 조회 | 개인 평가 결과 확인 | `/consultant/performance` |
-| 피드백 확인 | QC 평가 및 고객 후기 | `/consultant` |
-| 주간 성과 | 이번 주 종합 리포트 | `/consultant` |
+# 환경변수 설정
+cp .env.example .env.local
 
-## 🛠️ 개발 가이드
+# 데이터베이스 마이그레이션
+npx prisma migrate dev
 
-### 새로운 컴포넌트 추가
-```tsx
-// src/components/NewComponent.tsx
-'use client'
+# 시드 데이터 삽입
+npx prisma db seed
 
-import { useState } from 'react'
-
-interface NewComponentProps {
-  // props 정의
-}
-
-export default function NewComponent({ }: NewComponentProps) {
-  return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-      {/* 컴포넌트 내용 */}
-    </div>
-  )
-}
+# 개발 서버 실행
+npm run dev
 ```
 
-### 스타일링 가이드라인
-- **색상 팔레트**: Pink-Purple 그라데이션 기반
-- **간격**: Tailwind의 4px 단위 사용
-- **반응형**: Mobile-first 접근법
-- **애니메이션**: `transition-all duration-300` 표준
+## 📝 작업 순서
 
-### 상태 관리 패턴
-```tsx
-// 컴포넌트 상태
-const [isLoading, setIsLoading] = useState(false)
-const [data, setData] = useState<DataType[]>([])
+1. **환경 설정**: 패키지 설치 및 환경변수 설정
+2. **데이터베이스 설계**: Prisma 스키마 작성
+3. **인증 시스템**: Supabase Auth 설정
+4. **API 구현**: REST API 엔드포인트 작성
+5. **데이터 마이그레이션**: 기존 목데이터 이전
+6. **프론트엔드 연동**: 컴포넌트 수정 및 훅 구현
+7. **테스트 및 최적화**: 성능 최적화 및 보안 강화
 
-// 이벤트 핸들러
-const handleAction = async () => {
-  setIsLoading(true)
-  try {
-    // 비즈니스 로직
-  } finally {
-    setIsLoading(false)
-  }
-}
-```
-
-## 🤝 기여하기
-
-1. 이슈 생성 또는 기존 이슈 확인
-2. 새 브랜치 생성: `git checkout -b feature/새기능`
-3. 변경사항 커밋: `git commit -m 'feat: 새 기능 추가'`
-4. 브랜치 푸시: `git push origin feature/새기능`
-5. Pull Request 생성
-
-### 커밋 컨벤션
-- `feat:` 새 기능 추가
-- `fix:` 버그 수정
-- `docs:` 문서 수정
-- `style:` 코드 스타일 변경
-- `refactor:` 코드 리팩토링
-- `test:` 테스트 추가/수정
-
-## 📄 라이선스
-
-이 프로젝트는 MIT 라이선스 하에 제공됩니다.
+각 단계는 순차적으로 진행하며, 각 단계 완료 후 테스트를 통해 정상 작동을 확인합니다.
 
 ---
+
+이 계획은 기존 프로젝트의 구조를 유지하면서 점진적으로 Supabase와 Prisma를 도입하는 것을 목표로 합니다.

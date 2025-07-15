@@ -1,0 +1,290 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model analysis_results {
+  session_id String   @id @default("NULL")
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  metrics    Json?
+  transcript Json?
+  user_id    String?  @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model counselor_evaluations {
+  session_id                String    @id
+  politeness_score          Decimal?  @db.Decimal(6, 3)
+  politeness_grade          String?   @db.VarChar(2)
+  empathy_score             Decimal?  @db.Decimal(6, 3)
+  empathy_grade             String?   @db.VarChar(2)
+  problem_solving_score     Decimal?  @db.Decimal(6, 3)
+  problem_solving_grade     String?   @db.VarChar(2)
+  emotional_stability_score Decimal?  @db.Decimal(6, 3)
+  emotional_stability_grade String?   @db.VarChar(2)
+  stability_score           Decimal?  @db.Decimal(6, 3)
+  stability_grade           String?   @db.VarChar(2)
+  gpt_feedback              String?
+  evaluation_model          String?   @default("gpt-4o-mini") @db.VarChar(50)
+  data_source               String?   @db.VarChar(100)
+  created_at                DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at                DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@index([created_at], map: "idx_counselor_evaluations_created_at")
+}
+
+model User {
+  id            String       @id @default(cuid())
+  email         String       @unique
+  name          String
+  role          UserRole     @default(CONSULTANT)
+  phone         String?
+  avatar        String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  consultant    Consultant?
+  qcEvaluations Evaluation[] @relation("QCEvaluator")
+  inspections   Inspection[] @relation("QCInspector")
+
+  @@map("users")
+}
+
+model Team {
+  id          String       @id @default(cuid())
+  name        String
+  leaderId    String?
+  memberCount Int          @default(0)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  consultants Consultant[]
+
+  @@map("teams")
+}
+
+model Consultant {
+  id                String           @id @default(cuid())
+  userId            String           @unique
+  employeeId        String           @unique
+  name              String
+  email             String           @unique
+  position          String
+  status            ConsultantStatus @default(ACTIVE)
+  teamId            String
+  satisfactionScore Float            @default(0)
+  joinDate          DateTime         @default(now())
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  team              Team             @relation(fields: [teamId], references: [id])
+  user              User             @relation(fields: [userId], references: [id])
+  dailyStats        DailyStats[]
+  evaluations       Evaluation[]     @relation("ConsultantEvaluations")
+  inspections       Inspection[]     @relation("ConsultantInspections")
+  riskAlerts        RiskAlert[]
+  sessionData       SessionData[]
+  weeklyStats       WeeklyStats[]
+
+  @@map("consultants")
+}
+
+model DailyStats {
+  id                String     @id @default(cuid())
+  consultantId      String
+  date              DateTime
+  callsCompleted    Int        @default(0)
+  avgCallDuration   Float      @default(0)
+  satisfactionScore Float      @default(0)
+  resolvedIssues    Int        @default(0)
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+  consultant        Consultant @relation(fields: [consultantId], references: [id])
+
+  @@unique([consultantId, date])
+  @@map("daily_stats")
+}
+
+model WeeklyStats {
+  id              String     @id @default(cuid())
+  consultantId    String
+  weekStart       DateTime
+  weekEnd         DateTime
+  totalCalls      Int        @default(0)
+  avgSatisfaction Float      @default(0)
+  improvementRate Float      @default(0)
+  rankInTeam      Int?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  consultant      Consultant @relation(fields: [consultantId], references: [id])
+
+  @@unique([consultantId, weekStart])
+  @@map("weekly_stats")
+}
+
+model EvaluationCategory {
+  id             String          @id @default(cuid())
+  name           String
+  description    String?
+  weight         Float           @default(1.0)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  categoryScores CategoryScore[]
+
+  @@map("evaluation_categories")
+}
+
+model Evaluation {
+  id             String          @id @default(cuid())
+  consultantId   String
+  qcManagerId    String
+  evaluationDate DateTime
+  finalScore     Float
+  result         SessionResult   @default(PENDING)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  categoryScores CategoryScore[]
+  consultant     Consultant      @relation("ConsultantEvaluations", fields: [consultantId], references: [id])
+  qcManager      User            @relation("QCEvaluator", fields: [qcManagerId], references: [id])
+  feedback       Feedback?
+  riskAlerts     RiskAlert[]
+
+  @@map("evaluations")
+}
+
+model CategoryScore {
+  id                   String             @id @default(cuid())
+  evaluationId         String
+  evaluationCategoryId String
+  grade                EvaluationGrade
+  score                Float
+  severity             SeverityLevel      @default(LOW)
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  evaluationCategory   EvaluationCategory @relation(fields: [evaluationCategoryId], references: [id])
+  evaluation           Evaluation         @relation(fields: [evaluationId], references: [id])
+
+  @@unique([evaluationId, evaluationCategoryId])
+  @@map("category_scores")
+}
+
+model Feedback {
+  id           String     @id @default(cuid())
+  evaluationId String     @unique
+  strengths    String[]
+  improvements String[]
+  coaching     String[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  evaluation   Evaluation @relation(fields: [evaluationId], references: [id])
+
+  @@map("feedback")
+}
+
+model RiskAlert {
+  id             String        @id @default(cuid())
+  consultantId   String
+  evaluationId   String
+  severity       SeverityLevel @default(MEDIUM)
+  actionRequired Boolean       @default(false)
+  resolved       Boolean       @default(false)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  consultant     Consultant    @relation(fields: [consultantId], references: [id])
+  evaluation     Evaluation    @relation(fields: [evaluationId], references: [id])
+
+  @@map("risk_alerts")
+}
+
+model Inspection {
+  id                   String             @id @default(cuid())
+  consultantId         String
+  qcManagerId          String
+  inspectionDate       DateTime
+  daysSinceInspection  Int                @default(0)
+  recommendationReason String
+  priority             InspectionPriority @default(MEDIUM)
+  completed            Boolean            @default(false)
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  consultant           Consultant         @relation("ConsultantInspections", fields: [consultantId], references: [id])
+  qcManager            User               @relation("QCInspector", fields: [qcManagerId], references: [id])
+
+  @@map("inspections")
+}
+
+model SessionData {
+  id                 String          @id @default(cuid())
+  consultantId       String
+  sessionDate        DateTime
+  duration           Float
+  finalScore         Float
+  politeness         EvaluationGrade
+  empathy            EvaluationGrade
+  problemSolving     EvaluationGrade
+  emotionalStability EvaluationGrade
+  conversationFlow   EvaluationGrade
+  result             SessionResult   @default(PENDING)
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  consultant         Consultant      @relation(fields: [consultantId], references: [id])
+
+  @@map("session_data")
+}
+
+model DepartmentStats {
+  id             String   @id @default(cuid())
+  teamId         String
+  date           DateTime
+  totalCalls     Int      @default(0)
+  avgScore       Float    @default(0)
+  completionRate Float    @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([teamId, date])
+  @@map("department_stats")
+}
+
+enum UserRole {
+  ADMIN
+  QC_MANAGER
+  CONSULTANT
+  TEAM_LEAD
+}
+
+enum ConsultantStatus {
+  ACTIVE
+  INACTIVE
+  BREAK
+}
+
+enum EvaluationGrade {
+  A
+  B
+  C
+  D
+  F
+  G
+}
+
+enum SeverityLevel {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum InspectionPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum SessionResult {
+  PASS
+  FAIL
+  PENDING
+}
