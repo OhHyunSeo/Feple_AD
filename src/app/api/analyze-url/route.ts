@@ -43,7 +43,7 @@ async function startReplicatePrediction(fileUrl: string) {
     },
     body: JSON.stringify({
       // 실제 사용하는 Replicate 모델의 버전으로 변경해야 합니다.
-      version: "ohdurma/feple-ai-backend:aabfccaa466810596c17946b24c967767202dc921684cd141bdd943202aacad8", 
+      version: "ohdurma/feple-ai-backend:bda18901dc951006ecb8c5926300c15fcfd4749a59460685900528caae8e0bb0", 
       input: {
         audio: fileUrl,
       },
