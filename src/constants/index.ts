@@ -151,15 +151,7 @@ export const SEVERITY_COLORS = {
   warning: 'text-orange-600'
 };
 
-// ===== API 관련 상수 =====
-export const API_ENDPOINTS = {
-  CONSULTANTS: '/api/consultants',
-  TEAMS: '/api/teams',
-  PERFORMANCE: '/api/performance',
-  EVALUATIONS: '/api/evaluations',
-  RISK_ALERTS: '/api/risk-alerts',
-  INSPECTIONS: '/api/inspections'
-};
+
 
 // ===== 애니메이션 설정 =====
 export const ANIMATION_DURATION = {
