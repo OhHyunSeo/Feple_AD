@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useState, useContext, ReactNode, useEffect } from 'react';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import { supabase } from '@/lib/supabaseClient';
 import { v4 as uuidv4 } from 'uuid';
 

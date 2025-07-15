@@ -25,10 +25,12 @@ async function getReplicatePrediction(predictionId: string) {
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const predictionId = params.id;
+    const resolvedParams = await params;
+    const predictionId = resolvedParams.id;
+    
     if (!predictionId) {
       return NextResponse.json({ message: 'Prediction ID is required' }, { status: 400 });
     }
@@ -38,8 +40,7 @@ export async function GET(
     return NextResponse.json(prediction, { status: 200 });
 
   } catch (error: unknown) {
-    const predictionId = params.id;
-    console.error(`Error in /api/predictions/${predictionId}:`, error);
+    console.error(`Error in /api/predictions:`, error);
     const errorMessage = error instanceof Error ? error.message : 'Internal Server Error';
     return NextResponse.json({ message: errorMessage }, { status: 500 });
   }
