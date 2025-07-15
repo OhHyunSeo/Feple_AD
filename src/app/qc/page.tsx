@@ -10,6 +10,7 @@ export default function DashboardPage() {
   const [selectedTeam, setSelectedTeam] = useState<string>("");
   const [isTeamDropdownOpen, setIsTeamDropdownOpen] = useState(false);
   const [riskAlertPage, setRiskAlertPage] = useState(0);
+  const [inspectionPage, setInspectionPage] = useState(0);
 
   // 검색 데이터 (업데이트된 정적 데이터)
   const searchData = [
@@ -249,8 +250,23 @@ export default function DashboardPage() {
     return teamMembers[selectedTeam as keyof typeof teamMembers] || [];
   };
 
-  // 위험 등급 알림 페이지네이션
+  // 점검 추천 상담사 페이지네이션
   const ITEMS_PER_PAGE = 2;
+  const inspectionTotalPages = Math.ceil(inspectionRecommendations.length / ITEMS_PER_PAGE);
+  const paginatedInspectionRecommendations = inspectionRecommendations.slice(
+    inspectionPage * ITEMS_PER_PAGE,
+    (inspectionPage + 1) * ITEMS_PER_PAGE
+  );
+
+  const handleInspectionPrevPage = () => {
+    setInspectionPage(prev => Math.max(0, prev - 1));
+  };
+
+  const handleInspectionNextPage = () => {
+    setInspectionPage(prev => Math.min(inspectionTotalPages - 1, prev + 1));
+  };
+
+  // 위험 등급 알림 페이지네이션
   const totalPages = Math.ceil(riskAlerts.length / ITEMS_PER_PAGE);
   const paginatedRiskAlerts = riskAlerts.slice(
     riskAlertPage * ITEMS_PER_PAGE,
@@ -353,7 +369,7 @@ export default function DashboardPage() {
             </div>
             
             <div className="space-y-3 overflow-y-auto flex-1">
-              {inspectionRecommendations.map((recommendation) => (
+              {paginatedInspectionRecommendations.map((recommendation) => (
                 <div 
                   key={recommendation.id}
                   onClick={() => handleInspectionRecommendationClick(recommendation)}
@@ -392,6 +408,41 @@ export default function DashboardPage() {
                 </div>
               ))}
             </div>
+            
+            {/* 페이지네이션 */}
+            {inspectionTotalPages > 1 && (
+              <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200">
+                <button
+                  onClick={handleInspectionPrevPage}
+                  disabled={inspectionPage === 0}
+                  className={`flex items-center gap-2 px-3 py-1 rounded-lg text-sm ${
+                    inspectionPage === 0
+                      ? 'text-gray-400 cursor-not-allowed'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  이전
+                </button>
+                
+                <span className="text-sm text-gray-600">
+                  {inspectionPage + 1} / {inspectionTotalPages}
+                </span>
+                
+                <button
+                  onClick={handleInspectionNextPage}
+                  disabled={inspectionPage === inspectionTotalPages - 1}
+                  className={`flex items-center gap-2 px-3 py-1 rounded-lg text-sm ${
+                    inspectionPage === inspectionTotalPages - 1
+                      ? 'text-gray-400 cursor-not-allowed'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  다음
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
+            )}
           </div>
 
           {/* 두 번째: 위험 등급 알림 (페이지네이션 적용) */}
