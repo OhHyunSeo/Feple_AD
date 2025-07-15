@@ -6,7 +6,8 @@ import { useState, useEffect } from 'react'
 import { 
   LayoutDashboard, 
   Users, 
-  BarChart3
+  BarChart3,
+  Upload
 } from 'lucide-react'
 
 interface SidebarProps {
@@ -24,6 +25,7 @@ export default function Sidebar({ onWidthChange }: SidebarProps) {
   const menuItems = isConsultantMode ? [
     { href: '/consultant', icon: LayoutDashboard, label: '대시보드' },
     { href: '/consultant/performance', icon: BarChart3, label: '상담 모니터링' },
+    { href: '/consultant/upload', icon: Upload, label: '상담 파일 업로드' },
   ] : [
     { href: '/qc', icon: LayoutDashboard, label: '대시보드' },
     { href: '/consultants', icon: Users, label: '상담사 관리' },
