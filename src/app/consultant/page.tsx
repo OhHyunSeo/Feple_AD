@@ -29,158 +29,166 @@ export default function ConsultantDashboardPage() {
 
   return (
     <DashboardLayout>
-      <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 p-6">
-        {/* 헤더 */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                안녕하세요, {consultantData.name}님! 👋
-              </h1>
-              <p className="text-gray-600">
-                {consultantData.team} • {consultantData.position}
-              </p>
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="bg-white rounded-lg p-3 shadow-sm">
-                <div className="text-sm text-gray-600">현재 시각</div>
-                <div className="text-lg font-semibold">
-                  {new Date().toLocaleTimeString('ko-KR', { 
-                    hour: '2-digit', 
-                    minute: '2-digit' 
-                  })}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* 오늘의 성과 카드 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <MessageCircle className="h-6 w-6 text-blue-600" />
-              </div>
-              <span className="text-sm text-gray-500">오늘</span>
-            </div>
-            <div className="text-2xl font-bold text-gray-900 mb-1">
-              {todayStats.callsCompleted}
-            </div>
-            <div className="text-sm text-gray-600">완료된 상담</div>
-          </div>
-
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <Clock className="h-6 w-6 text-green-600" />
-              </div>
-              <span className="text-sm text-gray-500">평균</span>
-            </div>
-            <div className="text-2xl font-bold text-gray-900 mb-1">
-              {todayStats.avgCallDuration}
-            </div>
-            <div className="text-sm text-gray-600">상담 시간</div>
-          </div>
-
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-2 bg-yellow-100 rounded-lg">
-                <Award className="h-6 w-6 text-yellow-600" />
-              </div>
-              <span className="text-sm text-gray-500">만족도</span>
-            </div>
-            <div className="text-2xl font-bold text-gray-900 mb-1">
-              {todayStats.satisfactionScore}
-            </div>
-            <div className="text-sm text-gray-600">평점 (5점 만점)</div>
-          </div>
-
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <TrendingUp className="h-6 w-6 text-purple-600" />
-              </div>
-              <span className="text-sm text-gray-500">해결율</span>
-            </div>
-            <div className="text-2xl font-bold text-gray-900 mb-1">
-              {Math.round((todayStats.resolvedIssues / todayStats.callsCompleted) * 100)}%
-            </div>
-            <div className="text-sm text-gray-600">문제 해결</div>
-          </div>
-        </div>
-
-        {/* 주요 섹션들 */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          {/* 이번 주 성과 */}
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-              <BarChart3 className="h-5 w-5 mr-2 text-blue-600" />
-              이번 주 성과
-            </h2>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                <span className="text-gray-600">총 상담 건수</span>
-                <span className="font-semibold">{weeklyPerformance.totalCalls}건</span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                <span className="text-gray-600">평균 만족도</span>
-                <span className="font-semibold">{weeklyPerformance.avgSatisfaction}</span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                <span className="text-gray-600">개선률</span>
-                <span className="font-semibold text-green-600">{weeklyPerformance.improvementRate}</span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                <span className="text-gray-600">팀 내 순위</span>
-                <span className="font-semibold text-blue-600">{weeklyPerformance.rankInTeam}위</span>
-              </div>
-            </div>
-          </div>
-
-          {/* 최근 피드백 */}
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-              <MessageCircle className="h-5 w-5 mr-2 text-green-600" />
-              최근 피드백
-            </h2>
-            <div className="space-y-3">
-              <div className="p-4 border border-green-200 rounded-lg bg-green-50">
-                <div className="flex items-start justify-between mb-2">
-                  <span className="text-sm font-medium text-green-800">QC 평가</span>
-                  <span className="text-xs text-green-600">2시간 전</span>
-                </div>
-                <p className="text-sm text-green-700">
-                  고객 응대 시 공감 표현이 매우 자연스럽고 효과적입니다. 
-                  문제 해결 과정도 체계적으로 진행하셨습니다.
+      <div className="h-full bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 p-2 sm:p-4 lg:p-6">
+        <div className="h-full space-y-4 sm:space-y-6">
+          {/* 헤더 */}
+          <div className="bg-gradient-to-r from-pink-500 to-purple-600 rounded-xl p-4 sm:p-6 text-white shadow-xl">
+            <div className="flex items-center justify-between">
+              <div className="flex-1">
+                <h1 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold mb-2">
+                  안녕하세요, {consultantData.name}님! 👋
+                </h1>
+                <p className="text-sm sm:text-base text-white/90">
+                  {consultantData.team} • {consultantData.position}
                 </p>
               </div>
-              <div className="p-4 border border-blue-200 rounded-lg bg-blue-50">
-                <div className="flex items-start justify-between mb-2">
-                  <span className="text-sm font-medium text-blue-800">고객 후기</span>
-                  <span className="text-xs text-blue-600">1일 전</span>
+              <div className="hidden sm:flex items-center space-x-4">
+                <div className="bg-white/20 backdrop-blur-sm rounded-lg p-2 sm:p-3">
+                  <div className="text-xs sm:text-sm text-white/80">현재 시각</div>
+                  <div className="text-base sm:text-lg font-semibold">
+                    {new Date().toLocaleTimeString('ko-KR', { 
+                      hour: '2-digit', 
+                      minute: '2-digit' 
+                    })}
+                  </div>
                 </div>
-                <p className="text-sm text-blue-700">
-                  &ldquo;친절하고 정확한 안내 덕분에 문제가 빠르게 해결되었습니다. 감사합니다!&rdquo;
-                </p>
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white/20 rounded-full flex items-center justify-center">
+                  <div className="w-8 h-8 sm:w-12 sm:h-12 bg-white/30 rounded-full flex items-center justify-center text-lg sm:text-xl font-bold">
+                    {consultantData.name.substring(0, 1)}
+                  </div>
+                </div>
+              </div>
+              <div className="flex sm:hidden">
+                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                  <div className="w-8 h-8 bg-white/30 rounded-full flex items-center justify-center text-sm font-bold">
+                    {consultantData.name.substring(0, 1)}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* 개발 예정 알림 */}
-        <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-xl p-6 border border-purple-200">
-          <div className="flex items-center mb-3">
-            <AlertCircle className="h-5 w-5 text-purple-600 mr-2" />
-            <h3 className="text-lg font-semibold text-purple-900">
-              🚧 개발 진행 중
-            </h3>
+          {/* 오늘의 성과 메트릭 */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+            <div className="bg-white rounded-xl p-3 sm:p-4 lg:p-6 shadow-sm border border-gray-200">
+              <div className="flex items-center justify-between mb-2">
+                <div className="text-xs sm:text-sm text-gray-600">오늘</div>
+                <MessageCircle className="h-4 w-4 sm:h-5 sm:w-5 text-blue-500" />
+              </div>
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1">
+                {todayStats.callsCompleted}
+              </div>
+              <div className="text-xs sm:text-sm text-gray-600">완료된 상담</div>
+            </div>
+
+            <div className="bg-white rounded-xl p-3 sm:p-4 lg:p-6 shadow-sm border border-gray-200">
+              <div className="flex items-center justify-between mb-2">
+                <div className="text-xs sm:text-sm text-gray-600">평균</div>
+                <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-green-500" />
+              </div>
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1">
+                {todayStats.avgCallDuration}
+              </div>
+              <div className="text-xs sm:text-sm text-gray-600">상담 시간</div>
+            </div>
+
+            <div className="bg-white rounded-xl p-3 sm:p-4 lg:p-6 shadow-sm border border-gray-200">
+              <div className="flex items-center justify-between mb-2">
+                <div className="text-xs sm:text-sm text-gray-600">평점</div>
+                <Award className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-500" />
+              </div>
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1">
+                {todayStats.satisfactionScore}
+              </div>
+              <div className="text-xs sm:text-sm text-gray-600">만족도 (5점 만점)</div>
+            </div>
+
+            <div className="bg-white rounded-xl p-3 sm:p-4 lg:p-6 shadow-sm border border-gray-200">
+              <div className="flex items-center justify-between mb-2">
+                <div className="text-xs sm:text-sm text-gray-600">해결율</div>
+                <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-purple-500" />
+              </div>
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1">
+                91%
+              </div>
+              <div className="text-xs sm:text-sm text-gray-600">문제 해결</div>
+            </div>
           </div>
-          <p className="text-purple-700 mb-4">
-            상담사 전용 대시보드가 현재 개발 중입니다. 곧 더 많은 기능들을 만나보실 수 있습니다!
-          </p>
-          <div className="text-sm text-purple-600">
-            <strong>예정 기능:</strong> 개인 성과 분석, 스킬 개발 추천, 교육 자료, 일정 관리, 고객 히스토리 등
+
+          {/* 메인 콘텐츠 영역 */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 h-full lg:h-[calc(100vh-28rem)]">
+            {/* 이번 주 성과 */}
+            <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-200 flex flex-col">
+              <div className="flex items-center gap-2 mb-4">
+                <BarChart3 className="h-5 w-5 text-blue-500" />
+                <h2 className="text-base sm:text-lg font-semibold text-gray-800">이번 주 성과</h2>
+              </div>
+              
+              <div className="space-y-4 sm:space-y-6 flex-1">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm sm:text-base text-gray-600">총 상담 건수</span>
+                  <span className="text-lg sm:text-xl font-bold text-gray-900">{weeklyPerformance.totalCalls}건</span>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <span className="text-sm sm:text-base text-gray-600">평균 만족도</span>
+                  <span className="text-lg sm:text-xl font-bold text-gray-900">{weeklyPerformance.avgSatisfaction}</span>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <span className="text-sm sm:text-base text-gray-600">개선율</span>
+                  <span className="text-lg sm:text-xl font-bold text-green-600">{weeklyPerformance.improvementRate}</span>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <span className="text-sm sm:text-base text-gray-600">팀 내 순위</span>
+                  <span className="text-lg sm:text-xl font-bold text-gray-900">{weeklyPerformance.rankInTeam}위</span>
+                </div>
+              </div>
+            </div>
+
+            {/* 최근 피드백 */}
+            <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-200 flex flex-col">
+              <div className="flex items-center gap-2 mb-4">
+                <MessageCircle className="h-5 w-5 text-green-500" />
+                <h2 className="text-base sm:text-lg font-semibold text-gray-800">최근 피드백</h2>
+              </div>
+              
+              <div className="space-y-3 sm:space-y-4 flex-1 overflow-y-auto">
+                <div className="bg-green-50 border border-green-200 rounded-lg p-3 sm:p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span className="text-xs sm:text-sm font-medium text-green-700">QC 평가</span>
+                    <span className="text-xs text-green-600 ml-auto">2시간 전</span>
+                  </div>
+                  <p className="text-sm sm:text-base text-green-800 leading-relaxed">
+                    고객 응대 시 공감대 형성과 정확한 해결책 제시. 체계적인 과정 응대로 자연스러운 대화를 유도했습니다.
+                  </p>
+                </div>
+
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 sm:p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                    <span className="text-xs sm:text-sm font-medium text-blue-700">고객 후기</span>
+                    <span className="text-xs text-blue-600 ml-auto">1일 전</span>
+                  </div>
+                                     <p className="text-sm sm:text-base text-blue-800 leading-relaxed">
+                     &ldquo;질문에 대한 정확한 답변과 친절한 진행인 문제를 해결해 주셔서 감사합니다!&rdquo;
+                   </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 개발 진행 중 알림 */}
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 sm:p-6">
+            <div className="flex items-center gap-2 mb-2">
+              <AlertCircle className="h-5 w-5 text-yellow-600" />
+              <h3 className="text-base sm:text-lg font-semibold text-yellow-800">🚧 개발 진행 중</h3>
+            </div>
+            <p className="text-sm sm:text-base text-yellow-700">
+              상담사 전용 대시보드가 현재 개발 중입니다. 곧 더 많은 기능들을 만나보실 수 있습니다!
+            </p>
           </div>
         </div>
       </div>

@@ -267,25 +267,25 @@ export default function DashboardPage() {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6 text-gray-900">
+      <div className="h-full space-y-4 sm:space-y-6 text-gray-900">
         {/* 환영 메시지 */}
-        <div className="bg-gradient-to-r from-pink-500 to-purple-600 rounded-2xl p-6 text-white shadow-xl welcome-white-text">
+        <div className="bg-gradient-to-r from-pink-500 to-purple-600 rounded-xl sm:rounded-2xl p-4 sm:p-6 text-white shadow-xl welcome-white-text">
           <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-bold mb-2">안녕하세요, 관리자님! 👋</h2>
-              <p className="text-white">팀별 상담원 모니터링을 통해 효율적인 관리를 도와드리겠습니다.</p>
+            <div className="flex-1">
+              <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2">안녕하세요, 관리자님! 👋</h2>
+              <p className="text-sm sm:text-base text-white">팀별 상담원 모니터링을 통해 효율적인 관리를 도와드리겠습니다.</p>
             </div>
             <div className="hidden md:block">
-              <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center">
-                <Users className="w-12 h-12 text-white" />
+              <div className="w-16 h-16 lg:w-24 lg:h-24 bg-white/20 rounded-full flex items-center justify-center">
+                <Users className="w-8 h-8 lg:w-12 lg:h-12 text-white" />
               </div>
             </div>
           </div>
         </div>
 
         {/* 전역 검색 */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center gap-4">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <input
@@ -293,10 +293,10 @@ export default function DashboardPage() {
                 placeholder="상담사 이름으로 검색..."
                 value={searchTerm}
                 onChange={(e) => handleSearchChange(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 text-lg"
+                className="w-full pl-10 pr-4 py-2 sm:py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 text-base sm:text-lg"
               />
             </div>
-            <button className="flex items-center gap-2 px-4 py-3 border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-700">
+            <button className="flex items-center justify-center gap-2 px-4 py-2 sm:py-3 border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-700 whitespace-nowrap">
               <Filter className="h-4 w-4" />
               필터
             </button>
@@ -315,17 +315,17 @@ export default function DashboardPage() {
                       className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
                     >
                       {getTypeIcon(result.type)}
-                      <div className="flex-1">
+                      <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="font-medium text-gray-900">{result.title}</span>
-                          <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
+                          <span className="font-medium text-gray-900 truncate">{result.title}</span>
+                          <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full whitespace-nowrap">
                             {getTypeName(result.type)}
                           </span>
                         </div>
-                        <p className="text-sm text-gray-500">{result.subtitle}</p>
+                        <p className="text-sm text-gray-500 truncate">{result.subtitle}</p>
                       </div>
                       {result.score && (
-                        <div className="text-sm font-medium text-gray-900">
+                        <div className="text-sm font-medium text-gray-900 whitespace-nowrap">
                           ⭐ {result.score}
                         </div>
                       )}
@@ -339,32 +339,32 @@ export default function DashboardPage() {
           )}
         </div>
 
-        {/* 3열 레이아웃 */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* 3열 레이아웃 - 완전 반응형 */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 h-full lg:h-[calc(100vh-24rem)]">
           
           {/* 첫 번째: 점검 추천 상담사 */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 flex flex-col h-full">
             <div className="flex items-center gap-2 mb-4">
               <Clock className="h-5 w-5 text-blue-500" />
-              <h3 className="text-lg font-semibold text-gray-800">점검 추천 상담사</h3>
+              <h3 className="text-base sm:text-lg font-semibold text-gray-800">점검 추천 상담사</h3>
               <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full">
                 {inspectionRecommendations.length}건
               </span>
             </div>
             
-            <div className="space-y-3 max-h-96 overflow-y-auto">
+            <div className="space-y-3 overflow-y-auto flex-1">
               {inspectionRecommendations.map((recommendation) => (
                 <div 
                   key={recommendation.id}
                   onClick={() => handleInspectionRecommendationClick(recommendation)}
-                  className="border border-blue-200 rounded-lg p-4 hover:bg-blue-50 transition-colors cursor-pointer"
+                  className="border border-blue-200 rounded-lg p-3 sm:p-4 hover:bg-blue-50 transition-colors cursor-pointer"
                 >
                   <div className="flex items-start justify-between mb-2">
-                    <div>
-                      <h4 className="font-semibold text-gray-900">{recommendation.name}</h4>
-                      <p className="text-sm text-gray-600">{recommendation.team} - {recommendation.position}</p>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-semibold text-gray-900 truncate">{recommendation.name}</h4>
+                      <p className="text-sm text-gray-600 truncate">{recommendation.team} - {recommendation.position}</p>
                     </div>
-                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${getPriorityColor(recommendation.priority)}`}>
+                    <span className={`px-2 py-1 text-xs font-medium rounded-full whitespace-nowrap ml-2 ${getPriorityColor(recommendation.priority)}`}>
                       {getPriorityText(recommendation.priority)}
                     </span>
                   </div>
@@ -372,7 +372,7 @@ export default function DashboardPage() {
                   <div className="space-y-1 mb-3">
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-gray-600">마지막 점검</span>
-                      <span className="text-gray-800">{recommendation.lastInspection}</span>
+                      <span className="text-gray-800 text-xs sm:text-sm">{recommendation.lastInspection}</span>
                     </div>
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-gray-600">경과 일수</span>
@@ -382,7 +382,7 @@ export default function DashboardPage() {
                     </div>
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-gray-600">담당 QC</span>
-                      <span className="text-gray-800">{recommendation.qcManager}</span>
+                      <span className="text-gray-800 truncate">{recommendation.qcManager}</span>
                     </div>
                   </div>
                   
@@ -395,108 +395,120 @@ export default function DashboardPage() {
           </div>
 
           {/* 두 번째: 위험 등급 알림 (페이지네이션 적용) */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 flex flex-col h-full">
             <div className="flex items-center gap-2 mb-4">
               <AlertTriangle className="h-5 w-5 text-red-500" />
-              <h3 className="text-lg font-semibold text-gray-800">위험 등급 알림</h3>
+              <h3 className="text-base sm:text-lg font-semibold text-gray-800">위험 등급 알림</h3>
               <span className="bg-red-100 text-red-800 text-xs font-medium px-2 py-1 rounded-full">
                 {riskAlerts.length}건
               </span>
             </div>
             
-            <div className="space-y-4 mb-4">
+            <div className="space-y-4 mb-4 flex-1 overflow-y-auto">
               {paginatedRiskAlerts.map((alert) => (
                 <div 
                   key={alert.id}
                   onClick={() => handleRiskAlertClick(alert)}
-                  className="border border-red-200 rounded-lg p-4 hover:bg-red-50 transition-colors cursor-pointer"
+                  className="border border-red-200 rounded-lg p-3 sm:p-4 hover:bg-red-50 transition-colors cursor-pointer"
                 >
                   <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <h4 className="font-semibold text-gray-900">{alert.name}</h4>
-                      <p className="text-sm text-gray-600">{alert.team} - {alert.position}</p>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-semibold text-gray-900 truncate">{alert.name}</h4>
+                      <p className="text-sm text-gray-600 truncate">{alert.team} - {alert.position}</p>
                     </div>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 ml-2">
                       {getSeverityIcon(alert.riskCategories[0].severity)}
-                      <span className="text-xs text-gray-500">긴급</span>
+                      <span className="text-xs text-gray-500 whitespace-nowrap">긴급</span>
                     </div>
                   </div>
                   
                   <div className="space-y-2 mb-3">
                     {alert.riskCategories.map((risk, index) => (
                       <div key={index} className="flex items-center justify-between">
-                        <span className="text-sm text-gray-700">{risk.category}</span>
-                        <span className={`px-2 py-1 text-xs font-bold rounded ${getGradeColor(risk.grade, risk.severity)}`}>
+                        <span className="text-sm text-gray-700 truncate">{risk.category}</span>
+                        <span className={`px-2 py-1 text-xs font-bold rounded whitespace-nowrap ${getGradeColor(risk.grade, risk.severity)}`}>
                           {risk.grade}
                         </span>
                       </div>
                     ))}
                   </div>
                   
-                  <div className="flex items-center justify-between text-xs text-gray-500">
-                    <span>최근 평가: {alert.lastEvaluation}</span>
-                    <ChevronRight className="h-3 w-3" />
+                  <div className="text-xs text-gray-600 bg-gray-50 rounded p-2">
+                    <div className="flex items-center justify-between">
+                      <span>최근 평가:</span>
+                      <span>{alert.lastEvaluation}</span>
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
-
+            
             {/* 페이지네이션 */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200">
                 <button
                   onClick={handlePrevPage}
                   disabled={riskAlertPage === 0}
-                  className="flex items-center gap-1 px-3 py-1 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className={`flex items-center gap-2 px-3 py-1 rounded-lg text-sm ${
+                    riskAlertPage === 0
+                      ? 'text-gray-400 cursor-not-allowed'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
                 >
-                  <ChevronLeft className="h-3 w-3" />
+                  <ChevronLeft className="h-4 w-4" />
                   이전
                 </button>
+                
                 <span className="text-sm text-gray-600">
                   {riskAlertPage + 1} / {totalPages}
                 </span>
+                
                 <button
                   onClick={handleNextPage}
                   disabled={riskAlertPage === totalPages - 1}
-                  className="flex items-center gap-1 px-3 py-1 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className={`flex items-center gap-2 px-3 py-1 rounded-lg text-sm ${
+                    riskAlertPage === totalPages - 1
+                      ? 'text-gray-400 cursor-not-allowed'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
                 >
                   다음
-                  <ChevronRight className="h-3 w-3" />
+                  <ChevronRight className="h-4 w-4" />
                 </button>
               </div>
             )}
           </div>
 
           {/* 세 번째: 팀별 상담원 관리 */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">팀별 상담원 관리</h3>
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 flex flex-col h-full">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-4">팀별 상담원 관리</h3>
             
             {/* 팀 선택 드롭다운 */}
-            <div className="mb-6">
+            <div className="mb-4 sm:mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">팀 선택</label>
               <div className="relative">
                 <button
                   onClick={() => setIsTeamDropdownOpen(!isTeamDropdownOpen)}
-                  className="w-full flex items-center justify-between px-4 py-3 border border-gray-200 rounded-lg hover:border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors"
+                  className="w-full flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3 border border-gray-200 rounded-lg hover:border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors"
                 >
-                  <span className="text-gray-900">{getSelectedTeamName()}</span>
+                  <span className="text-gray-900 truncate">{getSelectedTeamName()}</span>
                   <ChevronDown className={`h-4 w-4 text-gray-500 transition-transform ${isTeamDropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
                 
                 {isTeamDropdownOpen && (
-                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10 max-h-60 overflow-y-auto">
                     {teams.map((team) => (
                       <div
                         key={team.id}
                         onClick={() => handleTeamSelect(team.id)}
-                        className="px-4 py-3 hover:bg-pink-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                        className="px-3 sm:px-4 py-2 sm:py-3 hover:bg-pink-50 cursor-pointer border-b border-gray-100 last:border-b-0"
                       >
                         <div className="flex items-center justify-between">
-                          <div>
-                            <span className="font-medium text-gray-900">{team.name}</span>
-                            <p className="text-sm text-gray-600">{team.teamLead}</p>
+                          <div className="flex-1 min-w-0">
+                            <span className="font-medium text-gray-900 truncate block">{team.name}</span>
+                            <p className="text-sm text-gray-600 truncate">{team.teamLead}</p>
                           </div>
-                          <span className="text-xs text-gray-500">{team.memberCount}명</span>
+                          <span className="text-xs text-gray-500 whitespace-nowrap ml-2">{team.memberCount}명</span>
                         </div>
                       </div>
                     ))}
@@ -507,11 +519,11 @@ export default function DashboardPage() {
 
             {/* 선택된 팀의 상담원 목록 */}
             {selectedTeam && (
-              <div className="space-y-3">
-                <h4 className="text-md font-semibold text-gray-800">
+              <div className="space-y-3 flex-1 overflow-y-auto">
+                <h4 className="text-sm sm:text-base font-semibold text-gray-800">
                   {getSelectedTeamName()} 상담원 목록 ({getCurrentTeamMembers().length}명)
                 </h4>
-                <div className="grid grid-cols-1 gap-3 max-h-96 overflow-y-auto">
+                <div className="space-y-3">
                   {getCurrentTeamMembers().map((member) => (
                     <div
                       key={member.id}
@@ -519,15 +531,15 @@ export default function DashboardPage() {
                       className="p-3 border border-gray-200 rounded-lg hover:shadow-md transition-all cursor-pointer hover:border-pink-300"
                     >
                       <div className="flex items-center justify-between mb-2">
-                        <h5 className="font-semibold text-gray-900">{member.name}</h5>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(member.status)}`}>
+                        <h5 className="font-semibold text-gray-900 truncate">{member.name}</h5>
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${getStatusColor(member.status)}`}>
                           {member.status}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-600 mb-2">{member.position}</p>
+                      <p className="text-sm text-gray-600 mb-2 truncate">{member.position}</p>
                       <div className="flex justify-between text-sm">
-                        <span className="text-gray-500">오늘 통화: {member.callsToday}건</span>
-                        <span className="text-gray-500">⭐ {member.satisfactionScore}</span>
+                        <span className="text-gray-500 truncate">오늘 통화: {member.callsToday}건</span>
+                        <span className="text-gray-500 whitespace-nowrap">⭐ {member.satisfactionScore}</span>
                       </div>
                     </div>
                   ))}
@@ -536,9 +548,9 @@ export default function DashboardPage() {
             )}
             
             {!selectedTeam && (
-              <div className="text-center py-8 text-gray-500">
+              <div className="text-center py-8 text-gray-500 flex-1 flex flex-col items-center justify-center">
                 <Users className="h-12 w-12 mx-auto mb-3 text-gray-400" />
-                <p>팀을 선택하여 상담원 목록을 확인하세요</p>
+                <p className="text-sm sm:text-base">팀을 선택하여 상담원 목록을 확인하세요</p>
               </div>
             )}
           </div>
