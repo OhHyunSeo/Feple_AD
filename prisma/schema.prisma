@@ -88,6 +88,7 @@ model Consultant {
   inspections       Inspection[]     @relation("ConsultantInspections")
   riskAlerts        RiskAlert[]
   //sessionData       SessionData[]
+
   weeklyStats       WeeklyStats[]
 
   @@map("consultants")
