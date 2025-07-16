@@ -41,32 +41,31 @@ export default function ConsultantDashboardPage() {
 
   return (
     <DashboardLayout>
-      <div className="w-full h-full bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 p-6">
-        {/* 수정: h-96 -> h-full */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
-          {/* 왼쪽 카드 세로 배치 */}
-          {/* 수정: h-128, justify-center 제거 */}
-          <div className="flex flex-col gap-4">
+      <div className="w-full h-full bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 p-3">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 h-full">
+          {/* 왼쪽 카드들 */}
+          <div className="flex flex-col gap-3">
             {/* 인사말 카드 */}
-            <div className="bg-gradient-to-r from-pink-400 to-purple-400 rounded-2xl p-6 shadow-lg flex items-center gap-4 animate-pulse-glow">
-              <div className="h-12 w-12 rounded-full bg-white/30 flex items-center justify-center text-2xl font-bold text-white shadow">
+            <div className="bg-gradient-to-r from-pink-400 to-purple-400 rounded-xl p-4 shadow-lg flex items-center gap-3 animate-pulse-glow">
+              <div className="h-10 w-10 rounded-full bg-white/30 flex items-center justify-center text-lg font-bold text-white shadow">
                 {userInitial}
               </div>
               <div>
-                <div className="text-lg font-bold text-white flex items-center gap-2">
+                <div className="text-base font-bold text-white flex items-center gap-2">
                   {userName} 상담사님 <span className="animate-bounce">👋</span>
                 </div>
-                <div className="text-sm text-pink-100 mt-1">
+                <div className="text-xs text-pink-100 mt-1">
                   오늘도 힘내세요! Feple이 함께합니다 :)
                 </div>
               </div>
             </div>
+
             {/* 전일 상담 분석 카드 */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col gap-2">
-              <div className="text-lg font-semibold text-pink-600 mb-2">
+            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 flex flex-col gap-2">
+              <div className="text-base font-semibold text-pink-600 mb-2">
                 어제 상담 분석 요약
               </div>
-              <ul className="text-sm text-gray-700 list-disc pl-5 space-y-1">
+              <ul className="text-xs text-gray-700 list-disc pl-4 space-y-1">
                 <li>
                   <span className="font-bold">강점:</span>{" "}
                   {yesterdayAnalysis.strengths}
@@ -81,28 +80,27 @@ export default function ConsultantDashboardPage() {
                 </li>
               </ul>
             </div>
+
             {/* 전일 평균 점수 카드 */}
-            <div className="bg-white rounded-2xl p-6 shadow-md border border-gray-100 flex flex-col items-center justify-center">
-              <div className="text-base text-gray-500 mb-1">어제 평균 점수</div>
-              <div className="text-4xl font-bold text-pink-600">
+            <div className="bg-white rounded-xl p-4 shadow-md border border-gray-100 flex flex-col items-center justify-center">
+              <div className="text-sm text-gray-500 mb-1">어제 평균 점수</div>
+              <div className="text-3xl font-bold text-pink-600">
                 {yesterdayAvgScore}점
               </div>
-              <div className="text-xs text-gray-400 mt-1">
-                어제 상담의 종합 점수예요!
-              </div>
             </div>
+
             {/* 위험 지표 카드 2개 */}
             {lowIndicators.map((item) => (
               <div
                 key={item.label}
-                className="bg-white rounded-2xl p-4 shadow-md border border-gray-100 flex items-center gap-4"
+                className="bg-white rounded-xl p-3 shadow-md border border-gray-100 flex items-center gap-3"
               >
-                <div className="text-lg font-semibold">{item.label}</div>
+                <div className="text-sm font-semibold">{item.label}</div>
                 <div className="ml-auto flex items-center gap-2">
-                  <span className="text-2xl font-bold">{item.grade}</span>
+                  <span className="text-xl font-bold">{item.grade}</span>
                   <span
                     className={
-                      "h-4 w-4 rounded-full inline-block border border-white animate-blink"
+                      "h-3 w-3 rounded-full inline-block border border-white animate-blink"
                     }
                     style={{
                       backgroundColor:
@@ -114,19 +112,15 @@ export default function ConsultantDashboardPage() {
                     }}
                   ></span>
                 </div>
-                <span className="ml-3 text-xs text-pink-500 font-semibold">
-                  조금 더 신경 써주세요!
-                </span>
               </div>
             ))}
           </div>
+
           {/* 오른쪽 차트 */}
-          {/* 수정: h-96 -> h-full */}
-          <div className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100 flex flex-col justify-center h-full">
-            <div className="text-lg font-semibold text-gray-800 mb-0 text-center">
+          <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-100 flex flex-col justify-center h-full">
+            <div className="text-base font-semibold text-gray-800 mb-2 text-center">
               종합 역량 분석
             </div>
-            {/* 수정: h-96 -> h-full */}
             <div className="h-full flex items-center justify-center">
               <RadarChart data={radarData} />
             </div>
