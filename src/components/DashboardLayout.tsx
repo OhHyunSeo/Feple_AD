@@ -26,7 +26,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             height: "calc(100vh - 80px)",
           }}
         >
-          <div className="h-full w-full p-3">
+          <div className="h-full w-full">
             <div className="h-full w-full text-gray-900">{children}</div>
           </div>
         </main>
