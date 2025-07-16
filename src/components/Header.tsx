@@ -11,7 +11,7 @@ export default function Header() {
         <div className="w-64 px-4 py-4 flex items-center">
           <Link
             href="/"
-            className="flex items-center gap-4 hover:opacity-80 transition-opacity ml-2"
+            className="flex items-center gap-2 hover:opacity-80 transition-opacity ml-2"
           >
             <Image
               src="/logo.svg"
@@ -20,7 +20,7 @@ export default function Header() {
               height={22}
               className="h-6 w-auto flex-shrink-0"
             />
-            <span className="text-2xl font-bold text-white korean-heading header-white-text leading-none">
+            <span className="text-2xl mb-2 font-bold text-white korean-heading header-white-text leading-none">
               Feple
             </span>
           </Link>

@@ -5,4 +5,5 @@ export { default as CallTimeChart } from "./CallTimeChart";
 export { default as SparkLineChart } from "./SparkLineChart";
 export { default as TopConsultantsTable } from "./TopConsultantsTable";
 export { default as ConsultationTable } from "./ConsultationTable";
+export { default as ConversationDetail } from "./ConversationDetail";
 export { default as Pagination } from "./Pagination";

@@ -27,19 +27,25 @@ export default function CallTimeChart({
 
   const dates = getDatesInRange(startDate, endDate);
 
-  // 더미 데이터 생성 (실제로는 API에서 받아올 데이터)
-  const generateCallTimeData = (
-    length: number,
-    baseTime: number,
-    variance: number
-  ) => {
-    return Array.from({ length }, () =>
-      Math.max(0, baseTime + (Math.random() - 0.5) * variance)
-    );
+  // 고정된 더미 데이터 (hydration 오류 방지)
+  const getFixedCallTimeData = (dates: string[]) => {
+    // 시드 기반 고정 데이터 (날짜 수에 따라 조정)
+    const baseMyTimes = [8.2, 9.1, 7.8, 8.7, 9.3, 8.0, 7.5, 8.9, 9.2, 8.1];
+    const baseTeamTimes = [7.1, 7.8, 6.9, 7.3, 7.6, 7.0, 6.8, 7.4, 7.7, 7.2];
+
+    const myTimes = [];
+    const teamTimes = [];
+
+    for (let i = 0; i < dates.length; i++) {
+      myTimes.push(baseMyTimes[i % baseMyTimes.length]);
+      teamTimes.push(baseTeamTimes[i % baseTeamTimes.length]);
+    }
+
+    return { myTimes, teamTimes };
   };
 
-  const myCallTimes = generateCallTimeData(dates.length, 8.5, 4); // 평균 8.5분, 변동폭 4분
-  const teamCallTimes = generateCallTimeData(dates.length, 7.2, 3); // 팀 평균 7.2분, 변동폭 3분
+  const { myTimes: myCallTimes, teamTimes: teamCallTimes } =
+    getFixedCallTimeData(dates);
 
   // 날짜 라벨 처리
   const displayDates = dates.map((date, index) => `${index + 1}일차`);
