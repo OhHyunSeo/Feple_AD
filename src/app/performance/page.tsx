@@ -456,40 +456,40 @@ export default function MonitoringPage() {
 
             {/* 부서 선택 */}
             {!isConsultantMode && (
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-700">부서:</span>
-                <div className="relative">
-                  <select 
-                    value={selectedDepartment}
-                    onChange={(e) => setSelectedDepartment(e.target.value)}
-                    className="px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 pr-8"
-                  >
-                    {departments.map((dept) => (
-                      <option key={dept.id} value={dept.id}>{dept.name}</option>
-                    ))}
-                  </select>
-                  <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-                </div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-700">부서:</span>
+              <div className="relative">
+                <select 
+                  value={selectedDepartment}
+                  onChange={(e) => setSelectedDepartment(e.target.value)}
+                  className="px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 pr-8"
+                >
+                  {departments.map((dept) => (
+                    <option key={dept.id} value={dept.id}>{dept.name}</option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
               </div>
+            </div>
             )}
 
             {/* 상담원 선택 */}
             {!isConsultantMode && (
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-700">상담원:</span>
-                <div className="relative">
-                  <select 
-                    value={selectedConsultant}
-                    onChange={(e) => setSelectedConsultant(e.target.value)}
-                    className="px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 pr-8"
-                  >
-                    {getCurrentConsultants().map((consultant) => (
-                      <option key={consultant.id} value={consultant.id}>{consultant.name}</option>
-                    ))}
-                  </select>
-                  <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-                </div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-700">상담원:</span>
+              <div className="relative">
+                <select 
+                  value={selectedConsultant}
+                  onChange={(e) => setSelectedConsultant(e.target.value)}
+                  className="px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 pr-8"
+                >
+                  {getCurrentConsultants().map((consultant) => (
+                    <option key={consultant.id} value={consultant.id}>{consultant.name}</option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
               </div>
+            </div>
             )}
 
             {/* 조회 버튼 */}

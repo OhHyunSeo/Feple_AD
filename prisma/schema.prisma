@@ -87,7 +87,8 @@ model Consultant {
   evaluations       Evaluation[]     @relation("ConsultantEvaluations")
   inspections       Inspection[]     @relation("ConsultantInspections")
   riskAlerts        RiskAlert[]
-  /* sessionData       SessionData[] */
+  //sessionData       SessionData[]
+
   weeklyStats       WeeklyStats[]
 
   @@map("consultants")
@@ -235,7 +236,8 @@ model SessionData {
 
   @@map("session_data")
 }
-
+*/
+/*
 model DepartmentStats {
   id             String   @id @default(cuid())
   teamId         String
