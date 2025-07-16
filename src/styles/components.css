@@ -260,3 +260,134 @@
   width: 100% !important;
   height: 100% !important;
 }
+
+/* ===== PERFORMANCE COMPONENTS ===== */
+
+/* 성과 컴포넌트 전용 색상 클래스 */
+.performance-component {
+  color: var(--text-primary) !important;
+}
+
+.performance-component * {
+  color: inherit !important;
+}
+
+/* 성과 컴포넌트 내 특정 색상 강제 적용 */
+.performance-text-green {
+  color: #059669 !important;
+  font-weight: 900 !important;
+}
+
+.performance-text-red {
+  color: #dc2626 !important;
+  font-weight: 900 !important;
+}
+
+.performance-text-pink {
+  color: #ec7199 !important;
+  font-weight: 600 !important;
+}
+
+.performance-text-yellow {
+  color: #d97706 !important;
+  font-weight: 600 !important;
+}
+
+.performance-text-gray {
+  color: #6b7280 !important;
+}
+
+.performance-text-gray-dark {
+  color: #374151 !important;
+}
+
+.performance-text-gray-light {
+  color: #9ca3af !important;
+}
+
+/* 헤더 텍스트 */
+.performance-header {
+  color: #1f2937 !important;
+  font-weight: 600 !important;
+}
+
+/* 점수 텍스트 */
+.performance-score {
+  color: #1f2937 !important;
+  font-weight: 700 !important;
+}
+
+/* 라벨 텍스트 */
+.performance-label {
+  color: #6b7280 !important;
+  font-weight: 500 !important;
+}
+
+/* 본인 강조 텍스트 */
+.performance-highlight-me {
+  color: #ec7199 !important;
+  font-weight: 700 !important;
+}
+
+/* 팀 비교 텍스트 */
+.performance-team-text {
+  color: #6b7280 !important;
+  font-weight: 400 !important;
+}
+
+/* 순위 색상 */
+.performance-rank-gold {
+  color: #f59e0b !important;
+}
+
+.performance-rank-silver {
+  color: #9ca3af !important;
+}
+
+.performance-rank-bronze {
+  color: #d97706 !important;
+}
+
+/* ===== CONSULTATION TABLE ANIMATIONS ===== */
+
+.animate-slide-down {
+  animation: slideDown 0.3s ease-out;
+  overflow: hidden;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+  overflow: hidden;
+}
+
+@keyframes slideDown {
+  from {
+    max-height: 0;
+    opacity: 0;
+  }
+  to {
+    max-height: 500px;
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    max-height: 500px;
+    opacity: 1;
+  }
+  to {
+    max-height: 0;
+    opacity: 0;
+  }
+}
+
+/* ===== CUSTOM BACKGROUND COLORS ===== */
+
+.bg-blue-25 {
+  background-color: rgba(219, 234, 254, 0.5);
+}
+
+.bg-gray-25 {
+  background-color: rgba(249, 250, 251, 0.5);
+}
