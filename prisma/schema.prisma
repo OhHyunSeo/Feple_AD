@@ -87,7 +87,7 @@ model Consultant {
   evaluations       Evaluation[]     @relation("ConsultantEvaluations")
   inspections       Inspection[]     @relation("ConsultantInspections")
   riskAlerts        RiskAlert[]
-  sessionData       SessionData[]
+  /* sessionData       SessionData[] */
   weeklyStats       WeeklyStats[]
 
   @@map("consultants")
@@ -216,7 +216,7 @@ model Inspection {
 
   @@map("inspections")
 }
-
+/*
 model SessionData {
   id                 String          @id @default(cuid())
   consultantId       String
@@ -249,6 +249,7 @@ model DepartmentStats {
   @@unique([teamId, date])
   @@map("department_stats")
 }
+*/
 
 enum UserRole {
   ADMIN
