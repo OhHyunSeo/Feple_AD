@@ -7,7 +7,7 @@
   padding: 0.75rem 1.5rem;
   color: white;
   font-weight: 600;
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: "Noto Sans KR", sans-serif;
   transition: all 0.3s ease;
   cursor: pointer;
 }
@@ -25,7 +25,7 @@
   padding: 0.75rem 1.5rem;
   color: var(--primary-pink);
   font-weight: 600;
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: "Noto Sans KR", sans-serif;
   transition: all 0.3s ease;
   cursor: pointer;
 }
@@ -74,7 +74,7 @@
   background: var(--gradient-pink);
   color: white;
   font-weight: 600;
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: "Noto Sans KR", sans-serif;
   padding: 1rem;
   text-align: left;
 }
@@ -82,7 +82,7 @@
 .table-theme td {
   padding: 0.75rem 1rem;
   border-bottom: 1px solid rgba(236, 72, 153, 0.1);
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: "Noto Sans KR", sans-serif;
   color: var(--text-primary);
 }
 
@@ -102,7 +102,7 @@
   border: 1px solid rgba(236, 72, 153, 0.2);
   border-radius: 0.5rem;
   padding: 0.75rem 1rem;
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: "Noto Sans KR", sans-serif;
   transition: all 0.2s ease;
 }
 
@@ -122,7 +122,7 @@
   border: 1px solid rgba(236, 72, 153, 0.2);
   border-radius: 0.5rem;
   padding: 0.75rem 1rem;
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: "Noto Sans KR", sans-serif;
 }
 
 .select-theme option {
@@ -138,7 +138,7 @@
   border: 1px solid rgba(236, 72, 153, 0.2);
   border-radius: 0.5rem;
   padding: 0.5rem 1rem;
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: "Noto Sans KR", sans-serif;
   transition: all 0.2s ease;
   cursor: pointer;
 }
@@ -164,7 +164,7 @@
   color: var(--text-primary) !important;
   background-color: white !important;
   padding: 0.5rem 1rem;
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: "Noto Sans KR", sans-serif;
   transition: background-color 0.2s ease;
 }
 
@@ -182,4 +182,81 @@
   padding: 1px 2px !important;
   border-radius: 2px !important;
   font-weight: 600;
-} 
+}
+
+/* ===== SIDEBAR COMPONENTS ===== */
+
+.sidebar-tooltip {
+  position: absolute !important;
+  left: 100% !important;
+  margin-left: 10px !important;
+  padding: 8px 16px !important;
+  background-color: #111827 !important;
+  color: white !important;
+  font-size: 0.75rem !important;
+  border-radius: 0.375rem !important;
+  opacity: 0 !important;
+  transition: opacity 0.2s ease-in-out !important;
+  pointer-events: none !important;
+  white-space: nowrap !important;
+  z-index: 50 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  letter-spacing: 0 !important;
+  font-weight: 500 !important;
+  box-sizing: border-box !important;
+}
+
+.group:hover .sidebar-tooltip {
+  opacity: 1 !important;
+}
+
+.sidebar-user-info {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: linear-gradient(to right, #fdf2f8, #faf5ff) !important;
+  border-radius: 0.5rem !important;
+  transition: all 0.3s ease !important;
+  box-sizing: border-box !important;
+}
+
+.sidebar-user-info--expanded {
+  padding: 10px !important;
+  gap: 12px !important;
+  flex-direction: row !important;
+}
+
+.sidebar-user-info--collapsed {
+  padding: 8px !important;
+  gap: 0 !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.sidebar-user-avatar {
+  width: 28px !important;
+  height: 28px !important;
+  background: linear-gradient(to right, #ec4899, #8b5cf6) !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+
+.sidebar-user-avatar span {
+  color: white !important;
+  font-weight: 600 !important;
+  font-size: 0.75rem !important;
+  letter-spacing: 0 !important;
+  line-height: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
+}
