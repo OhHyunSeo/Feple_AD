@@ -8,6 +8,7 @@ import {
   CallTimeChart,
   TopConsultantsTable,
   ConsultationTable,
+  ConversationDetail,
 } from "@/components/features/performance";
 
 export default function ConsultantPerformancePage() {
@@ -23,6 +24,9 @@ export default function ConsultantPerformancePage() {
 
   const [startDate, setStartDate] = useState(defaultStartDate);
   const [endDate, setEndDate] = useState(defaultEndDate);
+  const [selectedSessionNo, setSelectedSessionNo] = useState<number | null>(
+    null
+  );
 
   // 더미 데이터
   const myScores = {
@@ -52,6 +56,11 @@ export default function ConsultantPerformancePage() {
   const handleSearch = () => {
     console.log("조회:", startDate, "~", endDate);
     // TODO: 실제 데이터 조회 로직
+  };
+
+  // 상담 세션 선택 핸들러
+  const handleSessionSelect = (sessionNo: number) => {
+    setSelectedSessionNo(sessionNo);
   };
 
   return (
@@ -84,14 +93,19 @@ export default function ConsultantPerformancePage() {
 
           {/* 중앙 패널 - 상담 세션 테이블 */}
           <div className="col-span-3">
-            <ConsultationTable startDate={startDate} endDate={endDate} />
+            <ConsultationTable
+              startDate={startDate}
+              endDate={endDate}
+              onSessionSelect={handleSessionSelect}
+            />
           </div>
 
-          {/* 우측 패널 - 추가 요소 공간 */}
+          {/* 우측 패널 - 상담 상세 내용 */}
           <div className="col-span-1">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 text-center">
-              <p className="text-gray-600 text-sm">추가 컴포넌트 영역</p>
-            </div>
+            <ConversationDetail
+              sessionNo={selectedSessionNo}
+              onClose={() => setSelectedSessionNo(null)}
+            />
           </div>
         </div>
       </div>
