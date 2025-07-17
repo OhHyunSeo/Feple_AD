@@ -29,11 +29,11 @@ export default function QCDashboardPage() {
   const [teamMemberPage, setTeamMemberPage] = useState(0);
 
   // QC 정보
-  const qcName = "김민준";
+  const qcName = "점소이현서";
   const qcInitial = qcName[0];
 
-  // 오늘 날짜 (2025-07-17)
-  const today = new Date("2025-07-17");
+  // 오늘 날짜
+  const today = new Date(Date.now());
 
   // 경과 일수 계산 함수
   const calculateDaysDiff = (dateString: string): number => {

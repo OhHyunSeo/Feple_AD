@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useState, Suspense, useEffect } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import {
   DateFilter,
@@ -11,36 +10,29 @@ import {
   ConsultationTable,
   ConversationDetail,
 } from "@/components/features/performance";
+import { useDateRange } from "@/context/DateRangeContext";
 
 function ConsultantPerformanceContent() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
+  const {
+    startDate: contextStartDate,
+    endDate: contextEndDate,
+    setDateRange,
+  } = useDateRange();
 
-  // 어제 날짜 계산
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-
-  // URL 파라미터에서 날짜를 가져오거나 기본값 사용
-  const getInitialStartDate = () => {
-    const paramStartDate = searchParams.get("startDate");
-    return (
-      paramStartDate ||
-      new Date(yesterday.getTime() - 24 * 60 * 60 * 1000)
-        .toISOString()
-        .split("T")[0]
-    );
-  };
-
-  const getInitialEndDate = () => {
-    const paramEndDate = searchParams.get("endDate");
-    return paramEndDate || yesterday.toISOString().split("T")[0];
-  };
-
-  const [startDate, setStartDate] = useState(getInitialStartDate());
-  const [endDate, setEndDate] = useState(getInitialEndDate());
+  // 로컬 상태 (실제 조회는 조회 버튼 클릭 시에만)
+  const [localStartDate, setLocalStartDate] = useState(contextStartDate);
+  const [localEndDate, setLocalEndDate] = useState(contextEndDate);
   const [selectedSessionNo, setSelectedSessionNo] = useState<number | null>(
     null
   );
+
+  // Context 값이 변경되면 로컬 상태도 업데이트
+  useEffect(() => {
+    if (contextStartDate && contextEndDate) {
+      setLocalStartDate(contextStartDate);
+      setLocalEndDate(contextEndDate);
+    }
+  }, [contextStartDate, contextEndDate]);
 
   // 더미 데이터
   const myScores = {
@@ -67,12 +59,13 @@ function ConsultantPerformanceContent() {
 
   const myRank = 5; // 본인 등수
 
+  // 조회 버튼 클릭 시에만 전역 날짜 상태 업데이트
   const handleSearch = () => {
-    console.log("조회:", startDate, "~", endDate);
-    // URL 업데이트
-    router.push(
-      `/consultant/performance?startDate=${startDate}&endDate=${endDate}`
-    );
+    console.log("조회:", localStartDate, "~", localEndDate);
+
+    // 전역 상태 업데이트 (조회 버튼 클릭 시에만)
+    setDateRange(localStartDate, localEndDate);
+
     // TODO: 실제 데이터 조회 로직
   };
 
@@ -86,10 +79,10 @@ function ConsultantPerformanceContent() {
       <div className="min-h-screen w-full bg-gray-50 p-3">
         {/* 상단 날짜 필터 */}
         <DateFilter
-          startDate={startDate}
-          endDate={endDate}
-          onStartDateChange={setStartDate}
-          onEndDateChange={setEndDate}
+          startDate={localStartDate}
+          endDate={localEndDate}
+          onStartDateChange={setLocalStartDate}
+          onEndDateChange={setLocalEndDate}
           onSearch={handleSearch}
         />
 
@@ -100,11 +93,14 @@ function ConsultantPerformanceContent() {
             <ScoreChart
               myScores={myScores}
               teamScores={teamAvgScores}
-              startDate={startDate}
-              endDate={endDate}
+              startDate={contextStartDate}
+              endDate={contextEndDate}
             />
 
-            <CallTimeChart startDate={startDate} endDate={endDate} />
+            <CallTimeChart
+              startDate={contextStartDate}
+              endDate={contextEndDate}
+            />
 
             <TopConsultantsTable consultants={topConsultants} myRank={myRank} />
           </div>
@@ -113,8 +109,8 @@ function ConsultantPerformanceContent() {
           <div className="col-span-3 flex flex-col">
             <div className="flex-1">
               <ConsultationTable
-                startDate={startDate}
-                endDate={endDate}
+                startDate={contextStartDate}
+                endDate={contextEndDate}
                 onSessionSelect={handleSessionSelect}
               />
             </div>
