@@ -9,6 +9,7 @@ interface DateFilterProps {
   onStartDateChange: (date: string) => void;
   onEndDateChange: (date: string) => void;
   onSearch?: () => void;
+  showCard?: boolean; // 카드 스타일 표시 여부
 }
 
 export default function DateFilter({
@@ -17,6 +18,7 @@ export default function DateFilter({
   onStartDateChange,
   onEndDateChange,
   onSearch,
+  showCard = true,
 }: DateFilterProps) {
   const [dateError, setDateError] = useState("");
 
@@ -80,46 +82,46 @@ export default function DateFilter({
     onEndDateChange(newEndDate);
   };
 
-  return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 mb-3">
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-1">
-          <Calendar className="h-4 w-4 text-gray-500" />
-          <span className="text-xs text-gray-700 font-medium">기간</span>
-        </div>
+  const content = (
+    <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1">
+        <Calendar className="h-3 w-3 text-gray-500" />
+        <span className="text-xs text-gray-700 font-medium">기간</span>
+      </div>
 
-        <div className="flex items-center gap-2">
-          <input
-            type="date"
-            value={startDate}
-            min={getMinStartDate(endDate)}
-            max={endDate}
-            onChange={(e) => handleStartDateChange(e.target.value)}
-            className={`px-2 py-1 border rounded text-xs ${
-              dateError
-                ? "border-red-300 focus:ring-red-500"
-                : "border-gray-200 focus:ring-pink-500"
-            } focus:outline-none focus:ring-1`}
-          />
-          <span className="text-gray-400 text-xs">~</span>
-          <input
-            type="date"
-            value={endDate}
-            min={startDate}
-            max={getMaxEndDate(startDate)}
-            onChange={(e) => handleEndDateChange(e.target.value)}
-            className={`px-2 py-1 border rounded text-xs ${
-              dateError
-                ? "border-red-300 focus:ring-red-500"
-                : "border-gray-200 focus:ring-pink-500"
-            } focus:outline-none focus:ring-1`}
-          />
-        </div>
+      <div className="flex items-center gap-1">
+        <input
+          type="date"
+          value={startDate}
+          min={getMinStartDate(endDate)}
+          max={endDate}
+          onChange={(e) => handleStartDateChange(e.target.value)}
+          className={`px-1 py-1 border rounded text-xs ${
+            dateError
+              ? "border-red-300 focus:ring-red-500"
+              : "border-gray-200 focus:ring-pink-500"
+          } focus:outline-none focus:ring-1`}
+        />
+        <span className="text-gray-400 text-xs">~</span>
+        <input
+          type="date"
+          value={endDate}
+          min={startDate}
+          max={getMaxEndDate(startDate)}
+          onChange={(e) => handleEndDateChange(e.target.value)}
+          className={`px-1 py-1 border rounded text-xs ${
+            dateError
+              ? "border-red-300 focus:ring-red-500"
+              : "border-gray-200 focus:ring-pink-500"
+          } focus:outline-none focus:ring-1`}
+        />
+      </div>
 
+      {onSearch && (
         <button
           disabled={!!dateError}
           onClick={onSearch}
-          className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+          className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
             dateError
               ? "bg-gray-300 text-gray-500 cursor-not-allowed"
               : "bg-pink-500 text-white hover:bg-pink-600"
@@ -127,15 +129,25 @@ export default function DateFilter({
         >
           조회
         </button>
-      </div>
+      )}
 
       {/* 에러 메시지 */}
       {dateError && (
-        <div className="mt-2 flex items-center gap-1 text-red-600 text-xs">
+        <div className="ml-2 flex items-center gap-1 text-red-600 text-xs">
           <AlertTriangle className="h-3 w-3" />
           <span>{dateError}</span>
         </div>
       )}
     </div>
   );
+
+  if (showCard) {
+    return (
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 mb-3">
+        {content}
+      </div>
+    );
+  }
+
+  return content;
 }

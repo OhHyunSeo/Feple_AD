@@ -6,11 +6,13 @@ import SparkLineChart from "./SparkLineChart";
 interface CallTimeChartProps {
   startDate: string;
   endDate: string;
+  teamAverageOverride?: number; // 팀 평균 통화 시간 (분) - 외부에서 전달받는 값
 }
 
 export default function CallTimeChart({
   startDate,
   endDate,
+  teamAverageOverride,
 }: CallTimeChartProps) {
   // 날짜 범위 계산 (안전한 처리)
   const getDatesInRange = (start: string, end: string) => {
@@ -74,6 +76,7 @@ export default function CallTimeChart({
   const myAverage =
     myCallTimes.reduce((sum, time) => sum + time, 0) / myCallTimes.length;
   const teamAverage =
+    teamAverageOverride ??
     teamCallTimes.reduce((sum, time) => sum + time, 0) / teamCallTimes.length;
 
   // 시간 포맷팅 (분:초)

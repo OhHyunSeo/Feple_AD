@@ -12,6 +12,7 @@ interface ConsultationTableProps {
   startDate: string;
   endDate: string;
   onSessionSelect?: (sessionNo: number) => void;
+  consultantId?: string; // 특정 상담원의 세션만 표시
 }
 
 type SortField =
@@ -28,6 +29,7 @@ export default function ConsultationTable({
   startDate,
   endDate,
   onSessionSelect,
+  consultantId,
 }: ConsultationTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedSession, setSelectedSession] = useState<number | null>(null);
@@ -108,17 +110,148 @@ export default function ConsultationTable({
 
   // 데이터 필터링 및 정렬
   const getFilteredData = (): ConsultationData[] => {
-    // 공통 데이터 사용
-    const rawData = consultationRawData;
+    // consultantId가 없으면 전체 데이터 사용
+    if (!consultantId) {
+      const rawData = consultationRawData;
+      const allData = rawData.map((item, index) => ({
+        ...item,
+        no: rawData.length - index,
+      }));
 
-    // No를 내림차순으로 자동 할당 (최신이 큰 번호)
-    const allData = rawData.map((item, index) => ({
-      ...item,
-      no: rawData.length - index,
-    }));
+      const filteredData = allData.filter((item) => {
+        const itemDate = item.datetime.split(" ")[0];
+        return itemDate >= startDate && itemDate <= endDate;
+      });
+
+      let sortedData = filteredData;
+      if (sortField) {
+        sortedData = sortData(filteredData, sortField, sortDirection);
+      }
+      return sortedData;
+    }
+
+    // 상담원별 맞춤 데이터 생성
+    const getConsultantData = (consultantId: string): ConsultationData[] => {
+      switch (consultantId) {
+        case "c1": // 김민수
+          return [
+            {
+              no: 1001,
+              datetime: "2025-07-16 13:30:46",
+              finalScore: 78,
+              courtesy: "B",
+              empathy: "A",
+              problemSolving: "B",
+              emotionalStability: "A",
+              communicationFlow: "B",
+              result: "만족",
+              feedback: {
+                strengths: [
+                  "공감적 소통(A): 고객의 감정을 잘 이해하고 적절한 공감 표현을 사용합니다.",
+                  "감정 안정성(A): 어려운 상황에서도 침착하게 대응하며 안정된 응대 태도를 보여줍니다.",
+                ],
+                improvements: [
+                  "정중함(B): 양호한 수준이지만 더욱 세련된 언어 사용으로 고급스러운 서비스를 제공할 수 있습니다.",
+                  "문제 해결 역량: 좀 더 창의적인 해결책 제시가 필요합니다.",
+                ],
+                coaching: [
+                  "이미 우수한 공감 능력을 보유하고 계시니, 이를 더욱 발전시켜 고객 만족도를 높여보세요.",
+                  "정중한 언어 사용에 더해 전문적인 용어 사용으로 신뢰감을 더할 수 있습니다.",
+                ],
+              },
+            },
+            {
+              no: 1002,
+              datetime: "2025-07-16 14:15:23",
+              finalScore: 75,
+              courtesy: "C",
+              empathy: "B",
+              problemSolving: "A",
+              emotionalStability: "B",
+              communicationFlow: "B",
+              result: "만족",
+              feedback: {
+                strengths: [
+                  "문제 해결 역량(A): 복잡한 문제도 체계적으로 분석하여 효과적인 해결책을 제시합니다.",
+                  "전반적인 상담 진행이 안정적입니다.",
+                ],
+                improvements: [
+                  "정중함(C): 기본적인 예의는 갖추었으나 더욱 정중한 언어 사용이 필요합니다.",
+                  "공감 표현을 좀 더 자연스럽게 사용하시면 좋겠습니다.",
+                ],
+                coaching: [
+                  "문제 해결 능력은 우수하니, 여기에 더 따뜻한 감성을 더해보세요.",
+                  "고객의 입장에서 한 번 더 생각해보는 습관을 기르시면 더 좋은 상담사가 될 수 있습니다.",
+                ],
+              },
+            },
+          ];
+        case "c12": // 노준석
+          return [
+            {
+              no: 1003,
+              datetime: "2025-07-16 10:30:15",
+              finalScore: 55,
+              courtesy: "F",
+              empathy: "G",
+              problemSolving: "D",
+              emotionalStability: "C",
+              communicationFlow: "D",
+              result: "추가 상담 필요",
+              feedback: {
+                strengths: [
+                  "출근 및 업무 참여 의지: 기본적인 업무 참여 자세는 보여줍니다.",
+                  "문제 인식: 고객의 기본적인 문제 상황은 파악할 수 있습니다.",
+                ],
+                improvements: [
+                  "공감적 소통(G): 고객의 감정을 이해하고 공감하는 능력이 현저히 부족합니다.",
+                  "정중함(F): 기본적인 예의가 부족하며 고객 응대 태도 전반적인 개선이 필요합니다.",
+                ],
+                coaching: [
+                  "고객의 상황과 감정을 먼저 인정하고 공감하는 표현을 연습해보세요.",
+                  "기본적인 고객 서비스 매뉴얼을 다시 숙지하고 정중한 언어 사용 연습이 필요합니다.",
+                ],
+              },
+            },
+            {
+              no: 1004,
+              datetime: "2025-07-16 15:20:41",
+              finalScore: 62,
+              courtesy: "D",
+              empathy: "F",
+              problemSolving: "C",
+              emotionalStability: "C",
+              communicationFlow: "D",
+              result: "미흡",
+              feedback: {
+                strengths: [
+                  "문제 해결 시도: 고객의 문제를 해결하려는 의지를 보입니다.",
+                  "상담 완료 의지: 상담을 끝까지 진행하려는 자세를 보여줍니다.",
+                ],
+                improvements: [
+                  "공감적 소통(F): 고객의 감정을 이해하는 능력이 크게 부족합니다.",
+                  "정중함(D): 고객에 대한 기본적인 예의와 정중함이 부족합니다.",
+                ],
+                coaching: [
+                  "기본적인 고객 응대 매뉴얼을 다시 학습하고 실습을 통해 체화하세요.",
+                  "선배 상담사의 우수 사례를 관찰하고 모방하는 연습을 권장합니다.",
+                ],
+              },
+            },
+          ];
+        default:
+          // 기본 데이터 (다른 상담원들)
+          return consultationRawData.slice(0, 3).map((item, index) => ({
+            ...item,
+            no: 2000 + index,
+          }));
+      }
+    };
+
+    const rawData = getConsultantData(consultantId);
 
     // 조회 기간에 해당하는 데이터만 필터링
-    const filteredData = allData.filter((item) => {
+    const filteredData = rawData.filter((item) => {
       const itemDate = item.datetime.split(" ")[0]; // YYYY-MM-DD 부분만 추출
       return itemDate >= startDate && itemDate <= endDate;
     });
@@ -129,7 +262,6 @@ export default function ConsultationTable({
       sortedData = sortData(filteredData, sortField, sortDirection);
     }
 
-    // No는 각 세션의 고유 ID로 유지 (정렬과 무관하게 고정)
     return sortedData;
   };
 
