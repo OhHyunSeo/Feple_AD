@@ -1,17 +1,21 @@
 /* ===== TEXT UTILITIES ===== */
 
-/* Global text readability improvements */
-td, th, span, div, p, h1, h2, h3, h4, h5, h6 {
-  color: var(--text-primary) !important;
+/* Global text readability improvements for specific elements */
+td,
+th,
+p {
+  color: var(--text-primary);
 }
 
-/* Specific context overrides */
-.bg-white, .card-theme, .table-theme td, .bg-gray-50 {
-  color: var(--text-primary) !important;
+/* Specific context overrides for table and card components */
+.table-theme td {
+  color: var(--text-primary);
 }
 
-.theme-gradient, .btn-theme-primary, .table-theme th {
-  color: white !important;
+.theme-gradient,
+.btn-theme-primary,
+.table-theme th {
+  color: white;
 }
 
 /* Link styles */
@@ -21,14 +25,14 @@ a {
 }
 
 a:hover {
-  text-decoration: none !important;
+  text-decoration: none;
 }
 
 /* ===== FORM UTILITIES ===== */
 
 /* Input field readability improvements */
 input[type="text"],
-input[type="email"], 
+input[type="email"],
 input[type="password"],
 input[type="number"],
 input[type="search"],
@@ -37,8 +41,8 @@ input[type="time"],
 input[type="datetime-local"],
 textarea,
 select {
-  color: var(--text-primary) !important;
-  background-color: white !important;
+  color: var(--text-primary);
+  background-color: white;
 }
 
 input[type="text"]::placeholder,
@@ -50,12 +54,12 @@ input[type="date"]::placeholder,
 input[type="time"]::placeholder,
 input[type="datetime-local"]::placeholder,
 textarea::placeholder {
-  color: var(--text-muted) !important;
+  color: var(--text-muted);
 }
 
 select option {
-  color: var(--text-primary) !important;
-  background-color: white !important;
+  color: var(--text-primary);
+  background-color: white;
 }
 
 /* Button text improvements */
@@ -70,23 +74,53 @@ button[type="submit"] {
 
 /* ===== SPACING UTILITIES ===== */
 
-.spacing-xs { gap: 0.25rem; }
-.spacing-sm { gap: 0.5rem; }
-.spacing-md { gap: 1rem; }
-.spacing-lg { gap: 1.5rem; }
-.spacing-xl { gap: 2rem; }
+.spacing-xs {
+  gap: 0.25rem;
+}
+.spacing-sm {
+  gap: 0.5rem;
+}
+.spacing-md {
+  gap: 1rem;
+}
+.spacing-lg {
+  gap: 1.5rem;
+}
+.spacing-xl {
+  gap: 2rem;
+}
 
-.padding-xs { padding: 0.25rem; }
-.padding-sm { padding: 0.5rem; }
-.padding-md { padding: 1rem; }
-.padding-lg { padding: 1.5rem; }
-.padding-xl { padding: 2rem; }
+.padding-xs {
+  padding: 0.25rem;
+}
+.padding-sm {
+  padding: 0.5rem;
+}
+.padding-md {
+  padding: 1rem;
+}
+.padding-lg {
+  padding: 1.5rem;
+}
+.padding-xl {
+  padding: 2rem;
+}
 
-.margin-xs { margin: 0.25rem; }
-.margin-sm { margin: 0.5rem; }
-.margin-md { margin: 1rem; }
-.margin-lg { margin: 1.5rem; }
-.margin-xl { margin: 2rem; }
+.margin-xs {
+  margin: 0.25rem;
+}
+.margin-sm {
+  margin: 0.5rem;
+}
+.margin-md {
+  margin: 1rem;
+}
+.margin-lg {
+  margin: 1.5rem;
+}
+.margin-xl {
+  margin: 2rem;
+}
 
 /* ===== LAYOUT UTILITIES ===== */
 
@@ -238,7 +272,7 @@ button[type="submit"] {
   .show-on-mobile {
     display: block;
   }
-  
+
   .hide-on-mobile {
     display: none;
   }
@@ -460,16 +494,16 @@ button[type="submit"] {
     width: 100vw;
     margin-left: calc(-50vw + 50%);
   }
-  
+
   .mobile-padding {
     padding-left: 1rem;
     padding-right: 1rem;
   }
-  
+
   .mobile-text-sm {
     font-size: 0.875rem;
   }
-  
+
   .mobile-gap-sm {
     gap: 0.5rem;
   }
@@ -482,13 +516,13 @@ button[type="submit"] {
     max-width: 1200px;
     margin: 0 auto;
   }
-  
+
   .desktop-padding {
     padding-left: 2rem;
     padding-right: 2rem;
   }
-  
+
   .desktop-gap-lg {
     gap: 2rem;
   }
-} 
+}

@@ -53,31 +53,31 @@
 
 /* Typography Themes */
 .korean-text {
-  font-family: 'Noto Sans KR', 'LGEIText', sans-serif;
+  font-family: "Noto Sans KR", "LGEIText", sans-serif;
   font-weight: 500;
   letter-spacing: -0.025em;
 }
 
 .korean-heading {
-  font-family: 'Noto Sans KR', 'LGEIHeadline', sans-serif;
+  font-family: "Noto Sans KR", "LGEIHeadline", sans-serif;
   font-weight: 700;
   letter-spacing: -0.025em;
 }
 
 /* Text Color Utilities */
 .text-readable {
-  color: var(--text-primary) !important;
+  color: var(--text-primary);
 }
 
 .text-secondary {
-  color: var(--text-secondary) !important;
+  color: var(--text-secondary);
 }
 
 .text-muted {
-  color: var(--text-muted) !important;
+  color: var(--text-muted);
 }
 
-/* Forced white text for specific contexts */
+/* Forced white text for specific contexts - keeping !important only where absolutely necessary */
 .text-white-force {
   color: white !important;
 }
@@ -88,31 +88,31 @@
 
 /* Special context classes */
 .sidebar-active-text {
-  color: white !important;
+  color: white;
 }
 
 .sidebar-active-text * {
-  color: white !important;
+  color: white;
 }
 
 .submenu-active-text {
-  color: var(--accent-pink) !important;
+  color: var(--accent-pink);
 }
 
 .submenu-active-text * {
-  color: var(--accent-pink) !important;
+  color: var(--accent-pink);
 }
 
 .header-white-text {
-  color: white !important;
+  color: white;
 }
 
 .welcome-white-text {
-  color: white !important;
+  color: white;
 }
 
 .welcome-white-text * {
-  color: white !important;
+  color: white;
 }
 
 /* Shadow utilities */
@@ -126,4 +126,4 @@
 
 .shadow-theme-lg {
   box-shadow: var(--shadow-lg);
-} 
+}

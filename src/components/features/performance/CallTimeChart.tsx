@@ -12,20 +12,40 @@ export default function CallTimeChart({
   startDate,
   endDate,
 }: CallTimeChartProps) {
-  // 날짜 범위 계산
+  // 날짜 범위 계산 (안전한 처리)
   const getDatesInRange = (start: string, end: string) => {
-    const dates = [];
-    const current = new Date(start);
-    const endDate = new Date(end);
+    try {
+      const dates = [];
+      const current = new Date(start);
+      const endDate = new Date(end);
 
-    while (current <= endDate) {
-      dates.push(new Date(current).toISOString().split("T")[0]);
-      current.setDate(current.getDate() + 1);
+      // 유효한 날짜인지 확인
+      if (isNaN(current.getTime()) || isNaN(endDate.getTime())) {
+        return [];
+      }
+
+      // 너무 긴 범위는 제한 (최대 31일)
+      const maxDays = 31;
+      let dayCount = 0;
+
+      while (current <= endDate && dayCount < maxDays) {
+        dates.push(new Date(current).toISOString().split("T")[0]);
+        current.setDate(current.getDate() + 1);
+        dayCount++;
+      }
+
+      return dates;
+    } catch (error) {
+      console.error("날짜 계산 오류:", error);
+      return [];
     }
-    return dates;
   };
 
   const dates = getDatesInRange(startDate, endDate);
+
+  // 빈 배열인 경우 기본값 사용
+  const safeDates =
+    dates.length > 0 ? dates : [new Date().toISOString().split("T")[0]];
 
   // 고정된 더미 데이터 (hydration 오류 방지)
   const getFixedCallTimeData = (dates: string[]) => {
@@ -45,10 +65,10 @@ export default function CallTimeChart({
   };
 
   const { myTimes: myCallTimes, teamTimes: teamCallTimes } =
-    getFixedCallTimeData(dates);
+    getFixedCallTimeData(safeDates);
 
   // 날짜 라벨 처리
-  const displayDates = dates.map((date, index) => `${index + 1}일차`);
+  const displayDates = safeDates.map((date, index) => `${index + 1}일차`);
 
   // 평균값 계산
   const myAverage =

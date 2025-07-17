@@ -8,18 +8,27 @@ import { useSidebar } from "@/context/SidebarContext";
 
 interface DashboardLayoutProps {
   children: ReactNode;
+  onPeriodChange?: (period: "yesterday" | "lastWeek" | "lastMonth") => void;
+  selectedPeriod?: "yesterday" | "lastWeek" | "lastMonth";
 }
 
-export default function DashboardLayout({ children }: DashboardLayoutProps) {
+export default function DashboardLayout({
+  children,
+  onPeriodChange,
+  selectedPeriod,
+}: DashboardLayoutProps) {
   const { sidebarWidth } = useSidebar();
 
   return (
     <AnalysisResultProvider>
       <div className="h-screen overflow-hidden bg-white">
-        <Header />
+        <Header
+          onPeriodChange={onPeriodChange}
+          selectedPeriod={selectedPeriod}
+        />
         <Sidebar />
         <main
-          className="korean-text overflow-y-auto text-gray-900 transition-all duration-300 ease-in-out"
+          className="korean-text overflow-y-auto transition-all duration-300 ease-in-out"
           style={{
             marginLeft: `${sidebarWidth}px`,
             marginTop: "80px", // 헤더 높이에 맞춰 조정
@@ -27,7 +36,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           }}
         >
           <div className="h-full w-full">
-            <div className="h-full w-full text-gray-900">{children}</div>
+            <div className="h-full w-full">{children}</div>
           </div>
         </main>
       </div>

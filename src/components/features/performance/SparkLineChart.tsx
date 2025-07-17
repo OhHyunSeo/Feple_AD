@@ -13,6 +13,19 @@ export default function SparkLineChart({
   height = 80,
   width = 220,
 }: SparkLineChartProps) {
+  // 데이터 유효성 검사 및 필터링
+  const validData = data.filter(
+    (val) => typeof val === "number" && !isNaN(val) && isFinite(val)
+  );
+  const validTeamData = teamData.filter(
+    (val) => typeof val === "number" && !isNaN(val) && isFinite(val)
+  );
+
+  // 데이터가 비어있는 경우 기본값 사용
+  const safeData = validData.length > 0 ? validData : [0];
+  const safeTeamData = validTeamData.length > 0 ? validTeamData : [0];
+  const safeXLabels = xLabels.length > 0 ? xLabels : ["1일차"];
+
   const paddingLeft = 0;
   const paddingRight = 0;
   const paddingTop = 5;
@@ -21,19 +34,27 @@ export default function SparkLineChart({
   const chartHeight = height - paddingTop - paddingBottom;
 
   // 데이터의 최대값과 최소값 계산 (내 데이터와 팀 데이터 모두 고려)
-  const allValues = [...data, ...teamData];
+  const allValues = [...safeData, ...safeTeamData];
   const maxValue = Math.max(...allValues);
   const minValue = Math.min(...allValues);
   const valueRange = maxValue - minValue || 1; // 0으로 나누기 방지
 
-  // 좌표 계산 함수
-  const getX = (index: number) =>
-    paddingLeft + (index / (data.length - 1)) * chartWidth;
-  const getY = (value: number) =>
-    paddingTop + chartHeight - ((value - minValue) / valueRange) * chartHeight;
+  // 좌표 계산 함수 (안전한 계산)
+  const getX = (index: number) => {
+    const dataLength = Math.max(safeData.length, 1);
+    const ratio = dataLength === 1 ? 0.5 : index / (dataLength - 1);
+    return paddingLeft + ratio * chartWidth;
+  };
+
+  const getY = (value: number) => {
+    if (!isFinite(value) || isNaN(value)) return paddingTop + chartHeight / 2;
+    return (
+      paddingTop + chartHeight - ((value - minValue) / valueRange) * chartHeight
+    );
+  };
 
   // 내 데이터 라인 경로 생성
-  const myPath = data
+  const myPath = safeData
     .map(
       (value, index) =>
         `${index === 0 ? "M" : "L"} ${getX(index)} ${getY(value)}`
@@ -41,7 +62,7 @@ export default function SparkLineChart({
     .join(" ");
 
   // 팀 데이터 라인 경로 생성
-  const teamPath = teamData
+  const teamPath = safeTeamData
     .map(
       (value, index) =>
         `${index === 0 ? "M" : "L"} ${getX(index)} ${getY(value)}`
@@ -148,7 +169,7 @@ export default function SparkLineChart({
         <path d={myPath} fill="none" stroke="#ec7199" strokeWidth="2" />
 
         {/* 내 데이터 포인트 */}
-        {data.map((value, index) => (
+        {safeData.map((value, index) => (
           <circle
             key={index}
             cx={getX(index)}
@@ -159,7 +180,7 @@ export default function SparkLineChart({
         ))}
 
         {/* 팀 데이터 포인트 */}
-        {teamData.map((value, index) => (
+        {safeTeamData.map((value, index) => (
           <circle
             key={index}
             cx={getX(index)}
@@ -171,17 +192,17 @@ export default function SparkLineChart({
         ))}
 
         {/* X축 라벨 (일차 표시) */}
-        {xLabels.map((label, index) => {
+        {safeXLabels.map((label, index) => {
           // 라벨을 선택적으로 표시 (너무 많으면 일부만)
           const shouldShow =
-            xLabels.length <= 7 ||
+            safeXLabels.length <= 7 ||
             index === 0 ||
-            index === xLabels.length - 1 ||
-            index % Math.ceil(xLabels.length / 5) === 0;
+            index === safeXLabels.length - 1 ||
+            index % Math.ceil(safeXLabels.length / 5) === 0;
 
           if (!shouldShow) return null;
 
-          const x = paddingLeft + (index / (data.length - 1)) * chartWidth;
+          const x = getX(index);
 
           return (
             <text
