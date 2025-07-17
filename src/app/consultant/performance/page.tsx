@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import DashboardLayout from "@/components/DashboardLayout";
 import {
@@ -12,7 +12,7 @@ import {
   ConversationDetail,
 } from "@/components/features/performance";
 
-export default function ConsultantPerformancePage() {
+function ConsultantPerformanceContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -132,5 +132,13 @@ export default function ConsultantPerformancePage() {
         </div>
       </div>
     </DashboardLayout>
+  );
+}
+
+export default function ConsultantPerformancePage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ConsultantPerformanceContent />
+    </Suspense>
   );
 }
