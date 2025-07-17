@@ -31,35 +31,41 @@ export default function ConversationDetail({
   );
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
-  const [conversationData, setConversationData] = useState<ConversationDetailData | null>(null);
+  const [conversationData, setConversationData] =
+    useState<ConversationDetailData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  const fetchConversationDetail = useCallback(async (sessionId: string) => {
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      const response = await fetch(`/api/conversation-detail?sessionId=${sessionId}`);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+  const fetchConversationDetail = useCallback(
+    async (sessionId: string) => {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const response = await fetch(
+          `/api/conversation-detail?sessionId=${sessionId}`
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setConversationData(data);
+      } catch (err) {
+        console.error("상담 상세 데이터 조회 실패:", err);
+        setError(err instanceof Error ? err.message : "데이터 로딩 실패");
+        // API 실패 시 mock 데이터 사용
+        if (sessionNo) {
+          setConversationData(generateConversationData(sessionNo));
+        }
+      } finally {
+        setIsLoading(false);
       }
-      
-      const data = await response.json();
-      setConversationData(data);
-    } catch (err) {
-      console.error('상담 상세 데이터 조회 실패:', err);
-      setError(err instanceof Error ? err.message : '데이터 로딩 실패');
-      // API 실패 시 mock 데이터 사용
-      if (sessionNo) {
-        setConversationData(generateConversationData(sessionNo));
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  }, [sessionNo]);
+    },
+    [sessionNo]
+  );
 
   // API에서 세션 데이터 가져오기
   useEffect(() => {
@@ -150,7 +156,9 @@ export default function ConversationDetail({
         <div className="flex items-center justify-center h-32">
           <div className="flex items-center gap-2">
             <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
-            <span className="text-xs text-gray-600">상담 상세 정보를 불러오는 중...</span>
+            <span className="text-xs text-gray-600">
+              상담 상세 정보를 불러오는 중...
+            </span>
           </div>
         </div>
       </div>
@@ -172,9 +180,11 @@ export default function ConversationDetail({
         </div>
         <div className="text-center h-32 flex items-center justify-center">
           <div>
-            <p className="text-xs text-red-600 mb-2">데이터를 불러오는 중 오류가 발생했습니다.</p>
+            <p className="text-xs text-red-600 mb-2">
+              데이터를 불러오는 중 오류가 발생했습니다.
+            </p>
             <p className="text-xs text-gray-500">{error}</p>
-            <button 
+            <button
               onClick={() => sessionId && fetchConversationDetail(sessionId)}
               className="mt-2 px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600"
             >
@@ -213,11 +223,6 @@ export default function ConversationDetail({
           <h3 className="text-sm font-semibold text-gray-800">
             상담 세션 {conversationData.no}
           </h3>
-          {sessionId && (
-            <div className="text-[10px] text-green-600 bg-green-50 px-2 py-1 rounded">
-              실제 데이터
-            </div>
-          )}
         </div>
         <button
           onClick={onClose}
