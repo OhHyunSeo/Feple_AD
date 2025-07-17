@@ -1,37 +1,189 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import DashboardLayout from "@/components/DashboardLayout";
 import { RadarChart } from "@/components/charts/RadarChart";
+import { ChevronRight } from "lucide-react";
 
 export default function ConsultantDashboardPage() {
-  // 전일 상담 분석
-  const yesterdayAnalysis = {
-    strengths: "고객의 말을 경청하고, 친절하게 안내하였습니다.",
-    improvements: "전문 용어 사용 시 추가 설명이 필요합니다.",
-    coaching: "고객의 감정에 공감하는 멘트를 한 번 더 추가해보세요.",
+  const router = useRouter();
+
+  // 기간 선택 상태
+  const [selectedPeriod, setSelectedPeriod] = useState<
+    "yesterday" | "lastWeek" | "lastMonth"
+  >("yesterday");
+
+  // 날짜 계산 함수들 (한국 시간 기준)
+  const getDateRange = (period: "yesterday" | "lastWeek" | "lastMonth") => {
+    // 한국 시간 기준으로 현재 날짜 계산
+    const now = new Date();
+    const koreaTime = new Date(now.getTime() + 9 * 60 * 60 * 1000); // UTC+9
+    const today = new Date(
+      koreaTime.getFullYear(),
+      koreaTime.getMonth(),
+      koreaTime.getDate()
+    );
+
+    const formatDate = (date: Date) => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    };
+
+    switch (period) {
+      case "yesterday":
+        const yesterday = new Date(today);
+        yesterday.setDate(today.getDate() - 1);
+        return {
+          startDate: formatDate(yesterday),
+          endDate: formatDate(yesterday),
+        };
+
+      case "lastWeek":
+        // 저번 주 월요일부터 금요일까지
+        const dayOfWeek = today.getDay(); // 0=일요일, 1=월요일, ...
+        const daysToSubtract = dayOfWeek === 0 ? 13 : dayOfWeek + 6; // 저번 주 월요일까지
+
+        const lastWeekStart = new Date(today);
+        lastWeekStart.setDate(today.getDate() - daysToSubtract);
+
+        const lastWeekEnd = new Date(lastWeekStart);
+        lastWeekEnd.setDate(lastWeekStart.getDate() + 4); // 금요일까지
+
+        return {
+          startDate: formatDate(lastWeekStart),
+          endDate: formatDate(lastWeekEnd),
+        };
+
+      case "lastMonth":
+        // 저번 달 전체 (한국 시간 기준)
+        const currentYear = today.getFullYear();
+        const currentMonth = today.getMonth();
+
+        // 저번 달의 첫 날과 마지막 날
+        const lastMonthStart = new Date(currentYear, currentMonth - 1, 1);
+        const lastMonthEnd = new Date(currentYear, currentMonth, 0); // 현재 월의 0일 = 저번 달 마지막 날
+
+        return {
+          startDate: formatDate(lastMonthStart),
+          endDate: formatDate(lastMonthEnd),
+        };
+
+      default:
+        const defaultYesterday = new Date(today);
+        defaultYesterday.setDate(today.getDate() - 1);
+        return {
+          startDate: formatDate(defaultYesterday),
+          endDate: formatDate(defaultYesterday),
+        };
+    }
   };
 
-  // 전일 평균 점수
-  const yesterdayAvgScore = 75;
+  // 상세 보기 페이지로 이동
+  const handleDetailView = () => {
+    const { startDate, endDate } = getDateRange(selectedPeriod);
+    router.push(
+      `/consultant/performance?startDate=${startDate}&endDate=${endDate}`
+    );
+  };
 
-  // 5대 지표 점수 및 등급 (예시)
-  const indicators = [
-    { label: "정중함 및 언어 품질", score: 60, grade: "G" },
-    { label: "대화 흐름 및 응대 태도", score: 80, grade: "B" },
-    { label: "공감적 소통", score: 70, grade: "C" },
-    { label: "감정 안정성", score: 65, grade: "C" },
-    { label: "문제 해결 역량", score: 85, grade: "A" },
-  ];
+  // 기간별 데이터
+  const periodData = {
+    yesterday: {
+      analysis: {
+        strengths: "고객의 말을 경청하고, 친절하게 안내하였습니다.",
+        improvements: "전문 용어 사용 시 추가 설명이 필요합니다.",
+        coaching: "고객의 감정에 공감하는 멘트를 한 번 더 추가해보세요.",
+      },
+      avgScore: 75,
+      indicators: [
+        { label: "정중함 및 언어 품질", score: 60, grade: "G" },
+        { label: "대화 흐름 및 응대 태도", score: 80, grade: "B" },
+        { label: "공감적 소통", score: 70, grade: "C" },
+        { label: "감정 안정성", score: 65, grade: "C" },
+        { label: "문제 해결 역량", score: 85, grade: "A" },
+      ],
+      teamAverage: [
+        { label: "정중함 및 언어 품질", score: 78 },
+        { label: "대화 흐름 및 응대 태도", score: 82 },
+        { label: "공감적 소통", score: 74 },
+        { label: "감정 안정성", score: 79 },
+        { label: "문제 해결 역량", score: 81 },
+      ],
+      title: "어제 상담 분석 요약",
+      scoreTitle: "어제 평균 점수",
+    },
+    lastWeek: {
+      analysis: {
+        strengths:
+          "지난 주 동안 꾸준한 고객 응대 품질을 유지하며, 문제 해결 능력이 향상되었습니다.",
+        improvements:
+          "공감적 소통 부분에서 더 많은 연습이 필요하며, 감정 표현을 다양화해야 합니다.",
+        coaching:
+          "주간 평균 점수가 상승세를 보이고 있습니다. 이 추세를 유지하며 약점 보완에 집중하세요.",
+      },
+      avgScore: 78,
+      indicators: [
+        { label: "정중함 및 언어 품질", score: 72, grade: "C" },
+        { label: "대화 흐름 및 응대 태도", score: 85, grade: "A" },
+        { label: "공감적 소통", score: 68, grade: "D" },
+        { label: "감정 안정성", score: 82, grade: "B" },
+        { label: "문제 해결 역량", score: 88, grade: "A" },
+      ],
+      teamAverage: [
+        { label: "정중함 및 언어 품질", score: 79 },
+        { label: "대화 흐름 및 응대 태도", score: 83 },
+        { label: "공감적 소통", score: 77 },
+        { label: "감정 안정성", score: 80 },
+        { label: "문제 해결 역량", score: 84 },
+      ],
+      title: "저번 주 상담 분석 요약",
+      scoreTitle: "저번 주 평균 점수",
+    },
+    lastMonth: {
+      analysis: {
+        strengths:
+          "한 달간 전반적인 상담 품질이 안정적이며, 고객 만족도가 지속적으로 개선되고 있습니다.",
+        improvements:
+          "월간 데이터를 보면 일관성 있는 서비스 제공에 더 노력이 필요합니다.",
+        coaching:
+          "월간 성과가 우수합니다. 현재 수준을 유지하며 지속적인 자기계발을 추천합니다.",
+      },
+      avgScore: 81,
+      indicators: [
+        { label: "정중함 및 언어 품질", score: 79, grade: "B" },
+        { label: "대화 흐름 및 응대 태도", score: 87, grade: "A" },
+        { label: "공감적 소통", score: 75, grade: "C" },
+        { label: "감정 안정성", score: 84, grade: "A" },
+        { label: "문제 해결 역량", score: 90, grade: "A" },
+      ],
+      teamAverage: [
+        { label: "정중함 및 언어 품질", score: 81 },
+        { label: "대화 흐름 및 응대 태도", score: 85 },
+        { label: "공감적 소통", score: 79 },
+        { label: "감정 안정성", score: 82 },
+        { label: "문제 해결 역량", score: 86 },
+      ],
+      title: "저번 달 상담 분석 요약",
+      scoreTitle: "저번 달 평균 점수",
+    },
+  };
 
-  // RadarChart용 데이터 변환 (subject, A 구조)
-  const radarData = indicators.map((item) => ({
+  // 현재 선택된 기간의 데이터
+  const currentData = periodData[selectedPeriod];
+
+  // RadarChart용 데이터 변환 (subject, A, B 구조)
+  const radarData = currentData.indicators.map((item, index) => ({
     subject: item.label,
-    A: item.score,
+    A: item.score, // 본인 점수
+    B: currentData.teamAverage[index].score, // 동료 평균
     fullMark: 100,
   }));
 
   // 점수 낮은 2개 지표 추출 (score 오름차순)
-  const lowIndicators = [...indicators]
+  const lowIndicators = [...currentData.indicators]
     .sort((a, b) => a.score - b.score)
     .slice(0, 2);
 
@@ -39,8 +191,18 @@ export default function ConsultantDashboardPage() {
   const userName = "마교준석";
   const userInitial = userName[0];
 
+  // 기간 변경 핸들러
+  const handlePeriodChange = (
+    period: "yesterday" | "lastWeek" | "lastMonth"
+  ) => {
+    setSelectedPeriod(period);
+  };
+
   return (
-    <DashboardLayout>
+    <DashboardLayout
+      onPeriodChange={handlePeriodChange}
+      selectedPeriod={selectedPeriod}
+    >
       <div className="w-full h-full bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 p-3">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 h-full">
           {/* 왼쪽 카드들 */}
@@ -52,7 +214,7 @@ export default function ConsultantDashboardPage() {
               </div>
               <div>
                 <div className="text-base font-bold text-white flex items-center gap-2">
-                  {userName} 상담사님 <span className="animate-bounce">👋</span>
+                  {userName} 상담사님 <span className="animate-bounce">👋🏻</span>
                 </div>
                 <div className="text-xs text-pink-100 mt-1">
                   오늘도 힘내세요! Feple이 함께합니다 :)
@@ -60,33 +222,44 @@ export default function ConsultantDashboardPage() {
               </div>
             </div>
 
-            {/* 전일 상담 분석 카드 */}
+            {/* 상담 분석 카드 */}
             <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 flex flex-col gap-2">
               <div className="text-base font-semibold text-pink-600 mb-2">
-                어제 상담 분석 요약
+                {currentData.title}
               </div>
               <ul className="text-xs text-gray-700 list-disc pl-4 space-y-1">
                 <li>
                   <span className="font-bold">강점:</span>{" "}
-                  {yesterdayAnalysis.strengths}
+                  {currentData.analysis.strengths}
                 </li>
                 <li>
                   <span className="font-bold">개선점:</span>{" "}
-                  {yesterdayAnalysis.improvements}
+                  {currentData.analysis.improvements}
                 </li>
                 <li>
                   <span className="font-bold">코칭 멘트:</span>{" "}
-                  {yesterdayAnalysis.coaching}
+                  {currentData.analysis.coaching}
                 </li>
               </ul>
             </div>
 
-            {/* 전일 평균 점수 카드 */}
-            <div className="bg-white rounded-xl p-4 shadow-md border border-gray-100 flex flex-col items-center justify-center">
-              <div className="text-sm text-gray-500 mb-1">어제 평균 점수</div>
-              <div className="text-3xl font-bold text-pink-600">
-                {yesterdayAvgScore}점
+            {/* 평균 점수 카드 */}
+            <div className="bg-white rounded-xl p-4 shadow-md border border-gray-100 flex flex-col items-center justify-center relative">
+              <div className="text-sm text-gray-500 mb-1">
+                {currentData.scoreTitle}
               </div>
+              <div className="text-3xl font-bold text-pink-600">
+                {currentData.avgScore}점
+              </div>
+
+              {/* 상세 보기 버튼 */}
+              <button
+                onClick={handleDetailView}
+                className="absolute bottom-2 right-2 flex items-center gap-1 px-2 py-1 text-xs text-gray-500 hover:text-pink-600 hover:bg-pink-50 rounded transition-colors group"
+              >
+                <span>상세 보기</span>
+                <ChevronRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform" />
+              </button>
             </div>
 
             {/* 위험 지표 카드 2개 */}
@@ -106,6 +279,8 @@ export default function ConsultantDashboardPage() {
                       backgroundColor:
                         item.grade === "G"
                           ? "#ef4444"
+                          : item.grade === "D"
+                          ? "#f97316"
                           : item.grade === "C"
                           ? "#facc15"
                           : "#4ade80",
@@ -122,7 +297,18 @@ export default function ConsultantDashboardPage() {
               종합 역량 분석
             </div>
             <div className="h-full flex items-center justify-center">
-              <RadarChart data={radarData} />
+              <RadarChart data={radarData} showComparison={true} />
+            </div>
+            {/* 범례 */}
+            <div className="flex justify-center items-center gap-4 mt-2">
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-3 rounded-full bg-purple-500"></div>
+                <span className="text-xs text-gray-600">내 점수</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-3 rounded-full bg-gray-400 border border-gray-300"></div>
+                <span className="text-xs text-gray-600">동료 평균</span>
+              </div>
             </div>
           </div>
         </div>

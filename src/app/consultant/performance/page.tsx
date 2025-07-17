@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import DashboardLayout from "@/components/DashboardLayout";
 import {
   DateFilter,
@@ -12,18 +13,31 @@ import {
 } from "@/components/features/performance";
 
 export default function ConsultantPerformancePage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
   // 어제 날짜 계산
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
 
-  // 기본값을 어제와 그 전날로 설정
-  const defaultEndDate = yesterday.toISOString().split("T")[0];
-  const defaultStartDate = new Date(yesterday.getTime() - 24 * 60 * 60 * 1000)
-    .toISOString()
-    .split("T")[0];
+  // URL 파라미터에서 날짜를 가져오거나 기본값 사용
+  const getInitialStartDate = () => {
+    const paramStartDate = searchParams.get("startDate");
+    return (
+      paramStartDate ||
+      new Date(yesterday.getTime() - 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0]
+    );
+  };
 
-  const [startDate, setStartDate] = useState(defaultStartDate);
-  const [endDate, setEndDate] = useState(defaultEndDate);
+  const getInitialEndDate = () => {
+    const paramEndDate = searchParams.get("endDate");
+    return paramEndDate || yesterday.toISOString().split("T")[0];
+  };
+
+  const [startDate, setStartDate] = useState(getInitialStartDate());
+  const [endDate, setEndDate] = useState(getInitialEndDate());
   const [selectedSessionNo, setSelectedSessionNo] = useState<number | null>(
     null
   );
@@ -55,6 +69,10 @@ export default function ConsultantPerformancePage() {
 
   const handleSearch = () => {
     console.log("조회:", startDate, "~", endDate);
+    // URL 업데이트
+    router.push(
+      `/consultant/performance?startDate=${startDate}&endDate=${endDate}`
+    );
     // TODO: 실제 데이터 조회 로직
   };
 
@@ -76,7 +94,7 @@ export default function ConsultantPerformancePage() {
         />
 
         {/* 메인 콘텐츠 영역 */}
-        <div className="grid grid-cols-5 gap-3">
+        <div className="grid grid-cols-5 gap-3 items-stretch">
           {/* 좌측 패널 - 기간 내 상담 점수 */}
           <div className="col-span-1 space-y-3">
             <ScoreChart
@@ -92,20 +110,24 @@ export default function ConsultantPerformancePage() {
           </div>
 
           {/* 중앙 패널 - 상담 세션 테이블 */}
-          <div className="col-span-3">
-            <ConsultationTable
-              startDate={startDate}
-              endDate={endDate}
-              onSessionSelect={handleSessionSelect}
-            />
+          <div className="col-span-3 flex flex-col">
+            <div className="flex-1">
+              <ConsultationTable
+                startDate={startDate}
+                endDate={endDate}
+                onSessionSelect={handleSessionSelect}
+              />
+            </div>
           </div>
 
           {/* 우측 패널 - 상담 상세 내용 */}
-          <div className="col-span-1">
-            <ConversationDetail
-              sessionNo={selectedSessionNo}
-              onClose={() => setSelectedSessionNo(null)}
-            />
+          <div className="col-span-1 flex flex-col">
+            <div className="flex-1">
+              <ConversationDetail
+                sessionNo={selectedSessionNo}
+                onClose={() => setSelectedSessionNo(null)}
+              />
+            </div>
           </div>
         </div>
       </div>

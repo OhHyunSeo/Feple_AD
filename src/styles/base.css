@@ -1,42 +1,42 @@
 /* ===== FONT FACES ===== */
 @font-face {
-  font-family: 'LGEIText';
-  src: url('/fonts/LGEITextTTF-Regular.ttf') format('truetype');
+  font-family: "LGEIText";
+  src: url("/fonts/LGEITextTTF-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'LGEIText';
-  src: url('/fonts/LGEITextTTF-SemiBold.ttf') format('truetype');
+  font-family: "LGEIText";
+  src: url("/fonts/LGEITextTTF-SemiBold.ttf") format("truetype");
   font-weight: 600;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'LGEIText';
-  src: url('/fonts/LGEITextTTF-Bold.ttf') format('truetype');
+  font-family: "LGEIText";
+  src: url("/fonts/LGEITextTTF-Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'LGEIHeadline';
-  src: url('/fonts/LGEIHeadlineTTF-Regular.ttf') format('truetype');
+  font-family: "LGEIHeadline";
+  src: url("/fonts/LGEIHeadlineTTF-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'LGEIHeadline';
-  src: url('/fonts/LGEIHeadlineTTF-Semibold.ttf') format('truetype');
+  font-family: "LGEIHeadline";
+  src: url("/fonts/LGEIHeadlineTTF-Semibold.ttf") format("truetype");
   font-weight: 600;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'LGEIHeadline';
-  src: url('/fonts/LGEIHeadlineTTF-Bold.ttf') format('truetype');
+  font-family: "LGEIHeadline";
+  src: url("/fonts/LGEIHeadlineTTF-Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
 }
@@ -47,27 +47,27 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
-  
+
   /* Theme Colors */
-  --primary-pink: #EC4899;
-  --primary-purple: #8B5CF6;
-  --secondary-pink: #F3E8FF;
-  --secondary-purple: #EDE9FE;
-  --accent-pink: #BE185D;
-  --accent-purple: #7C3AED;
-  --light-pink: #FCE7F3;
-  --light-purple: #F5F3FF;
-  --dark-purple: #581C87;
-  
+  --primary-pink: #ec4899;
+  --primary-purple: #8b5cf6;
+  --secondary-pink: #f3e8ff;
+  --secondary-purple: #ede9fe;
+  --accent-pink: #be185d;
+  --accent-purple: #7c3aed;
+  --light-pink: #fce7f3;
+  --light-purple: #f5f3ff;
+  --dark-purple: #581c87;
+
   /* Gradients */
-  --gradient-pink: linear-gradient(135deg, #EC4899 0%, #8B5CF6 100%);
-  --gradient-purple: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
-  
+  --gradient-pink: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+  --gradient-purple: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+
   /* Text Colors */
   --text-primary: #1f2937;
   --text-secondary: #6b7280;
   --text-muted: #9ca3af;
-  
+
   /* Shadows */
   --shadow-sm: 0 4px 20px rgba(139, 92, 246, 0.1);
   --shadow-md: 0 8px 30px rgba(139, 92, 246, 0.15);
@@ -89,18 +89,24 @@
   margin: 0;
 }
 
-html, body {
+html,
+body {
   height: 100%;
   overflow: auto;
 }
 
 body {
-  color: var(--text-primary) !important;
-  background: white !important;
+  color: var(--text-primary);
+  background: white;
   font-weight: 400;
-  font-family: 'Noto Sans KR', 'LGEIText', sans-serif;
+  font-family: "Noto Sans KR", "LGEIText", sans-serif;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'LGEIHeadline', 'Noto Sans KR', sans-serif;
-} 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "LGEIHeadline", "Noto Sans KR", sans-serif;
+}

@@ -389,7 +389,7 @@ export default function ConsultationTable({
                         <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                           {/* 강점 피드백 */}
                           <div className="bg-white rounded-lg p-3 shadow-sm">
-                            <h4 className="text-sm font-semibold text-pink-600 mb-2 flex items-center gap-1">
+                            <h4 className="text-sm font-semibold text-blue-600 mb-2 flex items-center gap-1">
                               강점
                             </h4>
                             <ul className="space-y-1">
