@@ -32,7 +32,7 @@ export default function Header({
               height={22}
               className="h-6 w-auto flex-shrink-0"
             />
-            <span className="text-2xl mb-2 font-bold text-white korean-heading header-white-text leading-none">
+            <span className="text-[22px] mb-1 font-bold text-white korean-heading header-white-text leading-none">
               Feple
             </span>
           </Link>
