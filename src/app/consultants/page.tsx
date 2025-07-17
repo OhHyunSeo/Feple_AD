@@ -2,91 +2,8 @@
 
 import { useState, useMemo } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
-import { Users, Search, Filter, Star, TrendingUp, TrendingDown, Minus } from "lucide-react";
-
-// 상담사 더미 데이터 (확장된 버전)
-const consultants = [
-  {
-    id: 1,
-    name: "김민수",
-    department: "고객상담 1팀",
-    position: "선임 상담사",
-    email: "kim.minsu@company.com",
-    phone: "010-1234-5678",
-    rating: 4.8,
-    evaluationCount: 156,
-    completionRate: 98,
-    trend: "up",
-    joinDate: "2020-03-15",
-    lastEvaluation: "2024-12-20",
-    status: "active",
-    avatar: "김",
-  },
-  {
-    id: 2,
-    name: "이영희",
-    department: "고객상담 2팀",
-    position: "상담사",
-    email: "lee.younghee@company.com",
-    phone: "010-2345-6789",
-    rating: 4.5,
-    evaluationCount: 142,
-    completionRate: 95,
-    trend: "up",
-    joinDate: "2021-06-10",
-    lastEvaluation: "2024-12-18",
-    status: "active",
-    avatar: "이",
-  },
-  {
-    id: 3,
-    name: "박철수",
-    department: "기술지원팀",
-    position: "책임 상담사",
-    email: "park.chulsoo@company.com",
-    phone: "010-3456-7890",
-    rating: 4.9,
-    evaluationCount: 203,
-    completionRate: 99,
-    trend: "stable",
-    joinDate: "2019-01-20",
-    lastEvaluation: "2024-12-22",
-    status: "active",
-    avatar: "박",
-  },
-  {
-    id: 4,
-    name: "정수진",
-    department: "고객상담 1팀",
-    position: "상담사",
-    email: "jung.sujin@company.com",
-    phone: "010-4567-8901",
-    rating: 4.3,
-    evaluationCount: 98,
-    completionRate: 92,
-    trend: "down",
-    joinDate: "2022-09-05",
-    lastEvaluation: "2024-12-15",
-    status: "active",
-    avatar: "정",
-  },
-  {
-    id: 5,
-    name: "최동욱",
-    department: "VIP상담팀",
-    position: "수석 상담사",
-    email: "choi.dongwook@company.com",
-    phone: "010-5678-9012",
-    rating: 4.95,
-    evaluationCount: 312,
-    completionRate: 100,
-    trend: "up",
-    joinDate: "2018-11-12",
-    lastEvaluation: "2024-12-23",
-    status: "active",
-    avatar: "최",
-  },
-];
+import { Users, Search, Filter, Star, TrendingUp, TrendingDown, Minus, Loader2 } from "lucide-react";
+import { useConsultants } from "@/hooks/useConsultants";
 
 export default function ConsultantsPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -94,21 +11,23 @@ export default function ConsultantsPage() {
   const [trendFilter, setTrendFilter] = useState("");
   const [showFilters, setShowFilters] = useState(false);
 
+  // Supabase에서 실제 상담사 데이터 가져오기
+  const { consultants, isLoading, error } = useConsultants();
+
   // 검색 및 필터링된 상담사 목록
   const filteredConsultants = useMemo(() => {
     return consultants.filter(consultant => {
       const matchesSearch = searchTerm === "" || 
         consultant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        consultant.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        consultant.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        consultant.team.toLowerCase().includes(searchTerm.toLowerCase()) ||
         consultant.position.toLowerCase().includes(searchTerm.toLowerCase());
 
-      const matchesDepartment = departmentFilter === "" || consultant.department === departmentFilter;
+      const matchesDepartment = departmentFilter === "" || consultant.team === departmentFilter;
       const matchesTrend = trendFilter === "" || consultant.trend === trendFilter;
 
       return matchesSearch && matchesDepartment && matchesTrend;
     });
-  }, [searchTerm, departmentFilter, trendFilter]);
+  }, [consultants, searchTerm, departmentFilter, trendFilter]);
 
   // 검색어 하이라이트 함수
   const highlightText = (text: string, search: string) => {
@@ -145,7 +64,35 @@ export default function ConsultantsPage() {
   };
 
   // 고유 부서 목록
-  const departments = Array.from(new Set(consultants.map(c => c.department)));
+  const departments = Array.from(new Set(consultants.map(c => c.team)));
+
+  // 로딩 상태
+  if (isLoading) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center h-64">
+          <div className="flex items-center gap-2">
+            <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
+            <span className="text-gray-600">상담사 데이터를 불러오는 중...</span>
+          </div>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  // 에러 상태
+  if (error) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <p className="text-red-600 mb-2">데이터를 불러오는 중 오류가 발생했습니다.</p>
+            <p className="text-gray-500 text-sm">{error}</p>
+          </div>
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout>
@@ -174,7 +121,7 @@ export default function ConsultantsPage() {
                 <p className="text-sm text-gray-600">평균 평점</p>
                 <p className="text-2xl font-bold text-gray-900">
                   {filteredConsultants.length > 0 ? 
-                    (filteredConsultants.reduce((sum, c) => sum + c.rating, 0) / filteredConsultants.length).toFixed(1) : 
+                    (filteredConsultants.reduce((sum, c) => sum + c.satisfactionScore, 0) / filteredConsultants.length).toFixed(1) : 
                     "0.0"
                   }
                 </p>
@@ -208,7 +155,7 @@ export default function ConsultantsPage() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
               <input
                 type="text"
-                placeholder="상담사 이름, 부서, 이메일로 검색..."
+                placeholder="상담사 이름, 팀, 직급으로 검색..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -316,19 +263,21 @@ export default function ConsultantsPage() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-medium">
-                          {consultant.avatar}
+                          {consultant.name[0]}
                         </div>
                         <div className="ml-4">
                           <div className="text-sm font-medium text-gray-900">
                             {highlightText(consultant.name, searchTerm)}
                           </div>
-                          <div className="text-sm text-gray-500">입사일: {consultant.joinDate}</div>
+                          <div className="text-sm text-gray-500">
+                            최종 평가: {consultant.lastEvaluation}
+                          </div>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">
-                        {highlightText(consultant.department, searchTerm)}
+                        {highlightText(consultant.team, searchTerm)}
                       </div>
                       <div className="text-sm text-gray-500">
                         {highlightText(consultant.position, searchTerm)}
@@ -336,14 +285,14 @@ export default function ConsultantsPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">
-                        {highlightText(consultant.email, searchTerm)}
+                        {consultant.id}
                       </div>
-                      <div className="text-sm text-gray-500">{consultant.phone}</div>
+                      <div className="text-sm text-gray-500">ID: {consultant.id}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center">
                       <div className="flex items-center justify-center gap-1">
                         <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                        <span className="text-sm font-medium text-gray-900">{consultant.rating}</span>
+                        <span className="text-sm font-medium text-gray-900">{consultant.satisfactionScore}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center">
@@ -358,8 +307,15 @@ export default function ConsultantsPage() {
                       {getTrendIcon(consultant.trend)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                        활성
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        consultant.status === 'active' 
+                          ? 'bg-green-100 text-green-800' 
+                          : consultant.status === 'break'
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : 'bg-gray-100 text-gray-800'
+                      }`}>
+                        {consultant.status === 'active' ? '활성' : 
+                         consultant.status === 'break' ? '휴식' : '비활성'}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center">
