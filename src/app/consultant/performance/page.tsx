@@ -25,6 +25,9 @@ function ConsultantPerformanceContent() {
   const [selectedSessionNo, setSelectedSessionNo] = useState<number | null>(
     null
   );
+  const [selectedSessionId, setSelectedSessionId] = useState<string | null>(
+    null
+  );
 
   // Context 값이 변경되면 로컬 상태도 업데이트
   useEffect(() => {
@@ -70,8 +73,9 @@ function ConsultantPerformanceContent() {
   };
 
   // 상담 세션 선택 핸들러
-  const handleSessionSelect = (sessionNo: number) => {
+  const handleSessionSelect = (sessionNo: number, sessionId?: string) => {
     setSelectedSessionNo(sessionNo);
+    setSelectedSessionId(sessionId || null);
   };
 
   return (
@@ -121,7 +125,11 @@ function ConsultantPerformanceContent() {
             <div className="flex-1">
               <ConversationDetail
                 sessionNo={selectedSessionNo}
-                onClose={() => setSelectedSessionNo(null)}
+                sessionId={selectedSessionId}
+                onClose={() => {
+                  setSelectedSessionNo(null);
+                  setSelectedSessionId(null);
+                }}
               />
             </div>
           </div>

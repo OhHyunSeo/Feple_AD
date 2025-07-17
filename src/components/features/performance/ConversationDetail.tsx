@@ -8,6 +8,7 @@ import {
   Pause,
   SkipBack,
   SkipForward,
+  Loader2,
 } from "lucide-react";
 import {
   generateConversationData,
@@ -16,11 +17,13 @@ import {
 
 interface ConversationDetailProps {
   sessionNo: number | null;
+  sessionId?: string | null; // 실제 session_id 추가
   onClose: () => void;
 }
 
 export default function ConversationDetail({
   sessionNo,
+  sessionId,
   onClose,
 }: ConversationDetailProps) {
   const [activeTab, setActiveTab] = useState<"original" | "summary">(
@@ -28,12 +31,47 @@ export default function ConversationDetail({
   );
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
+  const [conversationData, setConversationData] = useState<ConversationDetailData | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  // 세션 데이터 생성
-  const conversationData: ConversationDetailData | null = sessionNo
-    ? generateConversationData(sessionNo)
-    : null;
+  // API에서 세션 데이터 가져오기
+  useEffect(() => {
+    if (sessionId) {
+      fetchConversationDetail(sessionId);
+    } else if (sessionNo) {
+      // sessionId가 없으면 기존 mock 데이터 사용
+      setConversationData(generateConversationData(sessionNo));
+    } else {
+      setConversationData(null);
+    }
+  }, [sessionId, sessionNo]);
+
+  const fetchConversationDetail = async (sessionId: string) => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const response = await fetch(`/api/conversation-detail?sessionId=${sessionId}`);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      setConversationData(data);
+    } catch (err) {
+      console.error('상담 상세 데이터 조회 실패:', err);
+      setError(err instanceof Error ? err.message : '데이터 로딩 실패');
+      // API 실패 시 mock 데이터 사용
+      if (sessionNo) {
+        setConversationData(generateConversationData(sessionNo));
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // 오디오 관련 이펙트
   useEffect(() => {
@@ -96,6 +134,58 @@ export default function ConversationDetail({
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
+  // 로딩 상태
+  if (isLoading) {
+    return (
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-sm font-semibold text-gray-800">상담 상세</h3>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 text-sm"
+          >
+            ✕
+          </button>
+        </div>
+        <div className="flex items-center justify-center h-32">
+          <div className="flex items-center gap-2">
+            <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
+            <span className="text-xs text-gray-600">상담 상세 정보를 불러오는 중...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 에러 상태
+  if (error) {
+    return (
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-sm font-semibold text-gray-800">상담 상세</h3>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 text-sm"
+          >
+            ✕
+          </button>
+        </div>
+        <div className="text-center h-32 flex items-center justify-center">
+          <div>
+            <p className="text-xs text-red-600 mb-2">데이터를 불러오는 중 오류가 발생했습니다.</p>
+            <p className="text-xs text-gray-500">{error}</p>
+            <button 
+              onClick={() => sessionId && fetchConversationDetail(sessionId)}
+              className="mt-2 px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600"
+            >
+              다시 시도
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // 세션이 선택되지 않은 경우
   if (!conversationData) {
     return (
@@ -123,6 +213,11 @@ export default function ConversationDetail({
           <h3 className="text-sm font-semibold text-gray-800">
             상담 세션 {conversationData.no}
           </h3>
+          {sessionId && (
+            <div className="text-[10px] text-green-600 bg-green-50 px-2 py-1 rounded">
+              실제 데이터
+            </div>
+          )}
         </div>
         <button
           onClick={onClose}

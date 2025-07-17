@@ -7,11 +7,12 @@ import {
   ConsultationData,
   consultationRawData,
 } from "../../../data/consultationData";
+import { useState as useLocalState, useEffect } from "react";
 
 interface ConsultationTableProps {
   startDate: string;
   endDate: string;
-  onSessionSelect?: (sessionNo: number) => void;
+  onSessionSelect?: (sessionNo: number, sessionId?: string) => void;
   consultantId?: string; // 특정 상담원의 세션만 표시
 }
 
@@ -35,6 +36,9 @@ export default function ConsultationTable({
   const [selectedSession, setSelectedSession] = useState<number | null>(null);
   const [sortField, setSortField] = useState<SortField | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
+  const [apiData, setApiData] = useLocalState<ConsultationData[]>([]);
+  const [isLoading, setIsLoading] = useLocalState(false);
+  const [error, setError] = useLocalState<string | null>(null);
   const itemsPerPage = 10;
 
   // 등급을 숫자로 변환하는 함수 (A=7, B=6, ..., G=1)
@@ -108,9 +112,47 @@ export default function ConsultationTable({
     );
   };
 
-  // 데이터 필터링 및 정렬
-  const getFilteredData = (): ConsultationData[] => {
-    // consultantId가 없으면 전체 데이터 사용
+  // API에서 데이터 가져오기
+  useEffect(() => {
+    if (startDate && endDate) {
+      fetchEvaluationData();
+    }
+  }, [startDate, endDate, consultantId]);
+
+  const fetchEvaluationData = async () => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const params = new URLSearchParams({
+        startDate,
+        endDate,
+      });
+      
+      if (consultantId) {
+        params.append('consultantId', consultantId);
+      }
+      
+      const response = await fetch(`/api/counselor-evaluations?${params}`);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      setApiData(data);
+    } catch (err) {
+      console.error('평가 데이터 조회 실패:', err);
+      setError(err instanceof Error ? err.message : '데이터 로딩 실패');
+      // API 실패 시 기존 mock 데이터 사용
+      setApiData(getMockData());
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // 기존 mock 데이터 사용 (API 실패 시 fallback)
+  const getMockData = (): ConsultationData[] => {
     if (!consultantId) {
       const rawData = consultationRawData;
       const allData = rawData.map((item, index) => ({
@@ -118,19 +160,13 @@ export default function ConsultationTable({
         no: rawData.length - index,
       }));
 
-      const filteredData = allData.filter((item) => {
+      return allData.filter((item) => {
         const itemDate = item.datetime.split(" ")[0];
         return itemDate >= startDate && itemDate <= endDate;
       });
-
-      let sortedData = filteredData;
-      if (sortField) {
-        sortedData = sortData(filteredData, sortField, sortDirection);
-      }
-      return sortedData;
     }
 
-    // 상담원별 맞춤 데이터 생성
+    // 상담원별 맞춤 데이터 (기존 로직 유지)
     const getConsultantData = (consultantId: string): ConsultationData[] => {
       switch (consultantId) {
         case "c1": // 김민수
@@ -251,18 +287,22 @@ export default function ConsultationTable({
     const rawData = getConsultantData(consultantId);
 
     // 조회 기간에 해당하는 데이터만 필터링
-    const filteredData = rawData.filter((item) => {
+    return rawData.filter((item) => {
       const itemDate = item.datetime.split(" ")[0]; // YYYY-MM-DD 부분만 추출
       return itemDate >= startDate && itemDate <= endDate;
     });
+  };
 
+  // 데이터 정렬 및 필터링
+  const getFilteredData = (): ConsultationData[] => {
+    const data = apiData.length > 0 ? apiData : getMockData();
+    
     // 정렬 적용
-    let sortedData = filteredData;
     if (sortField) {
-      sortedData = sortData(filteredData, sortField, sortDirection);
+      return sortData(data, sortField, sortDirection);
     }
-
-    return sortedData;
+    
+    return data;
   };
 
   const consultationData = getFilteredData();
@@ -273,13 +313,13 @@ export default function ConsultationTable({
   );
 
   // 세션 클릭 핸들러
-  const handleSessionClick = (sessionNo: number) => {
+  const handleSessionClick = (sessionNo: number, sessionId?: string) => {
     const isOpening = selectedSession !== sessionNo;
     setSelectedSession(isOpening ? sessionNo : null);
 
     // 세션을 새로 열 때만 상세 정보 로드
     if (isOpening && onSessionSelect) {
-      onSessionSelect(sessionNo);
+      onSessionSelect(sessionNo, sessionId);
     }
   };
 
@@ -299,6 +339,40 @@ export default function ConsultationTable({
     }
   };
 
+  // 로딩 상태 표시
+  if (isLoading) {
+    return (
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        <div className="flex items-center justify-center h-64">
+          <div className="flex items-center gap-2">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+            <span className="text-gray-600">상담 세션 데이터를 불러오는 중...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 에러 상태 표시
+  if (error) {
+    return (
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <p className="text-red-600 mb-2">데이터를 불러오는 중 오류가 발생했습니다.</p>
+            <p className="text-gray-500 text-sm">{error}</p>
+            <button 
+              onClick={fetchEvaluationData}
+              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+              다시 시도
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
       {/* 헤더 */}
@@ -309,6 +383,11 @@ export default function ConsultationTable({
           <div className="text-[10px] text-gray-500 text-center">
             {startDate} ~ {endDate}
           </div>
+          {apiData.length > 0 && (
+            <div className="text-[10px] text-green-600 bg-green-50 px-2 py-1 rounded">
+              실제 데이터
+            </div>
+          )}
         </div>
         <div className="text-sm text-gray-600">
           총{" "}
@@ -400,7 +479,7 @@ export default function ConsultationTable({
               <React.Fragment key={item.no}>
                 <tr
                   key={item.no}
-                  onClick={() => handleSessionClick(item.no)}
+                  onClick={() => handleSessionClick(item.no, (item as any).sessionId)}
                   className={`border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors duration-200 ${
                     selectedSession === item.no
                       ? "bg-pink-50 border-pink-200"
