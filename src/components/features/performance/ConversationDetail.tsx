@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import {
   FileText,
   BarChart3,
@@ -36,19 +36,7 @@ export default function ConversationDetail({
   const [error, setError] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  // API에서 세션 데이터 가져오기
-  useEffect(() => {
-    if (sessionId) {
-      fetchConversationDetail(sessionId);
-    } else if (sessionNo) {
-      // sessionId가 없으면 기존 mock 데이터 사용
-      setConversationData(generateConversationData(sessionNo));
-    } else {
-      setConversationData(null);
-    }
-  }, [sessionId, sessionNo]);
-
-  const fetchConversationDetail = async (sessionId: string) => {
+  const fetchConversationDetail = useCallback(async (sessionId: string) => {
     setIsLoading(true);
     setError(null);
     
@@ -71,7 +59,19 @@ export default function ConversationDetail({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [sessionNo]);
+
+  // API에서 세션 데이터 가져오기
+  useEffect(() => {
+    if (sessionId) {
+      fetchConversationDetail(sessionId);
+    } else if (sessionNo) {
+      // sessionId가 없으면 기존 mock 데이터 사용
+      setConversationData(generateConversationData(sessionNo));
+    } else {
+      setConversationData(null);
+    }
+  }, [sessionId, sessionNo, fetchConversationDetail]);
 
   // 오디오 관련 이펙트
   useEffect(() => {

@@ -13,7 +13,7 @@ export async function GET(request: Request) {
     console.log('🔄 counselor_evaluations 데이터 조회 시작...', { startDate, endDate, consultantId });
 
     // 날짜 필터링 조건
-    let whereCondition: any = {};
+    const whereCondition: Record<string, unknown> = {};
     
     if (startDate && endDate) {
       const start = new Date(startDate + 'T00:00:00.000Z');

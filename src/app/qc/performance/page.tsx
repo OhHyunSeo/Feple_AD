@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import DashboardLayout from "@/components/DashboardLayout";
 import { ChevronDown, PhoneCall } from "lucide-react";
@@ -13,7 +13,7 @@ import {
 import { ScoreChart } from "@/components/features/performance";
 import { useDateRange } from "@/context/DateRangeContext";
 
-export default function QCMonitoringPage() {
+function QCMonitoringContent() {
   const searchParams = useSearchParams();
   const {
     startDate: contextStartDate,
@@ -361,5 +361,13 @@ export default function QCMonitoringPage() {
         </div>
       </div>
     </DashboardLayout>
+  );
+}
+
+export default function QCMonitoringPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <QCMonitoringContent />
+    </Suspense>
   );
 }

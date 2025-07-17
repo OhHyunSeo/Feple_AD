@@ -115,7 +115,7 @@ function parseGptFeedback(gptFeedback: string | null, type: 'strengths' | 'impro
 }
 
 // 대화 transcript 파싱
-function parseTranscript(transcript: any): Array<{
+function parseTranscript(transcript: unknown): Array<{
   speaker: string;
   message: string;
   startTime: number;
@@ -144,39 +144,41 @@ function parseTranscript(transcript: any): Array<{
     
     // 배열 형태인 경우 (실제 transcript 구조)
     if (Array.isArray(parsedData)) {
-      return parsedData.map((segment: any) => ({
+      return parsedData.map((segment: Record<string, unknown>) => ({
         speaker: segment.speaker === 'Agent' ? '상담사' : 
                 segment.speaker === 'Customer' ? '고객' : 
-                segment.speaker || '상담사',
-        message: segment.text || segment.message || '',
-        startTime: segment.start_time || segment.startTime || 0,
-        endTime: segment.end_time || segment.endTime || 0
+                (segment.speaker as string) || '상담사',
+        message: (segment.text as string) || (segment.message as string) || '',
+        startTime: (segment.start_time as number) || (segment.startTime as number) || 0,
+        endTime: (segment.end_time as number) || (segment.endTime as number) || 0
       }));
     }
     
     // 객체 형태인 경우
-    if (typeof parsedData === 'object') {
+    if (typeof parsedData === 'object' && parsedData !== null) {
+      const dataObj = parsedData as Record<string, unknown>;
+      
       // segments 프로퍼티가 있는 경우
-      if (parsedData.segments && Array.isArray(parsedData.segments)) {
-        return parsedData.segments.map((segment: any) => ({
+      if (dataObj.segments && Array.isArray(dataObj.segments)) {
+        return dataObj.segments.map((segment: Record<string, unknown>) => ({
           speaker: segment.speaker === 'Agent' ? '상담사' : 
                   segment.speaker === 'Customer' ? '고객' : 
-                  segment.speaker || '상담사',
-          message: segment.text || segment.message || '',
-          startTime: segment.start_time || segment.startTime || 0,
-          endTime: segment.end_time || segment.endTime || 0
+                  (segment.speaker as string) || '상담사',
+          message: (segment.text as string) || (segment.message as string) || '',
+          startTime: (segment.start_time as number) || (segment.startTime as number) || 0,
+          endTime: (segment.end_time as number) || (segment.endTime as number) || 0
         }));
       }
       
       // conversation 프로퍼티가 있는 경우
-      if (parsedData.conversation && Array.isArray(parsedData.conversation)) {
-        return parsedData.conversation.map((msg: any) => ({
+      if (dataObj.conversation && Array.isArray(dataObj.conversation)) {
+        return dataObj.conversation.map((msg: Record<string, unknown>) => ({
           speaker: msg.speaker === 'Agent' ? '상담사' : 
                   msg.speaker === 'Customer' ? '고객' : 
-                  msg.speaker || '상담사',
-          message: msg.message || msg.text || '',
-          startTime: msg.startTime || msg.start_time || 0,
-          endTime: msg.endTime || msg.end_time || 0
+                  (msg.speaker as string) || '상담사',
+          message: (msg.message as string) || (msg.text as string) || '',
+          startTime: (msg.startTime as number) || (msg.start_time as number) || 0,
+          endTime: (msg.endTime as number) || (msg.end_time as number) || 0
         }));
       }
     }
@@ -193,7 +195,7 @@ function parseTranscript(transcript: any): Array<{
 }
 
 // 총 대화 시간 계산
-function calculateTotalDuration(transcript: any): number {
+function calculateTotalDuration(transcript: unknown): number {
   try {
     const conversation = parseTranscript(transcript);
     if (conversation.length === 0) return 0;

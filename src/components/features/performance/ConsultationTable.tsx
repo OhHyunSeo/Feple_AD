@@ -7,7 +7,7 @@ import {
   ConsultationData,
   consultationRawData,
 } from "../../../data/consultationData";
-import { useState as useLocalState, useEffect } from "react";
+import { useState as useLocalState, useEffect, useCallback } from "react";
 
 interface ConsultationTableProps {
   startDate: string;
@@ -112,14 +112,7 @@ export default function ConsultationTable({
     );
   };
 
-  // API에서 데이터 가져오기
-  useEffect(() => {
-    if (startDate && endDate) {
-      fetchEvaluationData();
-    }
-  }, [startDate, endDate, consultantId]);
-
-  const fetchEvaluationData = async () => {
+  const fetchEvaluationData = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     
@@ -149,7 +142,14 @@ export default function ConsultationTable({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [startDate, endDate, consultantId]);
+
+  // API에서 데이터 가져오기
+  useEffect(() => {
+    if (startDate && endDate) {
+      fetchEvaluationData();
+    }
+  }, [startDate, endDate, consultantId, fetchEvaluationData]);
 
   // 기존 mock 데이터 사용 (API 실패 시 fallback)
   const getMockData = (): ConsultationData[] => {
@@ -479,7 +479,7 @@ export default function ConsultationTable({
               <React.Fragment key={item.no}>
                 <tr
                   key={item.no}
-                  onClick={() => handleSessionClick(item.no, (item as any).sessionId)}
+                  onClick={() => handleSessionClick(item.no, (item as ConsultationData & { sessionId?: string }).sessionId)}
                   className={`border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors duration-200 ${
                     selectedSession === item.no
                       ? "bg-pink-50 border-pink-200"
