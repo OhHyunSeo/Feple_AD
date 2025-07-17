@@ -3,10 +3,7 @@
 import React, { useState } from "react";
 import { FileText, ChevronDown, ChevronUp, ArrowUpDown } from "lucide-react";
 import Pagination from "./Pagination";
-import {
-  ConsultationData,
-  consultationRawData,
-} from "../../../data/consultationData";
+import { ConsultationData } from "../../../data/consultationData";
 import { useState as useLocalState, useEffect, useCallback } from "react";
 
 interface ConsultationTableProps {
@@ -115,34 +112,41 @@ export default function ConsultationTable({
   const fetchEvaluationData = useCallback(async () => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const params = new URLSearchParams({
         startDate,
         endDate,
       });
-      
+
       if (consultantId) {
-        params.append('consultantId', consultantId);
+        params.append("consultantId", consultantId);
       }
-      
+
+      console.log("API 호출:", `/api/counselor-evaluations?${params}`);
       const response = await fetch(`/api/counselor-evaluations?${params}`);
-      
+
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error("API 응답 에러:", {
+          status: response.status,
+          text: errorText,
+        });
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const data = await response.json();
+      console.log("API 응답 성공:", data.length, "개 항목");
       setApiData(data);
     } catch (err) {
-      console.error('평가 데이터 조회 실패:', err);
-      setError(err instanceof Error ? err.message : '데이터 로딩 실패');
-      // API 실패 시 기존 mock 데이터 사용
-      setApiData(getMockData());
+      console.error("평가 데이터 조회 실패:", err);
+      setError(err instanceof Error ? err.message : "데이터 로딩 실패");
+      // API 실패 시 빈 배열로 설정 (mock 데이터는 getFilteredData에서 처리)
+      setApiData([]);
     } finally {
       setIsLoading(false);
     }
-  }, [startDate, endDate, consultantId]);
+  }, [startDate, endDate, consultantId, setApiData, setError, setIsLoading]);
 
   // API에서 데이터 가져오기
   useEffect(() => {
@@ -151,157 +155,16 @@ export default function ConsultationTable({
     }
   }, [startDate, endDate, consultantId, fetchEvaluationData]);
 
-  // 기존 mock 데이터 사용 (API 실패 시 fallback)
-  const getMockData = (): ConsultationData[] => {
-    if (!consultantId) {
-      const rawData = consultationRawData;
-      const allData = rawData.map((item, index) => ({
-        ...item,
-        no: rawData.length - index,
-      }));
-
-      return allData.filter((item) => {
-        const itemDate = item.datetime.split(" ")[0];
-        return itemDate >= startDate && itemDate <= endDate;
-      });
-    }
-
-    // 상담원별 맞춤 데이터 (기존 로직 유지)
-    const getConsultantData = (consultantId: string): ConsultationData[] => {
-      switch (consultantId) {
-        case "c1": // 김민수
-          return [
-            {
-              no: 1001,
-              datetime: "2025-07-16 13:30:46",
-              finalScore: 78,
-              courtesy: "B",
-              empathy: "A",
-              problemSolving: "B",
-              emotionalStability: "A",
-              communicationFlow: "B",
-              result: "만족",
-              feedback: {
-                strengths: [
-                  "공감적 소통(A): 고객의 감정을 잘 이해하고 적절한 공감 표현을 사용합니다.",
-                  "감정 안정성(A): 어려운 상황에서도 침착하게 대응하며 안정된 응대 태도를 보여줍니다.",
-                ],
-                improvements: [
-                  "정중함(B): 양호한 수준이지만 더욱 세련된 언어 사용으로 고급스러운 서비스를 제공할 수 있습니다.",
-                  "문제 해결 역량: 좀 더 창의적인 해결책 제시가 필요합니다.",
-                ],
-                coaching: [
-                  "이미 우수한 공감 능력을 보유하고 계시니, 이를 더욱 발전시켜 고객 만족도를 높여보세요.",
-                  "정중한 언어 사용에 더해 전문적인 용어 사용으로 신뢰감을 더할 수 있습니다.",
-                ],
-              },
-            },
-            {
-              no: 1002,
-              datetime: "2025-07-16 14:15:23",
-              finalScore: 75,
-              courtesy: "C",
-              empathy: "B",
-              problemSolving: "A",
-              emotionalStability: "B",
-              communicationFlow: "B",
-              result: "만족",
-              feedback: {
-                strengths: [
-                  "문제 해결 역량(A): 복잡한 문제도 체계적으로 분석하여 효과적인 해결책을 제시합니다.",
-                  "전반적인 상담 진행이 안정적입니다.",
-                ],
-                improvements: [
-                  "정중함(C): 기본적인 예의는 갖추었으나 더욱 정중한 언어 사용이 필요합니다.",
-                  "공감 표현을 좀 더 자연스럽게 사용하시면 좋겠습니다.",
-                ],
-                coaching: [
-                  "문제 해결 능력은 우수하니, 여기에 더 따뜻한 감성을 더해보세요.",
-                  "고객의 입장에서 한 번 더 생각해보는 습관을 기르시면 더 좋은 상담사가 될 수 있습니다.",
-                ],
-              },
-            },
-          ];
-        case "c12": // 노준석
-          return [
-            {
-              no: 1003,
-              datetime: "2025-07-16 10:30:15",
-              finalScore: 55,
-              courtesy: "F",
-              empathy: "G",
-              problemSolving: "D",
-              emotionalStability: "C",
-              communicationFlow: "D",
-              result: "추가 상담 필요",
-              feedback: {
-                strengths: [
-                  "출근 및 업무 참여 의지: 기본적인 업무 참여 자세는 보여줍니다.",
-                  "문제 인식: 고객의 기본적인 문제 상황은 파악할 수 있습니다.",
-                ],
-                improvements: [
-                  "공감적 소통(G): 고객의 감정을 이해하고 공감하는 능력이 현저히 부족합니다.",
-                  "정중함(F): 기본적인 예의가 부족하며 고객 응대 태도 전반적인 개선이 필요합니다.",
-                ],
-                coaching: [
-                  "고객의 상황과 감정을 먼저 인정하고 공감하는 표현을 연습해보세요.",
-                  "기본적인 고객 서비스 매뉴얼을 다시 숙지하고 정중한 언어 사용 연습이 필요합니다.",
-                ],
-              },
-            },
-            {
-              no: 1004,
-              datetime: "2025-07-16 15:20:41",
-              finalScore: 62,
-              courtesy: "D",
-              empathy: "F",
-              problemSolving: "C",
-              emotionalStability: "C",
-              communicationFlow: "D",
-              result: "미흡",
-              feedback: {
-                strengths: [
-                  "문제 해결 시도: 고객의 문제를 해결하려는 의지를 보입니다.",
-                  "상담 완료 의지: 상담을 끝까지 진행하려는 자세를 보여줍니다.",
-                ],
-                improvements: [
-                  "공감적 소통(F): 고객의 감정을 이해하는 능력이 크게 부족합니다.",
-                  "정중함(D): 고객에 대한 기본적인 예의와 정중함이 부족합니다.",
-                ],
-                coaching: [
-                  "기본적인 고객 응대 매뉴얼을 다시 학습하고 실습을 통해 체화하세요.",
-                  "선배 상담사의 우수 사례를 관찰하고 모방하는 연습을 권장합니다.",
-                ],
-              },
-            },
-          ];
-        default:
-          // 기본 데이터 (다른 상담원들)
-          return consultationRawData.slice(0, 3).map((item, index) => ({
-            ...item,
-            no: 2000 + index,
-          }));
-      }
-    };
-
-    const rawData = getConsultantData(consultantId);
-
-    // 조회 기간에 해당하는 데이터만 필터링
-    return rawData.filter((item) => {
-      const itemDate = item.datetime.split(" ")[0]; // YYYY-MM-DD 부분만 추출
-      return itemDate >= startDate && itemDate <= endDate;
-    });
-  };
-
   // 데이터 정렬 및 필터링
   const getFilteredData = (): ConsultationData[] => {
-    const data = apiData.length > 0 ? apiData : getMockData();
-    
+    // 항상 API 데이터 사용
+    const data = apiData;
+
     // 정렬 적용
     if (sortField) {
       return sortData(data, sortField, sortDirection);
     }
-    
+
     return data;
   };
 
@@ -346,7 +209,9 @@ export default function ConsultationTable({
         <div className="flex items-center justify-center h-64">
           <div className="flex items-center gap-2">
             <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-            <span className="text-gray-600">상담 세션 데이터를 불러오는 중...</span>
+            <span className="text-gray-600">
+              상담 세션 데이터를 불러오는 중...
+            </span>
           </div>
         </div>
       </div>
@@ -359,9 +224,11 @@ export default function ConsultationTable({
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
-            <p className="text-red-600 mb-2">데이터를 불러오는 중 오류가 발생했습니다.</p>
+            <p className="text-red-600 mb-2">
+              데이터를 불러오는 중 오류가 발생했습니다.
+            </p>
             <p className="text-gray-500 text-sm">{error}</p>
-            <button 
+            <button
               onClick={fetchEvaluationData}
               className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
             >
@@ -383,11 +250,6 @@ export default function ConsultationTable({
           <div className="text-[10px] text-gray-500 text-center">
             {startDate} ~ {endDate}
           </div>
-          {apiData.length > 0 && (
-            <div className="text-[10px] text-green-600 bg-green-50 px-2 py-1 rounded">
-              실제 데이터
-            </div>
-          )}
         </div>
         <div className="text-sm text-gray-600">
           총{" "}
@@ -479,7 +341,13 @@ export default function ConsultationTable({
               <React.Fragment key={item.no}>
                 <tr
                   key={item.no}
-                  onClick={() => handleSessionClick(item.no, (item as ConsultationData & { sessionId?: string }).sessionId)}
+                  onClick={() =>
+                    handleSessionClick(
+                      item.no,
+                      (item as ConsultationData & { sessionId?: string })
+                        .sessionId
+                    )
+                  }
                   className={`border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors duration-200 ${
                     selectedSession === item.no
                       ? "bg-pink-50 border-pink-200"
