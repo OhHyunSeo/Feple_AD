@@ -5,25 +5,21 @@ import { useRouter } from "next/navigation";
 import DashboardLayout from "@/components/DashboardLayout";
 import { RadarChart } from "@/components/charts/RadarChart";
 import { ChevronRight } from "lucide-react";
+import { useDateRange } from "@/context/DateRangeContext";
 
 export default function ConsultantDashboardPage() {
   const router = useRouter();
+  const { setDateRange } = useDateRange();
 
   // 기간 선택 상태
   const [selectedPeriod, setSelectedPeriod] = useState<
     "yesterday" | "lastWeek" | "lastMonth"
   >("yesterday");
 
-  // 날짜 계산 함수들 (한국 시간 기준)
+  // 날짜 계산 함수들 (한국 시간 기준) - 테스트용 고정 날짜
   const getDateRange = (period: "yesterday" | "lastWeek" | "lastMonth") => {
-    // 한국 시간 기준으로 현재 날짜 계산
-    const now = new Date();
-    const koreaTime = new Date(now.getTime() + 9 * 60 * 60 * 1000); // UTC+9
-    const today = new Date(
-      koreaTime.getFullYear(),
-      koreaTime.getMonth(),
-      koreaTime.getDate()
-    );
+    // 테스트를 위해 고정된 오늘 날짜 사용 (2025-07-17)
+    const today = new Date("2025-07-17");
 
     const formatDate = (date: Date) => {
       const year = date.getFullYear();
@@ -84,9 +80,12 @@ export default function ConsultantDashboardPage() {
   // 상세 보기 페이지로 이동
   const handleDetailView = () => {
     const { startDate, endDate } = getDateRange(selectedPeriod);
-    router.push(
-      `/consultant/performance?startDate=${startDate}&endDate=${endDate}`
-    );
+
+    // 전역 날짜 상태 업데이트
+    setDateRange(startDate, endDate);
+
+    // 페이지 이동
+    router.push(`/consultant/performance`);
   };
 
   // 기간별 데이터

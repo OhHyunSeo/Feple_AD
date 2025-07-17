@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "@/styles/index.css";
 import { AnalysisResultProvider } from "@/context/AnalysisResultContext";
 import { SidebarProvider } from "@/context/SidebarContext";
+import { DateRangeProvider } from "@/context/DateRangeContext";
 
 export const metadata: Metadata = {
   title: "Feple Dashboard",
@@ -23,7 +24,9 @@ export default function RootLayout({
     <html lang="ko">
       <body className="bg-white font-sans antialiased text-sm">
         <SidebarProvider>
-          <AnalysisResultProvider>{children}</AnalysisResultProvider>
+          <DateRangeProvider>
+            <AnalysisResultProvider>{children}</AnalysisResultProvider>
+          </DateRangeProvider>
         </SidebarProvider>
       </body>
     </html>
