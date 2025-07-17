@@ -89,7 +89,7 @@ export default function UploadPage() {
                   </div>
                 )}
 
-                <div className="w-full flex justify-end mt-4">
+                <div className="w-full flex justify-end mt-4 text-white">
                   <Button
                     onClick={handleUploadAndAnalyze}
                     disabled={!selectedFile || isLoading}
