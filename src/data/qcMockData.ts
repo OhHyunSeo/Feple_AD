@@ -95,15 +95,17 @@ export const getLatestMockEvaluationByConsultant = (consultantId: string): Consu
 // Mock 데이터 사용 여부 설정
 export const USE_MOCK_DATA = true;
 
-// 개발 모드에서만 Mock 데이터 사용 여부 확인
+// Mock 데이터 사용 여부 확인
 export const shouldUseMockData = (): boolean => {
-  // 개발 환경에서는 Mock 데이터 사용
-  if (process.env.NODE_ENV === 'development') {
-    return USE_MOCK_DATA;
+  // 환경 변수가 명시적으로 'false'로 설정된 경우에만 API 사용
+  if (process.env.NEXT_PUBLIC_USE_MOCK_DATA === 'false') {
+    console.log('🔗 환경 변수로 API 모드 강제 활성화');
+    return false;
   }
   
-  // 프로덕션에서는 환경 변수로 제어
-  return process.env.NEXT_PUBLIC_USE_MOCK_DATA === 'true';
+  // 기본값: Mock 데이터 사용 (개발/배포 환경 모두)
+  console.log('🎭 Mock 데이터 모드 활성화 (기본값)');
+  return USE_MOCK_DATA;
 };
 
 // 상담사 정보 매핑 (UI 표시용)

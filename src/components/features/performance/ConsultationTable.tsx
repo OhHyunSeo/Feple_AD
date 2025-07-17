@@ -164,6 +164,15 @@ export default function ConsultationTable({
   const getFilteredData = (): ConsultationData[] => {
     let data: ConsultationData[] = [];
 
+    // 환경 변수 디버깅
+    console.log('🔍 환경 변수 체크:', {
+      NODE_ENV: process.env.NODE_ENV,
+      NEXT_PUBLIC_USE_MOCK_DATA: process.env.NEXT_PUBLIC_USE_MOCK_DATA,
+      shouldUseMock: shouldUseMockData(),
+      consultantId,
+      apiDataLength: apiData.length
+    });
+
     // Mock 데이터 사용 여부 확인
     if (shouldUseMockData()) {
       console.log("🎭 Mock 데이터 모드 활성화");
@@ -182,6 +191,8 @@ export default function ConsultationTable({
       console.log("🔗 API 데이터 모드 활성화");
       data = apiData;
     }
+
+    console.log('📊 최종 데이터 길이:', data.length);
 
     // 정렬 적용
     if (sortField) {
