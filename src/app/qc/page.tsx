@@ -69,6 +69,59 @@ export default function QCDashboardPage() {
     return "기타";
   };
 
+  // 상담사 이름으로 부서 찾기
+  const findDepartmentByConsultantName = (consultantName: string): string => {
+    const departments = {
+      team1: ["김민수", "박성호", "임지원", "노준석", "문지호"],
+      team2: ["이영희", "정다은", "강현준", "서민정", "김철호"],
+      team3: ["최미연", "한상욱", "송예진", "배수진"],
+      team4: ["윤진호", "조은실", "조현우", "이수정"],
+    };
+
+    for (const [deptId, names] of Object.entries(departments)) {
+      if (names.includes(consultantName)) {
+        return deptId;
+      }
+    }
+    return "team1"; // 기본값
+  };
+
+  // 상담사 이름으로 ID 찾기
+  const findConsultantIdByName = (consultantName: string): string => {
+    const consultantMap: { [key: string]: string } = {
+      // 기존 팀 멤버들
+      김민수: "c1",
+      박성호: "c2",
+      임지원: "c3",
+      노준석: "c12",
+      이영희: "c4",
+      정다은: "c5",
+      강현준: "c6",
+      최미연: "c7",
+      한상욱: "c8",
+      송예진: "c9",
+      윤진호: "c10",
+      조은실: "c11",
+      // 점검 추천 상담사들
+      문지호: "c15",
+      서민정: "c16",
+      조현우: "c17",
+      배수진: "c18",
+      // 위험 등급 알림 상담사들
+      김철호: "c13",
+      이수정: "c14",
+    };
+
+    return consultantMap[consultantName] || "c1"; // 기본값
+  };
+
+  // 전일 날짜 계산
+  const getYesterdayDate = (): string => {
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    return yesterday.toISOString().split("T")[0];
+  };
+
   const handleConsultantClick = (
     consultant:
       | {
@@ -84,22 +137,39 @@ export default function QCDashboardPage() {
           link: string;
         }
   ) => {
-    // 상담 모니터링 페이지로 이동
+    const yesterdayDate = getYesterdayDate();
+
     if ("id" in consultant) {
-      window.location.href = `/performance?consultant=${consultant.id}`;
+      // 팀별 상담원의 경우
+      const departmentId = findDepartmentByConsultantName(consultant.name);
+      const consultantId = findConsultantIdByName(consultant.name);
+
+      window.location.href = `/qc/performance?startDate=${yesterdayDate}&endDate=${yesterdayDate}&department=${departmentId}&consultant=${consultantId}&autoSearch=true`;
     } else {
-      window.location.href = `/performance?consultant=${consultant.title}`;
+      // 검색 결과의 경우
+      const departmentId = findDepartmentByConsultantName(consultant.title);
+      const consultantId = findConsultantIdByName(consultant.title);
+
+      window.location.href = `/qc/performance?startDate=${yesterdayDate}&endDate=${yesterdayDate}&department=${departmentId}&consultant=${consultantId}&autoSearch=true`;
     }
   };
 
   const handleRiskAlertClick = (alert: (typeof riskAlerts)[0]) => {
-    window.location.href = `/performance?consultant=${alert.id}`;
+    const yesterdayDate = getYesterdayDate();
+    const departmentId = findDepartmentByConsultantName(alert.name);
+    const consultantId = findConsultantIdByName(alert.name);
+
+    window.location.href = `/qc/performance?startDate=${yesterdayDate}&endDate=${yesterdayDate}&department=${departmentId}&consultant=${consultantId}&autoSearch=true`;
   };
 
   const handleInspectionRecommendationClick = (
     recommendation: (typeof inspectionRecommendations)[0]
   ) => {
-    window.location.href = `/performance?consultant=${recommendation.id}`;
+    const yesterdayDate = getYesterdayDate();
+    const departmentId = findDepartmentByConsultantName(recommendation.name);
+    const consultantId = findConsultantIdByName(recommendation.name);
+
+    window.location.href = `/qc/performance?startDate=${yesterdayDate}&endDate=${yesterdayDate}&department=${departmentId}&consultant=${consultantId}&autoSearch=true`;
   };
 
   const getGradeColor = (grade: string, severity: string) => {

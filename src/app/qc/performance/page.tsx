@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import DashboardLayout from "@/components/DashboardLayout";
 import { ChevronDown, PhoneCall } from "lucide-react";
 import {
@@ -13,6 +14,7 @@ import { ScoreChart } from "@/components/features/performance";
 import { useDateRange } from "@/context/DateRangeContext";
 
 export default function QCMonitoringPage() {
+  const searchParams = useSearchParams();
   const {
     startDate: contextStartDate,
     endDate: contextEndDate,
@@ -28,6 +30,47 @@ export default function QCMonitoringPage() {
     null
   );
   const [hasSearched, setHasSearched] = useState(false); // 조회 여부 상태
+
+  // URL 파라미터에서 자동 조회 처리
+  useEffect(() => {
+    const startDateParam = searchParams.get("startDate");
+    const endDateParam = searchParams.get("endDate");
+    const departmentParam = searchParams.get("department");
+    const consultantParam = searchParams.get("consultant");
+    const autoSearchParam = searchParams.get("autoSearch");
+
+    if (
+      autoSearchParam === "true" &&
+      startDateParam &&
+      endDateParam &&
+      departmentParam &&
+      consultantParam
+    ) {
+      // URL 파라미터로 상태 설정
+      setLocalStartDate(startDateParam);
+      setLocalEndDate(endDateParam);
+      setSelectedDepartment(departmentParam);
+      setSelectedConsultant(consultantParam);
+
+      // 컨텍스트 업데이트
+      setDateRange(startDateParam, endDateParam);
+
+      // 자동 조회 실행
+      setHasSearched(true);
+      setSelectedSessionNo(null);
+
+      console.log(
+        "자동 조회 실행:",
+        startDateParam,
+        "~",
+        endDateParam,
+        "부서",
+        departmentParam,
+        "상담원",
+        consultantParam
+      );
+    }
+  }, [searchParams, setDateRange]);
 
   // 부서 데이터
   const departments = [
@@ -165,7 +208,7 @@ export default function QCMonitoringPage() {
 
   return (
     <DashboardLayout>
-      <div className="w-full min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 p-3">
+      <div className="min-h-screen w-full bg-gray-50 p-3">
         <div className="space-y-3">
           {/* 통합 조회 옵션 - 기간 + 부서 + 상담원 + 조회 버튼 */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3">
@@ -239,10 +282,10 @@ export default function QCMonitoringPage() {
           {/* 메인 콘텐츠 - 조회 후에만 표시 */}
           {hasSearched && selectedConsultant && (
             <div
-              className="grid gap-3 h-[calc(100vh-10rem)]"
+              className="grid gap-3 h-full"
               style={{ gridTemplateColumns: "0.75fr 2.5fr 0.75fr" }}
             >
-              {/* 첫 번째 열 (0.7): 선택된 상담사 정보 + 점수 + 통화시간 */}
+              {/* 첫 번째 열 (0.75): 선택된 상담사 정보 + 점수 + 통화시간 */}
               <div className="space-y-3 h-full overflow-y-auto">
                 {/* 선택된 상담사 정보 */}
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3">
@@ -279,7 +322,7 @@ export default function QCMonitoringPage() {
                 />
               </div>
 
-              {/* 두 번째 열 (2.6): 상담 세션 목록 (ConsultationTable 컴포넌트 사용) */}
+              {/* 두 번째 열 (2.5): 상담 세션 목록 (ConsultationTable 컴포넌트 사용) */}
               <div className="h-full">
                 <ConsultationTable
                   startDate={contextStartDate}
@@ -289,7 +332,7 @@ export default function QCMonitoringPage() {
                 />
               </div>
 
-              {/* 세 번째 열 (0.7): 상세 분석 (ConversationDetail 컴포넌트 사용) */}
+              {/* 세 번째 열 (0.75): 상세 분석 (ConversationDetail 컴포넌트 사용) */}
               <div className="h-full">
                 <ConversationDetail
                   sessionNo={selectedSessionNo}
