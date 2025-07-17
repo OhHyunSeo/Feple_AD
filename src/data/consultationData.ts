@@ -656,12 +656,149 @@ export const consultationRawData: ConsultationData[] = [
 export const generateConversationData = (
   sessionNo: number
 ): ConversationDetailData => {
-  // ConsultationTable의 No 할당 방식과 동일하게 매칭
+  // 커스텀 세션 번호들 처리 (QC 모니터링용)
+  if (sessionNo >= 1001) {
+    const customData = getCustomSessionData(sessionNo);
+    if (customData) {
+      return createConversationDetail(customData, sessionNo);
+    }
+  }
+
+  // 2000번대 처리 (기본 데이터로 생성)
+  if (sessionNo >= 2000) {
+    const index = sessionNo - 2000;
+    const baseData = consultationRawData[index % consultationRawData.length];
+    if (baseData) {
+      return createConversationDetail(baseData, sessionNo);
+    }
+  }
+
+  // 기존 방식 (일반 ConsultationTable용)
   const baseData = consultationRawData[consultationRawData.length - sessionNo];
   if (!baseData) {
     throw new Error(`세션 번호 ${sessionNo}을(를) 찾을 수 없습니다.`);
   }
 
+  return createConversationDetail(baseData, sessionNo);
+};
+
+// 커스텀 세션 데이터 반환
+const getCustomSessionData = (sessionNo: number): ConsultationData | null => {
+  switch (sessionNo) {
+    case 1001: // 김민수
+      return {
+        no: 1001,
+        datetime: "2025-07-16 13:30:46",
+        finalScore: 78,
+        courtesy: "B",
+        empathy: "A",
+        problemSolving: "B",
+        emotionalStability: "A",
+        communicationFlow: "B",
+        result: "만족",
+        feedback: {
+          strengths: [
+            "공감적 소통(A): 고객의 감정을 잘 이해하고 적절한 공감 표현을 사용합니다.",
+            "감정 안정성(A): 어려운 상황에서도 침착하게 대응하며 안정된 응대 태도를 보여줍니다.",
+          ],
+          improvements: [
+            "정중함(B): 양호한 수준이지만 더욱 세련된 언어 사용으로 고급스러운 서비스를 제공할 수 있습니다.",
+            "문제 해결 역량: 좀 더 창의적인 해결책 제시가 필요합니다.",
+          ],
+          coaching: [
+            "이미 우수한 공감 능력을 보유하고 계시니, 이를 더욱 발전시켜 고객 만족도를 높여보세요.",
+            "정중한 언어 사용에 더해 전문적인 용어 사용으로 신뢰감을 더할 수 있습니다.",
+          ],
+        },
+      };
+    case 1002: // 김민수
+      return {
+        no: 1002,
+        datetime: "2025-07-16 14:15:23",
+        finalScore: 75,
+        courtesy: "C",
+        empathy: "B",
+        problemSolving: "A",
+        emotionalStability: "B",
+        communicationFlow: "B",
+        result: "만족",
+        feedback: {
+          strengths: [
+            "문제 해결 역량(A): 복잡한 문제도 체계적으로 분석하여 효과적인 해결책을 제시합니다.",
+            "전반적인 상담 진행이 안정적입니다.",
+          ],
+          improvements: [
+            "정중함(C): 기본적인 예의는 갖추었으나 더욱 정중한 언어 사용이 필요합니다.",
+            "공감 표현을 좀 더 자연스럽게 사용하시면 좋겠습니다.",
+          ],
+          coaching: [
+            "문제 해결 능력은 우수하니, 여기에 더 따뜻한 감성을 더해보세요.",
+            "고객의 입장에서 한 번 더 생각해보는 습관을 기르시면 더 좋은 상담사가 될 수 있습니다.",
+          ],
+        },
+      };
+    case 1003: // 노준석
+      return {
+        no: 1003,
+        datetime: "2025-07-16 10:30:15",
+        finalScore: 55,
+        courtesy: "F",
+        empathy: "G",
+        problemSolving: "D",
+        emotionalStability: "C",
+        communicationFlow: "D",
+        result: "추가 상담 필요",
+        feedback: {
+          strengths: [
+            "출근 및 업무 참여 의지: 기본적인 업무 참여 자세는 보여줍니다.",
+            "문제 인식: 고객의 기본적인 문제 상황은 파악할 수 있습니다.",
+          ],
+          improvements: [
+            "공감적 소통(G): 고객의 감정을 이해하고 공감하는 능력이 현저히 부족합니다.",
+            "정중함(F): 기본적인 예의가 부족하며 고객 응대 태도 전반적인 개선이 필요합니다.",
+          ],
+          coaching: [
+            "고객의 상황과 감정을 먼저 인정하고 공감하는 표현을 연습해보세요.",
+            "기본적인 고객 서비스 매뉴얼을 다시 숙지하고 정중한 언어 사용 연습이 필요합니다.",
+          ],
+        },
+      };
+    case 1004: // 노준석
+      return {
+        no: 1004,
+        datetime: "2025-07-16 15:20:41",
+        finalScore: 62,
+        courtesy: "D",
+        empathy: "F",
+        problemSolving: "C",
+        emotionalStability: "C",
+        communicationFlow: "D",
+        result: "미흡",
+        feedback: {
+          strengths: [
+            "문제 해결 시도: 고객의 문제를 해결하려는 의지를 보입니다.",
+            "상담 완료 의지: 상담을 끝까지 진행하려는 자세를 보여줍니다.",
+          ],
+          improvements: [
+            "공감적 소통(F): 고객의 감정을 이해하는 능력이 크게 부족합니다.",
+            "정중함(D): 고객에 대한 기본적인 예의와 정중함이 부족합니다.",
+          ],
+          coaching: [
+            "기본적인 고객 응대 매뉴얼을 다시 학습하고 실습을 통해 체화하세요.",
+            "선배 상담사의 우수 사례를 관찰하고 모방하는 연습을 권장합니다.",
+          ],
+        },
+      };
+    default:
+      return null;
+  }
+};
+
+// 대화 상세 정보 생성
+const createConversationDetail = (
+  baseData: ConsultationData,
+  sessionNo: number
+): ConversationDetailData => {
   // 간단한 대화 내용 생성 (임시)
   const conversation: ConversationMessage[] = [
     {
