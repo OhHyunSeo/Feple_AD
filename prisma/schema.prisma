@@ -7,7 +7,6 @@ datasource db {
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
-        
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model analysis_results {
@@ -36,6 +35,7 @@ model counselor_evaluations {
   data_source               String?   @db.VarChar(100)
   created_at                DateTime? @default(now()) @db.Timestamptz(6)
   updated_at                DateTime? @default(now()) @db.Timestamptz(6)
+  final_score               Float?
 
   @@index([created_at], map: "idx_counselor_evaluations_created_at")
 }
@@ -87,8 +87,6 @@ model Consultant {
   evaluations       Evaluation[]     @relation("ConsultantEvaluations")
   inspections       Inspection[]     @relation("ConsultantInspections")
   riskAlerts        RiskAlert[]
-  //sessionData       SessionData[]
-
   weeklyStats       WeeklyStats[]
 
   @@map("consultants")
@@ -217,41 +215,6 @@ model Inspection {
 
   @@map("inspections")
 }
-/*
-model SessionData {
-  id                 String          @id @default(cuid())
-  consultantId       String
-  sessionDate        DateTime
-  duration           Float
-  finalScore         Float
-  politeness         EvaluationGrade
-  empathy            EvaluationGrade
-  problemSolving     EvaluationGrade
-  emotionalStability EvaluationGrade
-  conversationFlow   EvaluationGrade
-  result             SessionResult   @default(PENDING)
-  createdAt          DateTime        @default(now())
-  updatedAt          DateTime        @updatedAt
-  consultant         Consultant      @relation(fields: [consultantId], references: [id])
-
-  @@map("session_data")
-}
-*/
-/*
-model DepartmentStats {
-  id             String   @id @default(cuid())
-  teamId         String
-  date           DateTime
-  totalCalls     Int      @default(0)
-  avgScore       Float    @default(0)
-  completionRate Float    @default(0)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  @@unique([teamId, date])
-  @@map("department_stats")
-}
-*/
 
 enum UserRole {
   ADMIN

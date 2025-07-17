@@ -1,9 +1,9 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Consultant, FilterOptions, UseConsultantsResult } from '@/types';
 import { mockConsultants } from '@/data/mockData';
 
 export function useConsultants(initialData?: Consultant[]): UseConsultantsResult {
-  const [consultants] = useState<Consultant[]>(initialData || mockConsultants);
+  const [consultants, setConsultants] = useState<Consultant[]>(initialData || []);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<FilterOptions>({});
@@ -52,14 +52,45 @@ export function useConsultants(initialData?: Consultant[]): UseConsultantsResult
     setSortDirection(direction);
   };
 
-  const refetch = () => {
+  // API에서 상담사 데이터 가져오기
+  const fetchConsultants = async () => {
     setIsLoading(true);
     setError(null);
-    // Simulate API call
-    setTimeout(() => {
+    
+    try {
+      const response = await fetch('/api/consultants');
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      
+      setConsultants(data);
+    } catch (err) {
+      console.error('상담사 데이터 조회 실패:', err);
+      setError(err instanceof Error ? err.message : '데이터 로딩 실패');
+      // API 실패 시 Mock 데이터 사용
+      setConsultants(mockConsultants);
+    } finally {
       setIsLoading(false);
-    }, 500);
+    }
   };
+
+  const refetch = () => {
+    fetchConsultants();
+  };
+
+  // 컴포넌트 마운트 시 데이터 로딩
+  useEffect(() => {
+    if (!initialData || initialData.length === 0) {
+      fetchConsultants();
+    }
+  }, []);
 
   return {
     consultants: filteredAndSortedConsultants,
