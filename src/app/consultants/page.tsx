@@ -52,7 +52,7 @@ export default function ConsultantsPage() {
     );
   };
 
-  const getTrendIcon = (trend: string) => {
+  const getTrendIcon = (trend: string | undefined) => {
     switch (trend) {
       case "up":
         return <TrendingUp className="h-4 w-4 text-green-600" />;

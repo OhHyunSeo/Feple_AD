@@ -22,13 +22,17 @@ export default function DateFilter({
 
   // 30일 제한 계산 함수
   const getMinStartDate = (endDateStr: string) => {
+    if (!endDateStr) return "";
     const endDate = new Date(endDateStr);
+    if (isNaN(endDate.getTime())) return "";
     const minStartDate = new Date(endDate.getTime() - 29 * 24 * 60 * 60 * 1000);
     return minStartDate.toISOString().split("T")[0];
   };
 
   const getMaxEndDate = (startDateStr: string) => {
+    if (!startDateStr) return "";
     const startDate = new Date(startDateStr);
+    if (isNaN(startDate.getTime())) return "";
     const maxEndDate = new Date(startDate.getTime() + 29 * 24 * 60 * 60 * 1000);
     const today = new Date();
 
