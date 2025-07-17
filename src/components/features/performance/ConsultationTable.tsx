@@ -5,6 +5,11 @@ import { FileText, ChevronDown, ChevronUp, ArrowUpDown } from "lucide-react";
 import Pagination from "./Pagination";
 import { ConsultationData } from "../../../data/consultationData";
 import { useState as useLocalState, useEffect, useCallback } from "react";
+import { 
+  shouldUseMockData, 
+  getMockEvaluationsByConsultant, 
+  getAllMockEvaluations 
+} from "../../../data/qcMockData";
 
 interface ConsultationTableProps {
   startDate: string;
@@ -157,8 +162,26 @@ export default function ConsultationTable({
 
   // 데이터 정렬 및 필터링
   const getFilteredData = (): ConsultationData[] => {
-    // 항상 API 데이터 사용
-    const data = apiData;
+    let data: ConsultationData[] = [];
+
+    // Mock 데이터 사용 여부 확인
+    if (shouldUseMockData()) {
+      console.log("🎭 Mock 데이터 모드 활성화");
+      
+      if (consultantId) {
+        // 특정 상담사의 데이터만 조회
+        data = getMockEvaluationsByConsultant(consultantId);
+        console.log(`👤 상담사 ${consultantId}: ${data.length}개 Mock 데이터 로드`);
+      } else {
+        // 모든 상담사 데이터 조회
+        data = getAllMockEvaluations();
+        console.log(`👥 전체 상담사: ${data.length}개 Mock 데이터 로드`);
+      }
+    } else {
+      // API 데이터 사용
+      console.log("🔗 API 데이터 모드 활성화");
+      data = apiData;
+    }
 
     // 정렬 적용
     if (sortField) {

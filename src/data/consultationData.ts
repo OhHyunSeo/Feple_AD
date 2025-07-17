@@ -789,6 +789,244 @@ const getCustomSessionData = (sessionNo: number): ConsultationData | null => {
           ],
         },
       };
+    
+    // 새로운 1100번대 세션 데이터 (사용자 제공)
+    case 1101: // 김민수 (c1)
+      return {
+        no: 1101,
+        datetime: "2025-07-16 13:30:46",
+        finalScore: 78,
+        courtesy: "B",
+        empathy: "A",
+        problemSolving: "B",
+        emotionalStability: "A",
+        communicationFlow: "B",
+        result: "만족",
+        feedback: {
+          strengths: [
+            "공감적 소통(A): 고객의 감정을 잘 이해하고 적절한 공감 표현을 사용합니다.",
+            "감정 안정성(A): 어려운 상황에서도 침착하게 대응하며 안정된 응대 태도를 보여줍니다.",
+          ],
+          improvements: [
+            "정중함(B): 양호한 수준이지만 더욱 세련된 언어 사용으로 고급스러운 서비스를 제공할 수 있습니다.",
+            "문제 해결 역량: 좀 더 창의적인 해결책 제시가 필요합니다.",
+          ],
+          coaching: [
+            "이미 우수한 공감 능력을 보유하고 계시니, 이를 더욱 발전시켜 고객 만족도를 높여보세요.",
+            "정중한 언어 사용에 더해 전문적인 용어 사용으로 신뢰감을 더할 수 있습니다.",
+          ],
+        },
+      };
+    case 1102: // 김민수 (c1)
+      return {
+        no: 1102,
+        datetime: "2025-07-16 14:15:23",
+        finalScore: 75,
+        courtesy: "C",
+        empathy: "B",
+        problemSolving: "A",
+        emotionalStability: "B",
+        communicationFlow: "B",
+        result: "만족",
+        feedback: {
+          strengths: [
+            "문제 해결 역량(A): 복잡한 문제도 체계적으로 분석하여 효과적인 해결책을 제시합니다.",
+            "전반적인 상담 진행이 안정적입니다.",
+          ],
+          improvements: [
+            "정중함(C): 기본적인 예의는 갖추었으나 더욱 정중한 언어 사용이 필요합니다.",
+            "공감 표현을 좀 더 자연스럽게 사용하시면 좋겠습니다.",
+          ],
+          coaching: [
+            "문제 해결 능력은 우수하니, 여기에 더 따뜻한 감성을 더해보세요.",
+            "고객의 입장에서 한 번 더 생각해보는 습관을 기르시면 더 좋은 상담사가 될 수 있습니다.",
+          ],
+        },
+      };
+    case 1103: // 이영희 (c4)
+      return {
+        no: 1103,
+        datetime: "2025-07-15 10:20:30",
+        finalScore: 82,
+        courtesy: "A",
+        empathy: "A",
+        problemSolving: "B",
+        emotionalStability: "A",
+        communicationFlow: "A",
+        result: "만족",
+        feedback: {
+          strengths: [
+            "정중함(A): 항상 예의를 갖추고 친절하게 응대했습니다.",
+            "공감적 소통(A): 고객의 어려움을 깊이 이해했습니다.",
+          ],
+          improvements: [
+            "문제 해결(B): 더 빠른 대안 제시를 연습해보세요.",
+          ],
+          coaching: [
+            "즉각적인 해결책을 제공하기 위한 시뮬레이션을 추천합니다.",
+          ],
+        },
+      };
+    case 1104: // 이영희 (c4)
+      return {
+        no: 1104,
+        datetime: "2025-07-15 11:45:12",
+        finalScore: 70,
+        courtesy: "B",
+        empathy: "C",
+        problemSolving: "D",
+        emotionalStability: "B",
+        communicationFlow: "C",
+        result: "미흡",
+        feedback: {
+          strengths: [
+            "안정적 어조로 고객을 편안하게 만들었습니다.",
+          ],
+          improvements: [
+            "공감 표현(C): 좀 더 적극적인 공감 언어 사용이 필요합니다.",
+            "문제 해결(D): 근본 원인 분석 연습이 필요합니다.",
+          ],
+          coaching: [
+            "다양한 시나리오 기반 문제 해결 트레이닝을 권장합니다.",
+          ],
+        },
+      };
+    case 1105: // 박성호 (c2)
+      return {
+        no: 1105,
+        datetime: "2025-07-14 14:30:00",
+        finalScore: 88,
+        courtesy: "A",
+        empathy: "B",
+        problemSolving: "A",
+        emotionalStability: "A",
+        communicationFlow: "B",
+        result: "만족",
+        feedback: {
+          strengths: [
+            "명확한 해결책 제시로 고객 만족도가 높았습니다.",
+          ],
+          improvements: [
+            "의사 전달 속도를 조금만 더 올려보세요.",
+          ],
+          coaching: [
+            "스피치 훈련을 병행하시면 더욱 좋아집니다.",
+          ],
+        },
+      };
+    case 1106: // 박성호 (c2)
+      return {
+        no: 1106,
+        datetime: "2025-07-14 15:50:20",
+        finalScore: 60,
+        courtesy: "D",
+        empathy: "E",
+        problemSolving: "C",
+        emotionalStability: "C",
+        communicationFlow: "D",
+        result: "추가 상담 필요",
+        feedback: {
+          strengths: [
+            "문제 인식 능력: 고객의 요구사항을 정확히 파악했습니다.",
+          ],
+          improvements: [
+            "공감 부족(E): 감정 이입 연습이 필요합니다.",
+            "정중함(D): 더욱 예의를 갖춘 언어 사용이 필요합니다.",
+          ],
+          coaching: [
+            "감정 이입 워크숍 참여를 권장합니다.",
+          ],
+        },
+      };
+    case 1107: // 최미연 (c7)
+      return {
+        no: 1107,
+        datetime: "2025-07-13 09:15:45",
+        finalScore: 92,
+        courtesy: "A",
+        empathy: "A",
+        problemSolving: "B",
+        emotionalStability: "A",
+        communicationFlow: "A",
+        result: "만족",
+        feedback: {
+          strengths: [
+            "정중함(A)과 안정감(A)이 매우 우수했습니다.",
+          ],
+          improvements: [],
+          coaching: [
+            "현재 페이스를 유지하며 더 발전을 도모하세요.",
+          ],
+        },
+      };
+    case 1108: // 최미연 (c7)
+      return {
+        no: 1108,
+        datetime: "2025-07-13 11:00:10",
+        finalScore: 55,
+        courtesy: "F",
+        empathy: "F",
+        problemSolving: "E",
+        emotionalStability: "D",
+        communicationFlow: "F",
+        result: "해결 불가",
+        feedback: {
+          strengths: [
+            "상담 의지는 보였으나 전반적 스킬 부족.",
+          ],
+          improvements: [
+            "기본 매너와 프로세스부터 재학습 필요.",
+          ],
+          coaching: [
+            "기본 교육 프로그램 즉시 수강 권장.",
+          ],  
+        },
+      };
+    case 1109: // 노준석 (c12)
+      return {
+        no: 1109,
+        datetime: "2025-07-12 14:20:33",
+        finalScore: 75,
+        courtesy: "B",
+        empathy: "C",
+        problemSolving: "B",
+        emotionalStability: "B",
+        communicationFlow: "C",
+        result: "미흡",
+        feedback: {
+          strengths: [
+            "상담 태도는 안정적이었습니다.",
+          ],
+          improvements: [
+            "공감 언어 사용을 늘려보세요.",
+          ],
+          coaching: [
+            "공감 표현 연습 세션을 추천합니다.",
+          ],
+        },
+      };
+    case 1110: // 노준석 (c12)
+      return {
+        no: 1110,
+        datetime: "2025-07-12 16:45:50",
+        finalScore: 85,
+        courtesy: "A",
+        empathy: "A",
+        problemSolving: "A",
+        emotionalStability: "B",
+        communicationFlow: "A",
+        result: "만족",
+        feedback: {
+          strengths: [
+            "우수한 문제 해결 능력과 친절함.",
+          ],
+          improvements: [],
+          coaching: [
+            "지금처럼 계속 성장하시길 바랍니다.",
+          ],  
+        },
+      };
+    
     default:
       return null;
   }
