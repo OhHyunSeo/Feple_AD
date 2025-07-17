@@ -90,7 +90,7 @@ export function useConsultants(initialData?: Consultant[]): UseConsultantsResult
     if (!initialData || initialData.length === 0) {
       fetchConsultants();
     }
-  }, []);
+  }, [initialData]);
 
   return {
     consultants: filteredAndSortedConsultants,
