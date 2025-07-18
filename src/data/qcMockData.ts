@@ -1,21 +1,21 @@
 // QC 대시보드용 Mock 데이터 연결 파일
-// 현재는 Mock 데이터를 사용하며, 차후 API 연결 시 이 파일을 통해 전환
+// 현재는 고정된 Mock 데이터를 사용하며, 차후 API 연결 시 이 파일을 통해 전환
 
 import { ConsultationData } from "./consultationData";
 import { 
-  extendedConsultantInfo,
-  getExtendedMockEvaluationsByConsultant,
-  getAllExtendedMockEvaluations 
-} from "./extendedQcMockData";
+  fixedConsultantInfo,
+  getFixedEvaluationsByConsultant,
+  getAllFixedEvaluations 
+} from "./fixedQcMockData";
 
-// 상담사별 평가 데이터 조회 (Mock 버전) - 확장된 데이터 사용
+// 상담사별 평가 데이터 조회 (Mock 버전) - 고정된 데이터 사용
 export const getMockEvaluationsByConsultant = (consultantId: string): ConsultationData[] => {
-  return getExtendedMockEvaluationsByConsultant(consultantId);
+  return getFixedEvaluationsByConsultant(consultantId);
 };
 
-// 모든 상담사의 평가 데이터 조회 (Mock 버전) - 확장된 데이터 사용
+// 모든 상담사의 평가 데이터 조회 (Mock 버전) - 고정된 데이터 사용
 export const getAllMockEvaluations = (): ConsultationData[] => {
-  return getAllExtendedMockEvaluations();
+  return getAllFixedEvaluations();
 };
 
 // 상담사별 최신 평가 데이터 조회
@@ -50,5 +50,5 @@ export const shouldUseMockData = (): boolean => {
   return USE_MOCK_DATA;
 };
 
-// 상담사 정보 매핑 (UI 표시용) - 확장된 정보 사용
-export const consultantInfo = extendedConsultantInfo;
+// 상담사 정보 매핑 (UI 표시용) - 고정된 정보 사용
+export const consultantInfo = fixedConsultantInfo;

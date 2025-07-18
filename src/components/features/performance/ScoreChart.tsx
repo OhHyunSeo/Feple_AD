@@ -2,6 +2,8 @@
 
 import { BarChart3 } from "lucide-react";
 import ScoreBar from "./ScoreBar";
+import { useEffect, useState } from "react";
+import { getMockEvaluationsByConsultant } from "../../../data/qcMockData";
 
 interface ScoreData {
   min: number;
@@ -10,10 +12,12 @@ interface ScoreData {
 }
 
 interface ScoreChartProps {
-  myScores: ScoreData;
+  myScores?: ScoreData; // Optional로 변경 (동적 계산을 위해)
   teamScores?: ScoreData;
   startDate: string;
   endDate: string;
+  consultantId?: string; // 동적 계산을 위한 상담사 ID
+  useMockData?: boolean; // Mock 데이터 사용 여부
 }
 
 export default function ScoreChart({
@@ -21,7 +25,54 @@ export default function ScoreChart({
   teamScores,
   startDate,
   endDate,
+  consultantId,
+  useMockData = false,
 }: ScoreChartProps) {
+  const [calculatedScores, setCalculatedScores] = useState<ScoreData>({ min: 0, avg: 0, max: 0 });
+
+  // 기간별 점수 계산
+  useEffect(() => {
+    if (useMockData && consultantId && startDate && endDate) {
+      console.log(`📊 점수 계산 시작: 상담사 ${consultantId}, 기간 ${startDate} ~ ${endDate}`);
+      
+      try {
+        // Mock 데이터 조회
+        const allData = getMockEvaluationsByConsultant(consultantId);
+        
+        // 기간 필터링
+        const startDateTime = new Date(startDate);
+        const endDateTime = new Date(endDate);
+        endDateTime.setHours(23, 59, 59, 999);
+        
+        const filteredData = allData.filter(item => {
+          const itemDate = new Date(item.datetime);
+          return itemDate >= startDateTime && itemDate <= endDateTime;
+        });
+        
+        console.log(`📅 기간 내 데이터: ${filteredData.length}개`);
+        
+        if (filteredData.length > 0) {
+          const scores = filteredData.map(item => item.finalScore);
+          const min = Math.min(...scores);
+          const max = Math.max(...scores);
+          const avg = Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length);
+          
+          const newScores = { min, avg, max };
+          console.log(`📊 계산된 점수:`, newScores);
+          setCalculatedScores(newScores);
+        } else {
+          console.log('📊 해당 기간에 데이터가 없어 기본값 사용');
+          setCalculatedScores({ min: 0, avg: 0, max: 0 });
+        }
+      } catch (error) {
+        console.error('📊 점수 계산 오류:', error);
+        setCalculatedScores({ min: 0, avg: 0, max: 0 });
+      }
+    }
+  }, [consultantId, startDate, endDate, useMockData]);
+
+  // 표시할 점수 결정 (props로 받은 것 우선, 없으면 계산된 값)
+  const displayScores = myScores || calculatedScores;
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3">
       <div className="flex items-center justify-between mb-2">
@@ -36,19 +87,19 @@ export default function ScoreChart({
         <div className="flex justify-center gap-3">
           <ScoreBar
             label="최저"
-            myScore={myScores.min}
+            myScore={displayScores.min}
             teamScore={teamScores?.min}
             color="bg-red-400"
           />
           <ScoreBar
             label="평균"
-            myScore={myScores.avg}
+            myScore={displayScores.avg}
             teamScore={teamScores?.avg}
             color="bg-blue-400"
           />
           <ScoreBar
             label="최고"
-            myScore={myScores.max}
+            myScore={displayScores.max}
             teamScore={teamScores?.max}
             color="bg-green-400"
           />

@@ -1,5 +1,5 @@
-// 확장된 Mock 데이터 import
-import { generateExtendedMockSession, extendedConsultantSessionMapping } from './extendedQcMockData';
+// 고정된 Mock 데이터 import
+import { generateFixedMockSession, fixedConsultantSessionMapping } from './fixedQcMockData';
 
 export interface FeedbackData {
   strengths: string[];
@@ -687,12 +687,12 @@ export const generateConversationData = (
 
 // 커스텀 세션 데이터 반환
 const getCustomSessionData = (sessionNo: number): ConsultationData | null => {
-  // 확장된 세션 범위 체크 (1101-1280)
+  // 고정된 세션 범위 체크 (1101-1280)
   if (sessionNo >= 1101 && sessionNo <= 1280) {
     // 해당 세션이 어느 상담사에 속하는지 찾기
-    for (const [consultantId, sessions] of Object.entries(extendedConsultantSessionMapping)) {
+    for (const [consultantId, sessions] of Object.entries(fixedConsultantSessionMapping)) {
       if (sessions.includes(sessionNo)) {
-        return generateExtendedMockSession(sessionNo, consultantId);
+        return generateFixedMockSession(sessionNo, consultantId);
       }
     }
   }

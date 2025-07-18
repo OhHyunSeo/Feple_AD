@@ -192,6 +192,21 @@ export default function ConsultationTable({
       data = apiData;
     }
 
+    // 기간 필터링 적용 (Mock 데이터의 경우)
+    if (useMockData && startDate && endDate) {
+      const startDateTime = new Date(startDate);
+      const endDateTime = new Date(endDate);
+      // endDate는 해당 날짜의 23:59:59까지 포함
+      endDateTime.setHours(23, 59, 59, 999);
+      
+      data = data.filter(item => {
+        const itemDate = new Date(item.datetime);
+        return itemDate >= startDateTime && itemDate <= endDateTime;
+      });
+      
+      console.log(`📅 기간 필터링 (${startDate} ~ ${endDate}): ${data.length}개 데이터`);
+    }
+
     console.log('📊 최종 데이터 길이:', data.length);
 
     // 정렬 적용

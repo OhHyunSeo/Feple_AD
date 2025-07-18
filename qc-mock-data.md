@@ -7,7 +7,7 @@ QC 대시보드의 상담 모니터링 페이지에서 사용되는 Mock 데이�
 - **총 상담사**: 18명 (기존 12명 + 신규 6명)
 - **총 평가 세션**: 180개 (상담사당 10개씩)
 - **세션 번호 범위**: 1101~1280
-- **데이터 소스**: `src/data/extendedQcMockData.ts`, `src/data/qcMockData.ts`, `src/data/consultationData.ts`
+- **데이터 소스**: `src/data/fixedQcMockData.ts`, `src/data/qcMockData.ts`, `src/data/consultationData.ts`
 
 ## 👥 상담사별 Mock 데이터 (확장된 데이터)
 
@@ -288,10 +288,10 @@ QC 대시보드의 상담 모니터링 페이지에서 사용되는 Mock 데이�
 
 ## 🔧 기술적 구현 (확장됨)
 
-### 최종 확장된 데이터 매핑 (18명 상담사)
+### 고정된 데이터 매핑 (18명 상담사)
 ```typescript
-// src/data/extendedQcMockData.ts
-export const extendedConsultantSessionMapping: Record<string, number[]> = {
+// src/data/fixedQcMockData.ts
+export const fixedConsultantSessionMapping: Record<string, number[]> = {
   // 기존 상담사들 (각 10개 세션으로 확장)
   c1: [1101, 1102, 1103, 1104, 1105, 1106, 1107, 1108, 1109, 1110], // 김민수
   c2: [1121, 1122, 1123, 1124, 1125, 1126, 1127, 1128, 1129, 1130], // 박성호
@@ -316,24 +316,31 @@ export const extendedConsultantSessionMapping: Record<string, number[]> = {
 };
 ```
 
-### 알고리즘 기반 데이터 생성
+### 시드 기반 고정 데이터 생성
 ```typescript
-// 성과 패턴별 자동 생성
-export const generateExtendedMockSession = (sessionNo: number, consultantId: string): ConsultationData => {
-  const consultantPerformanceMap: Record<string, number[]> = {
-    c1: [0, 0, 1, 0, 0, 1, 0, 0, 1, 0], // 주로 우수, 가끔 양호
-    c2: [1, 2, 1, 0, 1, 2, 1, 0, 1, 1], // 양호~개선필요 편차
-    // ... 10명 상담사의 개별 패턴
+// 시드 기반 랜덤 생성기로 일관된 결과 보장
+class SeededRandom {
+  private seed: number;
+  constructor(seed: number) { this.seed = seed; }
+  next(): number {
+    const x = Math.sin(this.seed++) * 10000;
+    return x - Math.floor(x);
+  }
+}
+
+// 고정된 Mock 세션 데이터 생성 함수
+export const generateFixedMockSession = (sessionNo: number, consultantId: string): ConsultationData => {
+  const rng = new SeededRandom(sessionNo * 1000 + parseInt(consultantId.replace('c', ''), 10));
+  
+  // 상담사별 고정된 성향 패턴
+  const consultantPerformancePatterns: Record<string, number[]> = {
+    c1: [0, 0, 1, 0, 0, 1, 0, 0, 1, 0], // 김민수: 주로 우수, 가끔 양호
+    c2: [1, 2, 1, 0, 1, 2, 1, 0, 1, 1], // 박성호: 양호~개선필요 편차
+    // ... 18명 상담사의 개별 패턴
   };
   
-  const patterns = [
-    { /* 우수 패턴 */ },
-    { /* 양호 패턴 */ },
-    { /* 개선필요 패턴 */ },
-    { /* 심각한문제 패턴 */ }
-  ];
-  
-  // 패턴에 따른 자동 데이터 생성
+  // 시드 기반으로 고정된 날짜/시간, 점수, 등급, 피드백 생성
+  return { /* 일관된 결과 */ };
 };
 ```
 
@@ -341,12 +348,12 @@ export const generateExtendedMockSession = (sessionNo: number, consultantId: str
 ```typescript
 // src/data/qcMockData.ts
 import { 
-  getExtendedMockEvaluationsByConsultant,
-  getAllExtendedMockEvaluations 
-} from "./extendedQcMockData";
+  getFixedEvaluationsByConsultant,
+  getAllFixedEvaluations 
+} from "./fixedQcMockData";
 
 export const getMockEvaluationsByConsultant = (consultantId: string): ConsultationData[] => {
-  return getExtendedMockEvaluationsByConsultant(consultantId);
+  return getFixedEvaluationsByConsultant(consultantId);
 };
 ```
 
@@ -396,6 +403,10 @@ console.log(`📊 상담사 ${consultantId}: 총 ${evaluations.length}개 평가
   - 기존 상담사 8명 세션 데이터 추가 (c3, c5, c6, c8, c9, c10, c11, c18)
   - 모든 상담사가 QC 상담 모니터링에서 조회 가능
   - 팀별 상담사 분포 최적화 및 관리 시나리오 완성
+- **2025-07-18 고정화**: 시드 기반 고정 데이터 시스템 도입
+  - 알고리즘 기반 생성에서 시드 기반 고정 생성으로 전환
+  - 상담일시, 점수, 등급, 피드백의 일관성 보장
+  - 매번 조회 시에도 동일한 결과 제공
 
 ---
 
