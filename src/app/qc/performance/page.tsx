@@ -80,31 +80,37 @@ function QCMonitoringContent() {
     { id: "team4", name: "기술지원팀" },
   ];
 
-  // 부서별 상담원 데이터
+  // 부서별 상담원 데이터 (확장된 10명 상담사 포함)
   const consultantsByDepartment = {
     team1: [
       { id: "c1", name: "김민수" },
       { id: "c2", name: "박성호" },
       { id: "c3", name: "임지원" },
       { id: "c12", name: "노준석" },
+      { id: "c13", name: "정수민" },
+      { id: "c17", name: "오세훈" },
     ],
     team2: [
       { id: "c4", name: "이영희" },
       { id: "c5", name: "정다은" },
       { id: "c6", name: "강현준" },
+      { id: "c14", name: "안지혜" },
     ],
     team3: [
       { id: "c7", name: "최미연" },
       { id: "c8", name: "한상욱" },
       { id: "c9", name: "송예진" },
+      { id: "c15", name: "황도현" },
+      { id: "c18", name: "배수진" },
     ],
     team4: [
       { id: "c10", name: "윤진호" },
       { id: "c11", name: "조은실" },
+      { id: "c16", name: "차민영" },
     ],
   };
 
-  // 상담사별 점수 데이터
+  // 상담사별 점수 데이터 (확장된 10명 상담사 포함)
   const consultantScores = {
     c1: { min: 65, avg: 78, max: 85 },
     c2: { min: 55, avg: 72, max: 82 },
@@ -118,6 +124,13 @@ function QCMonitoringContent() {
     c9: { min: 68, avg: 79, max: 87 },
     c10: { min: 55, avg: 70, max: 81 },
     c11: { min: 72, avg: 83, max: 89 },
+    // 새로운 상담사들
+    c13: { min: 68, avg: 77, max: 86 }, // 정수민 (신입 성장형)
+    c14: { min: 82, avg: 89, max: 96 }, // 안지혜 (선임, 우수 안정형)
+    c15: { min: 58, avg: 74, max: 85 }, // 황도현 (불안정형)
+    c16: { min: 52, avg: 67, max: 78 }, // 차민영 (기술직 전환, 개선 중)
+    c17: { min: 40, avg: 58, max: 72 }, // 오세훈 (관리 대상)
+    c18: { min: 62, avg: 73, max: 83 }, // 배수진 (신입, 양호~개선필요)
   };
 
   // 팀별 점수 데이터 (각 상담사가 속한 팀의 평균 점수)

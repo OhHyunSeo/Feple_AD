@@ -1,3 +1,6 @@
+// 확장된 Mock 데이터 import
+import { generateExtendedMockSession, extendedConsultantSessionMapping } from './extendedQcMockData';
+
 export interface FeedbackData {
   strengths: string[];
   improvements: string[];
@@ -684,6 +687,16 @@ export const generateConversationData = (
 
 // 커스텀 세션 데이터 반환
 const getCustomSessionData = (sessionNo: number): ConsultationData | null => {
+  // 확장된 세션 범위 체크 (1101-1280)
+  if (sessionNo >= 1101 && sessionNo <= 1280) {
+    // 해당 세션이 어느 상담사에 속하는지 찾기
+    for (const [consultantId, sessions] of Object.entries(extendedConsultantSessionMapping)) {
+      if (sessions.includes(sessionNo)) {
+        return generateExtendedMockSession(sessionNo, consultantId);
+      }
+    }
+  }
+
   switch (sessionNo) {
     case 1001: // 김민수
       return {
@@ -1024,6 +1037,144 @@ const getCustomSessionData = (sessionNo: number): ConsultationData | null => {
           coaching: [
             "지금처럼 계속 성장하시길 바랍니다.",
           ],  
+        },
+      };
+
+    // 김민수 (c1) 추가 세션 - 1103~1110
+    case 1103:
+      return {
+        no: 1103,
+        datetime: "2025-07-16 16:20:30",
+        finalScore: 82,
+        courtesy: "A",
+        empathy: "B",
+        problemSolving: "A",
+        emotionalStability: "A",
+        communicationFlow: "A",
+        result: "만족",
+        feedback: {
+          strengths: ["문제 해결이 신속하고 정확했습니다.", "전문적인 지식으로 고객 신뢰도를 높였습니다."],
+          improvements: ["공감 표현을 더 풍부하게 사용하면 좋겠습니다."],
+          coaching: ["감정적 소통 기법 연습을 통해 더 따뜻한 서비스를 제공해보세요."],
+        },
+      };
+    case 1104:
+      return {
+        no: 1104,
+        datetime: "2025-07-15 09:45:12",
+        finalScore: 79,
+        courtesy: "B",
+        empathy: "A",
+        problemSolving: "B",
+        emotionalStability: "A",
+        communicationFlow: "B",
+        result: "만족",
+        feedback: {
+          strengths: ["고객의 감정을 잘 파악하고 공감했습니다.", "안정적인 상담 진행이 인상적이었습니다."],
+          improvements: ["정중함 표현을 더 세련되게 개선할 수 있습니다."],
+          coaching: ["고급 언어 사용법 훈련을 권장합니다."],
+        },
+      };
+    case 1105:
+      return {
+        no: 1105,
+        datetime: "2025-07-14 11:30:25",
+        finalScore: 84,
+        courtesy: "A",
+        empathy: "A",
+        problemSolving: "B",
+        emotionalStability: "A",
+        communicationFlow: "A",
+        result: "만족",
+        feedback: {
+          strengths: ["모든 영역에서 균형 잡힌 우수한 성과를 보여주었습니다."],
+          improvements: ["문제 해결 속도를 조금 더 개선하면 완벽할 것 같습니다."],
+          coaching: ["현재 수준을 유지하며 지속적으로 발전하세요."],
+        },
+      };
+    case 1106:
+      return {
+        no: 1106,
+        datetime: "2025-07-13 14:15:40",
+        finalScore: 77,
+        courtesy: "B",
+        empathy: "A",
+        problemSolving: "C",
+        emotionalStability: "A",
+        communicationFlow: "B",
+        result: "만족",
+        feedback: {
+          strengths: ["공감 능력이 뛰어나며 고객을 편안하게 만들었습니다."],
+          improvements: ["문제 해결 과정에서 더 적극적인 제안이 필요합니다."],
+          coaching: ["다양한 해결책 제시 훈련을 받아보세요."],
+        },
+      };
+    case 1107:
+      return {
+        no: 1107,
+        datetime: "2025-07-12 10:20:15",
+        finalScore: 76,
+        courtesy: "C",
+        empathy: "B",
+        problemSolving: "A",
+        emotionalStability: "B",
+        communicationFlow: "B",
+        result: "만족",
+        feedback: {
+          strengths: ["문제 해결 능력이 우수합니다."],
+          improvements: ["정중함을 더 개선하여 고급 서비스를 제공하세요."],
+          coaching: ["예의와 매너에 대한 추가 교육을 권장합니다."],
+        },
+      };
+    case 1108:
+      return {
+        no: 1108,
+        datetime: "2025-07-11 15:35:50",
+        finalScore: 88,
+        courtesy: "A",
+        empathy: "A",
+        problemSolving: "A",
+        emotionalStability: "A",
+        communicationFlow: "B",
+        result: "만족",
+        feedback: {
+          strengths: ["거의 모든 영역에서 A등급의 탁월한 성과를 보였습니다."],
+          improvements: ["대화 흐름에서 소폭 개선 여지가 있습니다."],
+          coaching: ["완벽에 가까운 상담 서비스를 제공하고 있습니다."],
+        },
+      };
+    case 1109:
+      return {
+        no: 1109,
+        datetime: "2025-07-10 13:25:30",
+        finalScore: 73,
+        courtesy: "C",
+        empathy: "B",
+        problemSolving: "B",
+        emotionalStability: "B",
+        communicationFlow: "C",
+        result: "미흡",
+        feedback: {
+          strengths: ["기본적인 상담 절차를 잘 이해하고 있습니다."],
+          improvements: ["정중함과 대화 흐름을 개선해야 합니다."],
+          coaching: ["고객 응대 기본기 재정비가 필요합니다."],
+        },
+      };
+    case 1110:
+      return {
+        no: 1110,
+        datetime: "2025-07-09 16:45:20",
+        finalScore: 81,
+        courtesy: "A",
+        empathy: "A",
+        problemSolving: "B",
+        emotionalStability: "A",
+        communicationFlow: "A",
+        result: "만족",
+        feedback: {
+          strengths: ["정중함과 공감 능력이 매우 우수합니다."],
+          improvements: ["문제 해결에서 더 창의적인 접근을 시도해보세요."],
+          coaching: ["현재의 우수한 감성 능력에 논리적 사고를 더해보세요."],
         },
       };
     
