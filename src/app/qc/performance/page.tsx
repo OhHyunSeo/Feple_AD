@@ -110,14 +110,6 @@ function QCMonitoringContent() {
     ],
   };
 
-  // 팀별 점수 데이터 (각 상담사가 속한 팀의 평균 점수)
-  const teamScores = {
-    team1: { min: 56, avg: 72, max: 84 }, // 고객상담 1팀
-    team2: { min: 68, avg: 80, max: 89 }, // 고객상담 2팀
-    team3: { min: 70, avg: 81, max: 89 }, // 고객상담 3팀
-    team4: { min: 64, avg: 77, max: 85 }, // 기술지원팀
-  };
-
   // 팀별 평균 통화 시간 데이터 (분)
   const teamCallTimeAverages = {
     team1: 7.2, // 고객상담 1팀
@@ -139,11 +131,6 @@ function QCMonitoringContent() {
     const consultants = getCurrentConsultants();
     const consultant = consultants.find((c) => c.id === selectedConsultant);
     return consultant?.name || "";
-  };
-
-  const getTeamScores = () => {
-    if (!selectedDepartment) return undefined;
-    return teamScores[selectedDepartment as keyof typeof teamScores];
   };
 
   const getTeamCallTimeAverage = () => {
@@ -285,9 +272,8 @@ function QCMonitoringContent() {
                   </div>
                 </div>
 
-                {/* 상담 점수 (ScoreChart 컴포넌트 사용) */}
+                {/* 상담 점수 (ScoreChart 컴포넌트 사용 - 팀 점수 동적 계산) */}
                 <ScoreChart
-                  teamScores={getTeamScores()}
                   startDate={contextStartDate}
                   endDate={contextEndDate}
                   consultantId={selectedConsultant}

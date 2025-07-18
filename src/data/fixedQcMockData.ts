@@ -316,3 +316,93 @@ export const getAllFixedEvaluations = (): ConsultationData[] => {
   console.log(`📊 전체: 총 ${allEvaluations.length}개 평가 데이터 반환`);
   return allEvaluations;
 };
+
+// 팀별 상담사 매핑
+export const teamConsultantMapping: Record<string, string[]> = {
+  team1: ["c1", "c2", "c3", "c12", "c13", "c17"], // 고객상담 1팀
+  team2: ["c4", "c5", "c6", "c14"],               // 고객상담 2팀
+  team3: ["c7", "c8", "c9", "c15", "c18"],        // 고객상담 3팀
+  team4: ["c10", "c11", "c16"],                   // 기술지원팀
+};
+
+// 상담사가 속한 팀 ID 조회
+export const getTeamByConsultant = (consultantId: string): string | null => {
+  for (const [teamId, consultants] of Object.entries(teamConsultantMapping)) {
+    if (consultants.includes(consultantId)) {
+      return teamId;
+    }
+  }
+  return null;
+};
+
+// 팀의 모든 상담사 ID 조회
+export const getConsultantsByTeam = (teamId: string): string[] => {
+  return teamConsultantMapping[teamId] || [];
+};
+
+// 점수 데이터 타입 정의
+interface ScoreData {
+  min: number;
+  avg: number;
+  max: number;
+}
+
+// 팀별 점수 계산 (기간 필터링 포함)
+export const calculateTeamScores = (teamId: string, startDate: string, endDate: string): ScoreData => {
+  console.log(`🏢 팀 점수 계산 시작: ${teamId}, 기간 ${startDate} ~ ${endDate}`);
+  
+  const teamConsultants = getConsultantsByTeam(teamId);
+  if (teamConsultants.length === 0) {
+    console.log(`⚠️ 팀 ${teamId}에 상담사가 없습니다.`);
+    return { min: 0, avg: 0, max: 0 };
+  }
+
+  const startDateTime = new Date(startDate);
+  const endDateTime = new Date(endDate);
+  endDateTime.setHours(23, 59, 59, 999);
+
+  const allScores: number[] = [];
+
+  // 팀 내 모든 상담사의 점수 수집
+  teamConsultants.forEach(consultantId => {
+    const consultantEvaluations = getFixedEvaluationsByConsultant(consultantId);
+    
+    // 기간 필터링
+    const filteredEvaluations = consultantEvaluations.filter(evaluation => {
+      const evaluationDate = new Date(evaluation.datetime);
+      return evaluationDate >= startDateTime && evaluationDate <= endDateTime;
+    });
+
+    const consultantScores = filteredEvaluations.map(evaluation => evaluation.finalScore);
+    allScores.push(...consultantScores);
+    
+    console.log(`👤 ${consultantId}: ${consultantScores.length}개 점수 추가`);
+  });
+
+  if (allScores.length === 0) {
+    console.log(`📊 팀 ${teamId}: 해당 기간에 데이터가 없어 기본값 반환`);
+    return { min: 0, avg: 0, max: 0 };
+  }
+
+  const min = Math.min(...allScores);
+  const max = Math.max(...allScores);
+  const avg = Math.round(allScores.reduce((sum, score) => sum + score, 0) / allScores.length);
+
+  const teamScores = { min, avg, max };
+  console.log(`📊 팀 ${teamId} 점수 계산 완료:`, teamScores, `(총 ${allScores.length}개 세션)`);
+  
+  return teamScores;
+};
+
+// 상담사가 속한 팀의 점수 계산
+export const calculateConsultantTeamScores = (consultantId: string, startDate: string, endDate: string): ScoreData | null => {
+  const teamId = getTeamByConsultant(consultantId);
+  
+  if (!teamId) {
+    console.log(`⚠️ 상담사 ${consultantId}의 팀을 찾을 수 없습니다.`);
+    return null;
+  }
+
+  console.log(`🔗 상담사 ${consultantId}는 ${teamId}에 속함`);
+  return calculateTeamScores(teamId, startDate, endDate);
+};
