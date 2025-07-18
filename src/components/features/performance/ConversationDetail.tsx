@@ -19,12 +19,14 @@ interface ConversationDetailProps {
   sessionNo: number | null;
   sessionId?: string | null; // 실제 session_id 추가
   onClose: () => void;
+  showAudioWhenMissing?: boolean; // 오디오가 없을 때도 플레이어를 보여줄지 여부 (QC용)
 }
 
 export default function ConversationDetail({
   sessionNo,
   sessionId,
   onClose,
+  showAudioWhenMissing = false,
 }: ConversationDetailProps) {
   const [activeTab, setActiveTab] = useState<"original" | "summary">(
     "original"
@@ -322,11 +324,11 @@ export default function ConversationDetail({
       </div>
 
       {/* 오디오 플레이어 */}
-      {conversationData.audioUrl && (
+      {(conversationData.audioUrl || showAudioWhenMissing) && (
         <div className="mb-3 p-2 bg-gray-50 rounded-lg">
           <audio
             ref={audioRef}
-            src={conversationData.audioUrl}
+            src={conversationData.audioUrl || undefined}
             preload="metadata"
           />
 
@@ -335,6 +337,7 @@ export default function ConversationDetail({
               <button
                 onClick={() => skipTime(-10)}
                 className="p-1 text-gray-600 hover:text-blue-600 transition-colors"
+                disabled={!conversationData.audioUrl}
               >
                 <SkipBack className="h-3 w-3" />
               </button>
@@ -342,6 +345,7 @@ export default function ConversationDetail({
               <button
                 onClick={togglePlay}
                 className="p-1 text-blue-600 hover:text-blue-700 transition-colors"
+                disabled={!conversationData.audioUrl}
               >
                 {isPlaying ? (
                   <Pause className="h-4 w-4" />
@@ -353,14 +357,21 @@ export default function ConversationDetail({
               <button
                 onClick={() => skipTime(10)}
                 className="p-1 text-gray-600 hover:text-blue-600 transition-colors"
+                disabled={!conversationData.audioUrl}
               >
                 <SkipForward className="h-3 w-3" />
               </button>
             </div>
 
             <div className="text-xs text-gray-600">
-              {formatTime(currentTime)} /{" "}
-              {formatTime(conversationData.totalDuration)}
+              {conversationData.audioUrl ? (
+                <>
+                  {formatTime(currentTime)} /{" "}
+                  {formatTime(conversationData.totalDuration)}
+                </>
+              ) : (
+                <span className="text-gray-400">오디오 없음</span>
+              )}
             </div>
           </div>
 
@@ -370,7 +381,8 @@ export default function ConversationDetail({
               className="bg-blue-500 h-2 rounded-full transition-all duration-100"
               style={{
                 width: `${
-                  conversationData.totalDuration > 0
+                  conversationData.totalDuration > 0 &&
+                  conversationData.audioUrl
                     ? (currentTime / conversationData.totalDuration) * 100
                     : 0
                 }%`,

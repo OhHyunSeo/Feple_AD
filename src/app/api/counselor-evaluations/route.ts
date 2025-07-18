@@ -133,7 +133,7 @@ function getResultFromScore(finalScore: number | null): string {
   return "해결 불가";
 }
 
-// GPT 피드백 파싱 (간단한 예시)
+// GPT 피드백 파싱 (구조화된 텍스트 처리)
 function parseGptFeedback(
   gptFeedback: string | null,
   type: "strengths" | "improvements" | "coaching"
@@ -145,7 +145,114 @@ function parseGptFeedback(
     const feedback = JSON.parse(gptFeedback);
     return feedback[type] || ["데이터가 없습니다."];
   } catch {
-    // JSON이 아닌 경우 텍스트 그대로 반환
-    return [gptFeedback];
+    // JSON이 아닌 경우 구조화된 텍스트 파싱
+    return parseStructuredFeedback(gptFeedback, type);
   }
+}
+
+// 구조화된 텍스트에서 특정 섹션 추출
+function parseStructuredFeedback(
+  text: string,
+  type: "strengths" | "improvements" | "coaching"
+): string[] {
+  const lines = text.split("\n").filter((line) => line.trim());
+
+  // 강점 섹션 추출
+  if (type === "strengths") {
+    const strengthsSection = extractSection(text, "강점");
+    if (strengthsSection.length > 0) return strengthsSection;
+
+    // 대안: "상위 2개 지표" 또는 등급 A, B 찾기
+    const highGrades = lines.filter(
+      (line) =>
+        (line.includes("A등급") || line.includes("B등급")) &&
+        !line.includes("약점")
+    );
+    if (highGrades.length > 0) {
+      return highGrades.map((line) => line.trim().replace(/^\d+\.\s*/, ""));
+    }
+  }
+
+  // 개선점 섹션 추출
+  if (type === "improvements") {
+    const improvementsSection = extractSection(text, "약점");
+    if (improvementsSection.length > 0) return improvementsSection;
+
+    // 대안: "하위 2개 지표" 또는 등급 F, G 찾기
+    const lowGrades = lines.filter(
+      (line) =>
+        (line.includes("F등급") ||
+          line.includes("G등급") ||
+          line.includes("D등급")) &&
+        !line.includes("강점")
+    );
+    if (lowGrades.length > 0) {
+      return lowGrades.map((line) => line.trim().replace(/^\d+\.\s*/, ""));
+    }
+  }
+
+  // 코칭 멘트 섹션 추출
+  if (type === "coaching") {
+    const coachingSection = extractSection(text, "코칭");
+    if (coachingSection.length > 0) return coachingSection;
+
+    // 대안: 마지막 문단이나 조언 내용 찾기
+    const coachingLines = lines.filter(
+      (line) =>
+        line.includes("상담사님") ||
+        line.includes("연습") ||
+        line.includes("노력") ||
+        line.includes("개선")
+    );
+    if (coachingLines.length > 0) {
+      return coachingLines.slice(0, 2); // 최대 2개 코칭 멘트
+    }
+  }
+
+  // 기본 fallback
+  return ["데이터 파싱 중 오류가 발생했습니다."];
+}
+
+// 텍스트에서 특정 섹션 추출 (강점, 약점, 코칭 등)
+function extractSection(text: string, keyword: string): string[] {
+  const lines = text.split("\n");
+  const result: string[] = [];
+  let inSection = false;
+
+  for (const line of lines) {
+    const trimmedLine = line.trim();
+
+    // 섹션 시작 감지
+    if (
+      trimmedLine.includes(`**${keyword}`) ||
+      trimmedLine.includes(`${keyword} (`)
+    ) {
+      inSection = true;
+      continue;
+    }
+
+    // 다른 섹션 시작 감지 (섹션 종료)
+    if (
+      inSection &&
+      trimmedLine.includes("**") &&
+      !trimmedLine.includes(keyword)
+    ) {
+      break;
+    }
+
+    // 섹션 내용 수집
+    if (inSection && trimmedLine) {
+      // 번호나 불필요한 기호 제거
+      const cleanLine = trimmedLine
+        .replace(/^\d+\.\s*/, "")
+        .replace(/^[•\-\*]\s*/, "")
+        .trim();
+
+      if (cleanLine && !cleanLine.includes("**") && cleanLine.length > 10) {
+        result.push(cleanLine);
+      }
+    }
+  }
+
+  return result.slice(0, 3); // 최대 3개 항목만 반환
 }

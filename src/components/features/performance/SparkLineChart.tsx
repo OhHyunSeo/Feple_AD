@@ -160,13 +160,13 @@ export default function SparkLineChart({
           d={teamPath}
           fill="none"
           stroke="#9ca3af"
-          strokeWidth="2"
-          strokeDasharray="3,3"
+          strokeWidth="1.5"
+          strokeDasharray="2,2"
           opacity="0.7"
         />
 
         {/* 내 데이터 라인 */}
-        <path d={myPath} fill="none" stroke="#ec7199" strokeWidth="2" />
+        <path d={myPath} fill="none" stroke="#ec7199" strokeWidth="1.5" />
 
         {/* 내 데이터 포인트 */}
         {safeData.map((value, index) => (
@@ -174,7 +174,7 @@ export default function SparkLineChart({
             key={index}
             cx={getX(index)}
             cy={getY(value)}
-            r="2"
+            r="1.5"
             fill="#ec7199"
           />
         ))}
@@ -185,7 +185,7 @@ export default function SparkLineChart({
             key={index}
             cx={getX(index)}
             cy={getY(value)}
-            r="1.5"
+            r="1"
             fill="#9ca3af"
             opacity="0.7"
           />

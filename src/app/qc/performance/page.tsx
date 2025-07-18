@@ -110,7 +110,6 @@ function QCMonitoringContent() {
     ],
   };
 
-
   // 팀별 점수 데이터 (각 상담사가 속한 팀의 평균 점수)
   const teamScores = {
     team1: { min: 56, avg: 72, max: 84 }, // 고객상담 1팀
@@ -141,7 +140,6 @@ function QCMonitoringContent() {
     const consultant = consultants.find((c) => c.id === selectedConsultant);
     return consultant?.name || "";
   };
-
 
   const getTeamScores = () => {
     if (!selectedDepartment) return undefined;
@@ -264,7 +262,7 @@ function QCMonitoringContent() {
           {hasSearched && selectedConsultant && (
             <div
               className="grid gap-3 h-full"
-              style={{ gridTemplateColumns: "0.75fr 2.5fr 0.75fr" }}
+              style={{ gridTemplateColumns: "0.6fr 3.2fr 0.6fr" }}
             >
               {/* 첫 번째 열 (0.75): 선택된 상담사 정보 + 점수 + 통화시간 */}
               <div className="space-y-3 h-full overflow-y-auto">
@@ -320,6 +318,7 @@ function QCMonitoringContent() {
                 <ConversationDetail
                   sessionNo={selectedSessionNo}
                   onClose={handleCloseDetail}
+                  showAudioWhenMissing={true}
                 />
               </div>
             </div>
