@@ -329,6 +329,7 @@ function QCMonitoringContent() {
                   endDate={contextEndDate}
                   onSessionSelect={handleSessionSelect}
                   consultantId={selectedConsultant}
+                  useMockData={true} // QC 대시보드: Mock 데이터 사용
                 />
               </div>
 

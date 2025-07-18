@@ -116,6 +116,7 @@ function ConsultantPerformanceContent() {
                 startDate={contextStartDate}
                 endDate={contextEndDate}
                 onSessionSelect={handleSessionSelect}
+                useMockData={false} // 상담사 대시보드: API 데이터 사용
               />
             </div>
           </div>

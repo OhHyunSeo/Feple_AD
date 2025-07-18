@@ -6,7 +6,6 @@ import Pagination from "./Pagination";
 import { ConsultationData } from "../../../data/consultationData";
 import { useState as useLocalState, useEffect, useCallback } from "react";
 import { 
-  shouldUseMockData, 
   getMockEvaluationsByConsultant, 
   getAllMockEvaluations 
 } from "../../../data/qcMockData";
@@ -16,6 +15,7 @@ interface ConsultationTableProps {
   endDate: string;
   onSessionSelect?: (sessionNo: number, sessionId?: string) => void;
   consultantId?: string; // 특정 상담원의 세션만 표시
+  useMockData?: boolean; // Mock 데이터 사용 여부 (기본값: false - API 사용)
 }
 
 type SortField =
@@ -33,6 +33,7 @@ export default function ConsultationTable({
   endDate,
   onSessionSelect,
   consultantId,
+  useMockData = false, // 기본값: API 사용
 }: ConsultationTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedSession, setSelectedSession] = useState<number | null>(null);
@@ -164,18 +165,17 @@ export default function ConsultationTable({
   const getFilteredData = (): ConsultationData[] => {
     let data: ConsultationData[] = [];
 
-    // 환경 변수 디버깅
-    console.log('🔍 환경 변수 체크:', {
-      NODE_ENV: process.env.NODE_ENV,
-      NEXT_PUBLIC_USE_MOCK_DATA: process.env.NEXT_PUBLIC_USE_MOCK_DATA,
-      shouldUseMock: shouldUseMockData(),
+    // 데이터 소스 선택 디버깅
+    console.log('🔍 데이터 소스 선택:', {
+      useMockData,
       consultantId,
-      apiDataLength: apiData.length
+      apiDataLength: apiData.length,
+      pageType: useMockData ? 'QC 대시보드' : '상담사 대시보드'
     });
 
-    // Mock 데이터 사용 여부 확인
-    if (shouldUseMockData()) {
-      console.log("🎭 Mock 데이터 모드 활성화");
+    // Props로 전달받은 useMockData 기준으로 데이터 소스 결정
+    if (useMockData) {
+      console.log("🎭 Mock 데이터 모드 활성화 (QC 대시보드)");
       
       if (consultantId) {
         // 특정 상담사의 데이터만 조회
@@ -188,7 +188,7 @@ export default function ConsultationTable({
       }
     } else {
       // API 데이터 사용
-      console.log("🔗 API 데이터 모드 활성화");
+      console.log("🔗 API 데이터 모드 활성화 (상담사 대시보드)");
       data = apiData;
     }
 
