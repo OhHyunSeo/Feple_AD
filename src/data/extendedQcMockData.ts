@@ -55,7 +55,6 @@ export const extendedConsultantInfo: Record<string, { name: string; team: string
 
 // Mock 세션 데이터 생성 함수
 export const generateExtendedMockSession = (sessionNo: number, consultantId: string): ConsultationData => {
-  const consultantInfo = extendedConsultantInfo[consultantId];
   
   // 세션 번호를 기반으로 다양한 패턴 생성
   const patterns = [

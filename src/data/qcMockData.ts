@@ -1,16 +1,12 @@
 // QC 대시보드용 Mock 데이터 연결 파일
 // 현재는 Mock 데이터를 사용하며, 차후 API 연결 시 이 파일을 통해 전환
 
-import { ConsultationData, generateConversationData } from "./consultationData";
+import { ConsultationData } from "./consultationData";
 import { 
-  extendedConsultantSessionMapping, 
   extendedConsultantInfo,
   getExtendedMockEvaluationsByConsultant,
   getAllExtendedMockEvaluations 
 } from "./extendedQcMockData";
-
-// 확장된 상담사별 세션 매핑 사용 (10명 상담사, 각 10개 세션)
-const consultantSessionMapping = extendedConsultantSessionMapping;
 
 // 상담사별 평가 데이터 조회 (Mock 버전) - 확장된 데이터 사용
 export const getMockEvaluationsByConsultant = (consultantId: string): ConsultationData[] => {
