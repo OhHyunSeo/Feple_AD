@@ -18,7 +18,7 @@ export default function ScoreBar({
   return (
     <div className="flex flex-col items-center">
       <div className="text-xs performance-label mb-1">{label}</div>
-      <div className="relative h-12 w-4 bg-gray-100 rounded overflow-hidden">
+      <div className="relative h-10 w-3 bg-gray-100 rounded overflow-hidden">
         {/* 팀 평균 (뒤쪽에 먼저 렌더링) */}
         {teamScore && (
           <div

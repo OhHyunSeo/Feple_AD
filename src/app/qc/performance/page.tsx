@@ -110,9 +110,6 @@ function QCMonitoringContent() {
     ],
   };
 
-
-  // 팀별 점수는 이제 ScoreChart에서 동적으로 계산됩니다
-
   // 팀별 평균 통화 시간 데이터 (분)
   const teamCallTimeAverages = {
     team1: 7.2, // 고객상담 1팀
@@ -135,9 +132,6 @@ function QCMonitoringContent() {
     const consultant = consultants.find((c) => c.id === selectedConsultant);
     return consultant?.name || "";
   };
-
-
-  // 팀 점수는 ScoreChart에서 동적으로 계산되므로 getTeamScores 함수 제거
 
   const getTeamCallTimeAverage = () => {
     if (!selectedDepartment) return undefined;
@@ -255,7 +249,7 @@ function QCMonitoringContent() {
           {hasSearched && selectedConsultant && (
             <div
               className="grid gap-3 h-full"
-              style={{ gridTemplateColumns: "0.75fr 2.5fr 0.75fr" }}
+              style={{ gridTemplateColumns: "0.6fr 3.2fr 0.6fr" }}
             >
               {/* 첫 번째 열 (0.75): 선택된 상담사 정보 + 점수 + 통화시간 */}
               <div className="space-y-3 h-full overflow-y-auto">
@@ -310,6 +304,7 @@ function QCMonitoringContent() {
                 <ConversationDetail
                   sessionNo={selectedSessionNo}
                   onClose={handleCloseDetail}
+                  showAudioWhenMissing={true}
                 />
               </div>
             </div>

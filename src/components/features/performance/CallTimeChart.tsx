@@ -118,8 +118,8 @@ export default function CallTimeChart({
             data={myCallTimes}
             teamData={teamCallTimes}
             xLabels={displayDates}
-            width={200}
-            height={80}
+            width={160}
+            height={60}
           />
         </div>
 

@@ -5,9 +5,9 @@ import { FileText, ChevronDown, ChevronUp, ArrowUpDown } from "lucide-react";
 import Pagination from "./Pagination";
 import { ConsultationData } from "../../../data/consultationData";
 import { useState as useLocalState, useEffect, useCallback } from "react";
-import { 
-  getMockEvaluationsByConsultant, 
-  getAllMockEvaluations 
+import {
+  getMockEvaluationsByConsultant,
+  getAllMockEvaluations,
 } from "../../../data/qcMockData";
 
 interface ConsultationTableProps {
@@ -166,21 +166,23 @@ export default function ConsultationTable({
     let data: ConsultationData[] = [];
 
     // 데이터 소스 선택 디버깅
-    console.log('🔍 데이터 소스 선택:', {
+    console.log("🔍 데이터 소스 선택:", {
       useMockData,
       consultantId,
       apiDataLength: apiData.length,
-      pageType: useMockData ? 'QC 대시보드' : '상담사 대시보드'
+      pageType: useMockData ? "QC 대시보드" : "상담사 대시보드",
     });
 
     // Props로 전달받은 useMockData 기준으로 데이터 소스 결정
     if (useMockData) {
       console.log("🎭 Mock 데이터 모드 활성화 (QC 대시보드)");
-      
+
       if (consultantId) {
         // 특정 상담사의 데이터만 조회
         data = getMockEvaluationsByConsultant(consultantId);
-        console.log(`👤 상담사 ${consultantId}: ${data.length}개 Mock 데이터 로드`);
+        console.log(
+          `👤 상담사 ${consultantId}: ${data.length}개 Mock 데이터 로드`
+        );
       } else {
         // 모든 상담사 데이터 조회
         data = getAllMockEvaluations();
@@ -198,16 +200,18 @@ export default function ConsultationTable({
       const endDateTime = new Date(endDate);
       // endDate는 해당 날짜의 23:59:59까지 포함
       endDateTime.setHours(23, 59, 59, 999);
-      
-      data = data.filter(item => {
+
+      data = data.filter((item) => {
         const itemDate = new Date(item.datetime);
         return itemDate >= startDateTime && itemDate <= endDateTime;
       });
-      
-      console.log(`📅 기간 필터링 (${startDate} ~ ${endDate}): ${data.length}개 데이터`);
+
+      console.log(
+        `📅 기간 필터링 (${startDate} ~ ${endDate}): ${data.length}개 데이터`
+      );
     }
 
-    console.log('📊 최종 데이터 길이:', data.length);
+    console.log("📊 최종 데이터 길이:", data.length);
 
     // 정렬 적용
     if (sortField) {
@@ -500,7 +504,7 @@ export default function ConsultationTable({
                   </td>
                   <td className="p-2 text-center">
                     <span
-                      className={`px-2 py-1 rounded text-[11px] font-medium ${getResultColor(
+                      className={`px-1.5 py-0.5 rounded text-[9px] font-medium ${getResultColor(
                         item.result
                       )}`}
                     >
@@ -514,47 +518,52 @@ export default function ConsultationTable({
                   <tr key={`feedback-${item.no}`}>
                     <td colSpan={9} className="p-0">
                       <div className="bg-pink-50 border-l-4 border-pink-500 animate-slide-down">
-                        <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                          {/* 강점 피드백 */}
-                          <div className="bg-white rounded-lg p-3 shadow-sm">
-                            <h4 className="text-sm font-semibold text-blue-600 mb-2 flex items-center gap-1">
-                              강점
-                            </h4>
-                            <ul className="space-y-1">
-                              {item.feedback.strengths.map((strength, idx) => (
-                                <li
-                                  key={idx}
-                                  className="text-xs text-gray-700 leading-relaxed"
-                                >
-                                  • {strength}
-                                </li>
-                              ))}
-                            </ul>
+                        <div className="p-3 space-y-2">
+                          {/* 상단: 강점과 개선점 */}
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            {/* 강점 피드백 */}
+                            <div className="bg-white rounded-lg p-3 shadow-sm">
+                              <h4 className="text-xs font-semibold text-blue-600 mb-2 flex items-center gap-1">
+                                💪 강점
+                              </h4>
+                              <ul className="space-y-1">
+                                {item.feedback.strengths.map(
+                                  (strength, idx) => (
+                                    <li
+                                      key={idx}
+                                      className="text-xs text-gray-700 leading-relaxed"
+                                    >
+                                      • {strength}
+                                    </li>
+                                  )
+                                )}
+                              </ul>
+                            </div>
+
+                            {/* 개선점 피드백 */}
+                            <div className="bg-white rounded-lg p-3 shadow-sm">
+                              <h4 className="text-xs font-semibold text-red-600 mb-2">
+                                🎯 개선점
+                              </h4>
+                              <ul className="space-y-1">
+                                {item.feedback.improvements.map(
+                                  (improvement, idx) => (
+                                    <li
+                                      key={idx}
+                                      className="text-xs text-gray-700 leading-relaxed"
+                                    >
+                                      • {improvement}
+                                    </li>
+                                  )
+                                )}
+                              </ul>
+                            </div>
                           </div>
 
-                          {/* 개선점 피드백 */}
+                          {/* 하단: 코칭 멘트 */}
                           <div className="bg-white rounded-lg p-3 shadow-sm">
-                            <h4 className="text-sm font-semibold text-red-600 mb-2">
-                              개선점
-                            </h4>
-                            <ul className="space-y-1">
-                              {item.feedback.improvements.map(
-                                (improvement, idx) => (
-                                  <li
-                                    key={idx}
-                                    className="text-xs text-gray-700 leading-relaxed"
-                                  >
-                                    • {improvement}
-                                  </li>
-                                )
-                              )}
-                            </ul>
-                          </div>
-
-                          {/* 코칭 멘트 */}
-                          <div className="bg-white rounded-lg p-3 shadow-sm md:col-span-2">
-                            <h4 className="text-sm font-semibold text-green-600 mb-2">
-                              코칭 멘트
+                            <h4 className="text-xs font-semibold text-green-600 mb-2">
+                              🎓 코칭 멘트
                             </h4>
                             <ul className="space-y-1">
                               {item.feedback.coaching.map((coaching, idx) => (

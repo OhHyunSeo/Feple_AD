@@ -91,9 +91,12 @@ function ConsultantPerformanceContent() {
         />
 
         {/* 메인 콘텐츠 영역 */}
-        <div className="grid grid-cols-5 gap-3 items-stretch">
+        <div
+          className="grid gap-3 items-stretch"
+          style={{ gridTemplateColumns: "0.8fr 3.5fr 0.8fr" }}
+        >
           {/* 좌측 패널 - 기간 내 상담 점수 */}
-          <div className="col-span-1 space-y-3">
+          <div className="space-y-3">
             <ScoreChart
               myScores={myScores}
               teamScores={teamAvgScores}
@@ -110,7 +113,7 @@ function ConsultantPerformanceContent() {
           </div>
 
           {/* 중앙 패널 - 상담 세션 테이블 */}
-          <div className="col-span-3 flex flex-col">
+          <div className="flex flex-col">
             <div className="flex-1">
               <ConsultationTable
                 startDate={contextStartDate}
@@ -122,7 +125,7 @@ function ConsultantPerformanceContent() {
           </div>
 
           {/* 우측 패널 - 상담 상세 내용 */}
-          <div className="col-span-1 flex flex-col">
+          <div className="flex flex-col">
             <div className="flex-1">
               <ConversationDetail
                 sessionNo={selectedSessionNo}
