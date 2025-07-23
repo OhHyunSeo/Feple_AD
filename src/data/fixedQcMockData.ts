@@ -24,7 +24,10 @@ export const fixedConsultantSessionMapping: Record<string, number[]> = {
 };
 
 // 상담사 정보
-export const fixedConsultantInfo: Record<string, { name: string; team: string; position: string }> = {
+export const fixedConsultantInfo: Record<
+  string,
+  { name: string; team: string; position: string }
+> = {
   c1: { name: "김민수", team: "고객상담 1팀", position: "선임 상담사" },
   c2: { name: "박성호", team: "고객상담 1팀", position: "상담사" },
   c3: { name: "임지원", team: "고객상담 1팀", position: "상담사" },
@@ -70,24 +73,37 @@ class SeededRandom {
 // 고정된 날짜 생성 (시드 기반)
 const generateFixedDateTime = (sessionNo: number): string => {
   const rng = new SeededRandom(sessionNo);
-  
+
   // 기준 날짜: 2025-07-18에서 역산
-  const baseDate = new Date('2025-07-18');
+  const baseDate = new Date("2025-07-18");
   const daysAgo = rng.nextInt(1, 30); // 1-30일 전
   const sessionDate = new Date(baseDate);
   sessionDate.setDate(sessionDate.getDate() - daysAgo);
-  
+
   const hours = rng.nextInt(9, 18); // 9-18시
   const minutes = rng.nextInt(0, 59);
   const seconds = rng.nextInt(0, 59);
-  
-  return `${sessionDate.getFullYear()}-${String(sessionDate.getMonth() + 1).padStart(2, '0')}-${String(sessionDate.getDate()).padStart(2, '0')} ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+  return `${sessionDate.getFullYear()}-${String(
+    sessionDate.getMonth() + 1
+  ).padStart(2, "0")}-${String(sessionDate.getDate()).padStart(
+    2,
+    "0"
+  )} ${String(hours).padStart(2, "0")}:${String(minutes).padStart(
+    2,
+    "0"
+  )}:${String(seconds).padStart(2, "0")}`;
 };
 
 // 고정된 Mock 세션 데이터 생성 함수
-export const generateFixedMockSession = (sessionNo: number, consultantId: string): ConsultationData => {
-  const rng = new SeededRandom(sessionNo * 1000 + parseInt(consultantId.replace('c', ''), 10));
-  
+export const generateFixedMockSession = (
+  sessionNo: number,
+  consultantId: string
+): ConsultationData => {
+  const rng = new SeededRandom(
+    sessionNo * 1000 + parseInt(consultantId.replace("c", ""), 10)
+  );
+
   // 성과 패턴 정의
   const patterns = [
     // 우수한 성과 패턴 (0)
@@ -98,7 +114,7 @@ export const generateFixedMockSession = (sessionNo: number, consultantId: string
         empathy: ["A", "A", "B"],
         problemSolving: ["A", "B", "A"],
         emotionalStability: ["A", "A", "B"],
-        communicationFlow: ["A", "B", "A"]
+        communicationFlow: ["A", "B", "A"],
       },
       result: "만족" as const,
       strengths: [
@@ -106,18 +122,18 @@ export const generateFixedMockSession = (sessionNo: number, consultantId: string
         "고객과의 소통이 매우 원활했습니다.",
         "전문적이고 체계적인 문제 해결 능력을 보였습니다.",
         "완벽에 가까운 상담 서비스를 제공했습니다.",
-        "고객에게 친절하고 정중한 응대를 보여주었습니다."
+        "고객에게 친절하고 정중한 응대를 보여주었습니다.",
       ],
       improvements: [
         "현재 수준을 유지하며 더욱 발전시켜 나가세요.",
         "현재의 우수한 수준을 계속 유지해주세요.",
-        "지속적인 품질 관리에 집중해주세요."
+        "지속적인 품질 관리에 집중해주세요.",
       ],
       coaching: [
         "탁월한 상담 서비스를 제공하고 있습니다.",
         "현재의 우수한 수준을 지속해주세요.",
-        "팀의 롤모델로서 다른 상담사들에게 좋은 영향을 주고 있습니다."
-      ]
+        "팀의 롤모델로서 다른 상담사들에게 좋은 영향을 주고 있습니다.",
+      ],
     },
     // 양호한 성과 패턴 (1)
     {
@@ -127,7 +143,7 @@ export const generateFixedMockSession = (sessionNo: number, consultantId: string
         empathy: ["A", "B", "B"],
         problemSolving: ["B", "B", "C"],
         emotionalStability: ["A", "B", "B"],
-        communicationFlow: ["B", "B", "C"]
+        communicationFlow: ["B", "B", "C"],
       },
       result: "만족" as const,
       strengths: [
@@ -135,19 +151,19 @@ export const generateFixedMockSession = (sessionNo: number, consultantId: string
         "고객과의 기본적인 소통은 원활했습니다.",
         "성실한 상담 태도를 보여주었습니다.",
         "전반적으로 안정적인 상담을 진행했습니다.",
-        "균형잡힌 성과를 보이고 있습니다."
+        "균형잡힌 성과를 보이고 있습니다.",
       ],
       improvements: [
         "일부 영역에서 개선이 필요합니다.",
         "고객 응대 스킬을 더욱 향상시켜보세요.",
         "좀 더 체계적인 접근이 필요합니다.",
-        "전 영역에서 한 단계 더 발전이 필요합니다."
+        "전 영역에서 한 단계 더 발전이 필요합니다.",
       ],
       coaching: [
         "지속적인 훈련을 통해 더욱 발전시켜보세요.",
         "현재 수준에서 한 단계 더 나아가시길 바랍니다.",
-        "꾸준한 개선을 위해 계속 노력해주세요."
-      ]
+        "꾸준한 개선을 위해 계속 노력해주세요.",
+      ],
     },
     // 개선 필요 패턴 (2)
     {
@@ -157,25 +173,25 @@ export const generateFixedMockSession = (sessionNo: number, consultantId: string
         empathy: ["B", "C", "D"],
         problemSolving: ["C", "C", "D"],
         emotionalStability: ["B", "C", "C"],
-        communicationFlow: ["C", "C", "D"]
+        communicationFlow: ["C", "C", "D"],
       },
       result: rng.choice(["만족", "미흡"]) as "만족" | "미흡",
       strengths: [
         "기본적인 상담 절차는 이해하고 있습니다.",
         "상담을 끝까지 완료하려는 의지를 보였습니다.",
-        "성실한 태도로 상담에 임했습니다."
+        "성실한 태도로 상담에 임했습니다.",
       ],
       improvements: [
         "전반적인 상담 스킬 향상이 필요합니다.",
         "고객 응대 태도를 개선해야 합니다.",
         "기본적인 매너와 예의를 더욱 갖춰야 합니다.",
-        "공감 능력 향상이 필요합니다."
+        "공감 능력 향상이 필요합니다.",
       ],
       coaching: [
         "기본 상담 교육을 다시 받아보시기 바랍니다.",
         "단계적으로 스킬을 개선해 나가세요.",
-        "멘토링 프로그램 참여를 권장합니다."
-      ]
+        "멘토링 프로그램 참여를 권장합니다.",
+      ],
     },
     // 심각한 문제 패턴 (3)
     {
@@ -185,24 +201,26 @@ export const generateFixedMockSession = (sessionNo: number, consultantId: string
         empathy: ["E", "F", "G"],
         problemSolving: ["D", "E", "F"],
         emotionalStability: ["C", "D", "E"],
-        communicationFlow: ["D", "E", "F"]
+        communicationFlow: ["D", "E", "F"],
       },
-      result: rng.choice(["추가 상담 필요", "해결 불가"]) as "추가 상담 필요" | "해결 불가",
+      result: rng.choice(["추가 상담 필요", "해결 불가"]) as
+        | "추가 상담 필요"
+        | "해결 불가",
       strengths: [
         "상담에 참여하려는 기본적인 의지는 있습니다.",
-        "기본적인 업무 참여 자세는 보여줍니다."
+        "기본적인 업무 참여 자세는 보여줍니다.",
       ],
       improvements: [
         "전반적인 상담 능력의 대폭 개선이 필요합니다.",
         "기본적인 고객 서비스 마인드를 갖춰야 합니다.",
-        "상담사로서의 기본 자질 향상이 시급합니다."
+        "상담사로서의 기본 자질 향상이 시급합니다.",
       ],
       coaching: [
         "즉시 기본 교육 프로그램을 수강해야 합니다.",
         "집중적인 재교육이 필요합니다.",
-        "상담 업무 재개 전 충분한 교육이 필요합니다."
-      ]
-    }
+        "상담 업무 재개 전 충분한 교육이 필요합니다.",
+      ],
+    },
   ];
 
   // 상담사별 성향 정의 (시드 기반)
@@ -227,13 +245,15 @@ export const generateFixedMockSession = (sessionNo: number, consultantId: string
     c18: [1, 1, 1, 2, 1, 1, 2, 1, 1, 1], // 배수진: 양호~개선필요 (신입)
   };
 
-  const sessionIndex = fixedConsultantSessionMapping[consultantId].indexOf(sessionNo);
-  const patternIndex = consultantPerformancePatterns[consultantId]?.[sessionIndex] || 1;
+  const sessionIndex =
+    fixedConsultantSessionMapping[consultantId].indexOf(sessionNo);
+  const patternIndex =
+    consultantPerformancePatterns[consultantId]?.[sessionIndex] || 1;
   const pattern = patterns[patternIndex];
 
   // 고정된 점수 생성
   const finalScore = rng.nextInt(pattern.scoreRange[0], pattern.scoreRange[1]);
-  
+
   // 고정된 등급 생성
   const courtesy = rng.choice(pattern.grades.courtesy);
   const empathy = rng.choice(pattern.grades.empathy);
@@ -244,17 +264,45 @@ export const generateFixedMockSession = (sessionNo: number, consultantId: string
   // 고정된 피드백 생성
   const strengths = [
     rng.choice(pattern.strengths),
-    ...(pattern.strengths.length > 1 ? [rng.choice(pattern.strengths.filter((_, i) => i !== pattern.strengths.indexOf(rng.choice(pattern.strengths))))] : [])
+    ...(pattern.strengths.length > 1
+      ? [
+          rng.choice(
+            pattern.strengths.filter(
+              (_, i) =>
+                i !== pattern.strengths.indexOf(rng.choice(pattern.strengths))
+            )
+          ),
+        ]
+      : []),
   ];
-  
+
   const improvements = [
     rng.choice(pattern.improvements),
-    ...(pattern.improvements.length > 1 ? [rng.choice(pattern.improvements.filter((_, i) => i !== pattern.improvements.indexOf(rng.choice(pattern.improvements))))] : [])
+    ...(pattern.improvements.length > 1
+      ? [
+          rng.choice(
+            pattern.improvements.filter(
+              (_, i) =>
+                i !==
+                pattern.improvements.indexOf(rng.choice(pattern.improvements))
+            )
+          ),
+        ]
+      : []),
   ];
-  
+
   const coaching = [
     rng.choice(pattern.coaching),
-    ...(pattern.coaching.length > 1 ? [rng.choice(pattern.coaching.filter((_, i) => i !== pattern.coaching.indexOf(rng.choice(pattern.coaching))))] : [])
+    ...(pattern.coaching.length > 1
+      ? [
+          rng.choice(
+            pattern.coaching.filter(
+              (_, i) =>
+                i !== pattern.coaching.indexOf(rng.choice(pattern.coaching))
+            )
+          ),
+        ]
+      : []),
   ];
 
   return {
@@ -276,19 +324,21 @@ export const generateFixedMockSession = (sessionNo: number, consultantId: string
 };
 
 // 상담사별 평가 데이터 조회
-export const getFixedEvaluationsByConsultant = (consultantId: string): ConsultationData[] => {
+export const getFixedEvaluationsByConsultant = (
+  consultantId: string
+): ConsultationData[] => {
   console.log(`🔄 고정된 Mock 데이터 조회: 상담사 ${consultantId}`);
-  
+
   const sessionNumbers = fixedConsultantSessionMapping[consultantId] || [];
-  
+
   if (sessionNumbers.length === 0) {
     console.log(`⚠️ 상담사 ${consultantId}에 대한 Mock 데이터가 없습니다.`);
     return [];
   }
 
   const evaluations: ConsultationData[] = [];
-  
-  sessionNumbers.forEach(sessionNo => {
+
+  sessionNumbers.forEach((sessionNo) => {
     try {
       const evaluationData = generateFixedMockSession(sessionNo, consultantId);
       evaluations.push(evaluationData);
@@ -298,17 +348,19 @@ export const getFixedEvaluationsByConsultant = (consultantId: string): Consultat
     }
   });
 
-  console.log(`📊 상담사 ${consultantId}: 총 ${evaluations.length}개 평가 데이터 반환`);
+  console.log(
+    `📊 상담사 ${consultantId}: 총 ${evaluations.length}개 평가 데이터 반환`
+  );
   return evaluations;
 };
 
 // 모든 상담사의 평가 데이터 조회
 export const getAllFixedEvaluations = (): ConsultationData[] => {
   console.log(`🔄 전체 고정된 Mock 데이터 조회`);
-  
+
   const allEvaluations: ConsultationData[] = [];
-  
-  Object.keys(fixedConsultantSessionMapping).forEach(consultantId => {
+
+  Object.keys(fixedConsultantSessionMapping).forEach((consultantId) => {
     const consultantEvaluations = getFixedEvaluationsByConsultant(consultantId);
     allEvaluations.push(...consultantEvaluations);
   });
@@ -320,9 +372,9 @@ export const getAllFixedEvaluations = (): ConsultationData[] => {
 // 팀별 상담사 매핑
 export const teamConsultantMapping: Record<string, string[]> = {
   team1: ["c1", "c2", "c3", "c12", "c13", "c17"], // 고객상담 1팀
-  team2: ["c4", "c5", "c6", "c14"],               // 고객상담 2팀
-  team3: ["c7", "c8", "c9", "c15", "c18"],        // 고객상담 3팀
-  team4: ["c10", "c11", "c16"],                   // 기술지원팀
+  team2: ["c4", "c5", "c6", "c14"], // 고객상담 2팀
+  team3: ["c7", "c8", "c9", "c15", "c18"], // 고객상담 3팀
+  team4: ["c10", "c11", "c16"], // 기술지원팀
 };
 
 // 상담사가 속한 팀 ID 조회
@@ -348,9 +400,15 @@ interface ScoreData {
 }
 
 // 팀별 점수 계산 (기간 필터링 포함)
-export const calculateTeamScores = (teamId: string, startDate: string, endDate: string): ScoreData => {
-  console.log(`🏢 팀 점수 계산 시작: ${teamId}, 기간 ${startDate} ~ ${endDate}`);
-  
+export const calculateTeamScores = (
+  teamId: string,
+  startDate: string,
+  endDate: string
+): ScoreData => {
+  console.log(
+    `🏢 팀 점수 계산 시작: ${teamId}, 기간 ${startDate} ~ ${endDate}`
+  );
+
   const teamConsultants = getConsultantsByTeam(teamId);
   if (teamConsultants.length === 0) {
     console.log(`⚠️ 팀 ${teamId}에 상담사가 없습니다.`);
@@ -364,18 +422,20 @@ export const calculateTeamScores = (teamId: string, startDate: string, endDate: 
   const allScores: number[] = [];
 
   // 팀 내 모든 상담사의 점수 수집
-  teamConsultants.forEach(consultantId => {
+  teamConsultants.forEach((consultantId) => {
     const consultantEvaluations = getFixedEvaluationsByConsultant(consultantId);
-    
+
     // 기간 필터링
-    const filteredEvaluations = consultantEvaluations.filter(evaluation => {
+    const filteredEvaluations = consultantEvaluations.filter((evaluation) => {
       const evaluationDate = new Date(evaluation.datetime);
       return evaluationDate >= startDateTime && evaluationDate <= endDateTime;
     });
 
-    const consultantScores = filteredEvaluations.map(evaluation => evaluation.finalScore);
+    const consultantScores = filteredEvaluations.map(
+      (evaluation) => evaluation.finalScore
+    );
     allScores.push(...consultantScores);
-    
+
     console.log(`👤 ${consultantId}: ${consultantScores.length}개 점수 추가`);
   });
 
@@ -386,18 +446,28 @@ export const calculateTeamScores = (teamId: string, startDate: string, endDate: 
 
   const min = Math.min(...allScores);
   const max = Math.max(...allScores);
-  const avg = Math.round(allScores.reduce((sum, score) => sum + score, 0) / allScores.length);
+  const avg = Math.round(
+    allScores.reduce((sum, score) => sum + score, 0) / allScores.length
+  );
 
   const teamScores = { min, avg, max };
-  console.log(`📊 팀 ${teamId} 점수 계산 완료:`, teamScores, `(총 ${allScores.length}개 세션)`);
-  
+  console.log(
+    `📊 팀 ${teamId} 점수 계산 완료:`,
+    teamScores,
+    `(총 ${allScores.length}개 세션)`
+  );
+
   return teamScores;
 };
 
 // 상담사가 속한 팀의 점수 계산
-export const calculateConsultantTeamScores = (consultantId: string, startDate: string, endDate: string): ScoreData | null => {
+export const calculateConsultantTeamScores = (
+  consultantId: string,
+  startDate: string,
+  endDate: string
+): ScoreData | null => {
   const teamId = getTeamByConsultant(consultantId);
-  
+
   if (!teamId) {
     console.log(`⚠️ 상담사 ${consultantId}의 팀을 찾을 수 없습니다.`);
     return null;

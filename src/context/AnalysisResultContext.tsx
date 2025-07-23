@@ -1,12 +1,18 @@
-'use client';
+"use client";
 
-import { createContext, useState, useContext, ReactNode, useEffect } from 'react';
-import axios from 'axios';
-import { supabase } from '@/lib/supabaseClient';
-import { v4 as uuidv4 } from 'uuid';
+import {
+  createContext,
+  useState,
+  useContext,
+  ReactNode,
+  useEffect,
+} from "react";
+import axios from "axios";
+import { supabase } from "@/lib/supabaseClient";
+import { v4 as uuidv4 } from "uuid";
 
 export interface TranscriptItem {
-  speaker: 'Agent' | 'Customer';
+  speaker: "Agent" | "Customer";
   text: string;
 }
 
@@ -22,10 +28,18 @@ interface AnalysisResultContextType {
   startAnalysis: (file: File) => Promise<void>;
 }
 
-const AnalysisResultContext = createContext<AnalysisResultContextType | undefined>(undefined);
+const AnalysisResultContext = createContext<
+  AnalysisResultContextType | undefined
+>(undefined);
 
-export const AnalysisResultProvider = ({ children }: { children: ReactNode }) => {
-  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
+export const AnalysisResultProvider = ({
+  children,
+}: {
+  children: ReactNode;
+}) => {
+  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(
+    null
+  );
   const [predictionId, setPredictionId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -38,12 +52,12 @@ export const AnalysisResultProvider = ({ children }: { children: ReactNode }) =>
 
     try {
       // 1. Supabase Storage에 파일 업로드
-      const fileExtension = file.name.split('.').pop();
+      const fileExtension = file.name.split(".").pop();
       const fileName = `${uuidv4()}.${fileExtension}`;
       const filePath = `public/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
-        .from('audio-bucket') // 실제 버킷 이름으로 변경 필요
+        .from("audio-bucket") // 실제 버킷 이름으로 변경 필요
         .upload(filePath, file);
 
       if (uploadError) {
@@ -52,17 +66,17 @@ export const AnalysisResultProvider = ({ children }: { children: ReactNode }) =>
 
       // 2. 업로드된 파일의 Public URL 가져오기
       const { data: urlData } = supabase.storage
-        .from('audio-bucket') // 실제 버킷 이름으로 변경 필요
+        .from("audio-bucket") // 실제 버킷 이름으로 변경 필요
         .getPublicUrl(filePath);
 
       if (!urlData || !urlData.publicUrl) {
-        throw new Error('Could not get public URL for the uploaded file.');
+        throw new Error("Could not get public URL for the uploaded file.");
       }
-      
+
       const fileUrl = urlData.publicUrl;
 
       // 3. 백엔드 API에 파일 URL을 보내 분석 시작 요청
-      const response = await axios.post('/api/analyze-url', { url: fileUrl });
+      const response = await axios.post("/api/analyze-url", { url: fileUrl });
 
       if (response.data && response.data.id) {
         setPredictionId(response.data.id);
@@ -70,14 +84,21 @@ export const AnalysisResultProvider = ({ children }: { children: ReactNode }) =>
         throw new Error("Invalid response from server: No prediction ID");
       }
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : '분석 시작 요청에 실패했습니다.';
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "분석 시작 요청에 실패했습니다.";
       console.error("An error occurred during the analysis process:", error);
       if (axios.isAxiosError(error) && error.response) {
         console.error("Server response data:", error.response.data);
         // 서버에서 보낸 에러 메시지가 있다면 이를 사용
-        if (typeof error.response.data === 'object' && error.response.data !== null && 'message' in error.response.data) {
+        if (
+          typeof error.response.data === "object" &&
+          error.response.data !== null &&
+          "message" in error.response.data
+        ) {
           setError((error.response.data as { message: string }).message);
-        } else if (typeof error.response.data === 'string') {
+        } else if (typeof error.response.data === "string") {
           setError(error.response.data);
         } else {
           setError(errorMessage);
@@ -97,19 +118,22 @@ export const AnalysisResultProvider = ({ children }: { children: ReactNode }) =>
         const response = await axios.get(`/api/predictions/${predictionId}`);
         const { status, output } = response.data;
 
-        if (status === 'succeeded') {
+        if (status === "succeeded") {
           setAnalysisResult(output);
           setIsLoading(false);
           setPredictionId(null);
           clearInterval(interval);
-        } else if (status === 'failed') {
-          setError('모델 분석에 실패했습니다.');
+        } else if (status === "failed") {
+          setError("모델 분석에 실패했습니다.");
           setIsLoading(false);
           setPredictionId(null);
           clearInterval(interval);
         }
       } catch (error: unknown) {
-        const errorMessage = error instanceof Error ? error.message : '분석 결과를 가져오는 데 실패했습니다.';
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : "분석 결과를 가져오는 데 실패했습니다.";
         console.error("Polling error:", error);
         setError(errorMessage);
         setIsLoading(false);
@@ -133,7 +157,9 @@ export const AnalysisResultProvider = ({ children }: { children: ReactNode }) =>
 export const useAnalysisResult = () => {
   const context = useContext(AnalysisResultContext);
   if (context === undefined) {
-    throw new Error('useAnalysisResult must be used within a AnalysisResultProvider');
+    throw new Error(
+      "useAnalysisResult must be used within a AnalysisResultProvider"
+    );
   }
   return context;
 };

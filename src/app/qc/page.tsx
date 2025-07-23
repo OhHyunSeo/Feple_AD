@@ -11,13 +11,34 @@ import {
   Clock,
   ChevronLeft,
 } from "lucide-react";
+import { getInspectionRecommendations, getRiskAlerts } from "@/data/mockData";
 import {
-  searchData,
-  teams,
-  teamMembers,
-  inspectionRecommendations,
-  riskAlerts,
-} from "@/data/qcData";
+  fixedConsultantInfo,
+  teamConsultantMapping,
+} from "@/data/fixedQcMockData";
+
+// 18명 전체 상담사 배열 생성
+const getAllConsultants = () =>
+  Object.entries(fixedConsultantInfo).map(([id, info]) => ({ id, ...info }));
+const getConsultantsByTeam = (teamId: string) =>
+  (teamConsultantMapping[teamId] || []).map((id) => ({
+    id,
+    ...fixedConsultantInfo[id],
+  }));
+
+// 팀 정보 동적 생성 (실제 18명 기준)
+const teamIdToName: Record<string, string> = {
+  team1: "고객상담 1팀",
+  team2: "고객상담 2팀",
+  team3: "고객상담 3팀",
+  team4: "기술지원팀",
+};
+const teams = Object.entries(teamConsultantMapping).map(([id, ids]) => ({
+  id,
+  name: teamIdToName[id] || id,
+  memberCount: ids.length,
+  teamLead: "", // 필요시 추가
+}));
 
 export default function QCDashboardPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -43,13 +64,17 @@ export default function QCDashboardPage() {
     return diffDays;
   };
 
-  // 검색 결과 필터링
+  // 18명 전체 상담사 배열
+  const allConsultants = getAllConsultants();
+
+  // 검색 결과 필터링 (18명 전체 상담사 대상)
   const searchResults =
     searchTerm.length > 0
-      ? searchData.filter(
+      ? allConsultants.filter(
           (item) =>
-            item.title.includes(searchTerm) ||
-            item.subtitle.includes(searchTerm)
+            item.name.includes(searchTerm) ||
+            item.team.includes(searchTerm) ||
+            item.position.includes(searchTerm)
         )
       : [];
 
@@ -58,16 +83,8 @@ export default function QCDashboardPage() {
     setShowResults(value.length > 0);
   };
 
-  const getTypeIcon = (type: string) => {
-    if (type === "consultant")
-      return <Users className="h-4 w-4 text-blue-500" />;
-    return <Search className="h-4 w-4 text-gray-500" />;
-  };
-
-  const getTypeName = (type: string) => {
-    if (type === "consultant") return "상담사";
-    return "기타";
-  };
+  const getTypeIcon = () => <Users className="h-4 w-4 text-blue-500" />;
+  const getTypeName = () => "상담사";
 
   // 상담사 이름으로 부서 찾기
   const findDepartmentByConsultantName = (consultantName: string): string => {
@@ -122,44 +139,40 @@ export default function QCDashboardPage() {
     return yesterday.toISOString().split("T")[0];
   };
 
-  const handleConsultantClick = (
-    consultant:
-      | {
-          id: string;
-          name: string;
-          position: string;
-          callsToday: number;
-        }
-      | {
-          type: string;
-          title: string;
-          subtitle: string;
-          link: string;
-        }
-  ) => {
+  const handleConsultantClick = (consultant: {
+    id: string;
+    name: string;
+    team: string;
+    position: string;
+  }) => {
     const yesterdayDate = getYesterdayDate();
-
-    if ("id" in consultant) {
-      // 팀별 상담원의 경우
-      const departmentId = findDepartmentByConsultantName(consultant.name);
-      const consultantId = findConsultantIdByName(consultant.name);
-
-      window.location.href = `/qc/performance?startDate=${yesterdayDate}&endDate=${yesterdayDate}&department=${departmentId}&consultant=${consultantId}&autoSearch=true`;
-    } else {
-      // 검색 결과의 경우
-      const departmentId = findDepartmentByConsultantName(consultant.title);
-      const consultantId = findConsultantIdByName(consultant.title);
-
-      window.location.href = `/qc/performance?startDate=${yesterdayDate}&endDate=${yesterdayDate}&department=${departmentId}&consultant=${consultantId}&autoSearch=true`;
+    // 팀 정보 추출
+    let departmentId = null;
+    for (const [team, ids] of Object.entries(teamConsultantMapping)) {
+      if (ids.includes(consultant.id)) {
+        departmentId = team;
+        break;
+      }
     }
+    window.location.href = `/qc/performance?startDate=${yesterdayDate}&endDate=${yesterdayDate}&department=${departmentId}&consultant=${consultant.id}&autoSearch=true`;
   };
 
-  const handleRiskAlertClick = (alert: (typeof riskAlerts)[0]) => {
+  const handleRiskAlertClick = (alert: {
+    id: string;
+    name: string;
+    team: string;
+    position: string;
+  }) => {
     const yesterdayDate = getYesterdayDate();
-    const departmentId = findDepartmentByConsultantName(alert.name);
-    const consultantId = findConsultantIdByName(alert.name);
-
-    window.location.href = `/qc/performance?startDate=${yesterdayDate}&endDate=${yesterdayDate}&department=${departmentId}&consultant=${consultantId}&autoSearch=true`;
+    // id로 팀 찾기
+    let departmentId = null;
+    for (const [team, ids] of Object.entries(teamConsultantMapping)) {
+      if (ids.includes(alert.id)) {
+        departmentId = team;
+        break;
+      }
+    }
+    window.location.href = `/qc/performance?startDate=${yesterdayDate}&endDate=${yesterdayDate}&department=${departmentId}&consultant=${alert.id}&autoSearch=true`;
   };
 
   const handleInspectionRecommendationClick = (
@@ -231,11 +244,12 @@ export default function QCDashboardPage() {
 
   const getCurrentTeamMembers = () => {
     if (!selectedTeam) return [];
-    return teamMembers[selectedTeam as keyof typeof teamMembers] || [];
+    return getConsultantsByTeam(selectedTeam);
   };
 
-  // 점검 추천 상담사 페이지네이션
+  // 점검 추천 상담사(18명만, mockData에서 동적 생성)
   const ITEMS_PER_PAGE = 2;
+  const inspectionRecommendations = getInspectionRecommendations();
   const inspectionTotalPages = Math.ceil(
     inspectionRecommendations.length / ITEMS_PER_PAGE
   );
@@ -252,7 +266,8 @@ export default function QCDashboardPage() {
     setInspectionPage((prev) => Math.min(inspectionTotalPages - 1, prev + 1));
   };
 
-  // 위험 등급 알림 페이지네이션
+  // 위험 등급 알림(18명만, mockData에서 동적 생성)
+  const riskAlerts = getRiskAlerts();
   const totalPages = Math.ceil(riskAlerts.length / ITEMS_PER_PAGE);
   const paginatedRiskAlerts = riskAlerts.slice(
     riskAlertPage * ITEMS_PER_PAGE,
@@ -323,27 +338,24 @@ export default function QCDashboardPage() {
                 </h4>
                 {searchResults.length > 0 ? (
                   <div className="space-y-2">
-                    {searchResults.slice(0, 4).map((result, index) => (
+                    {searchResults.slice(0, 4).map((consultant) => (
                       <div
-                        key={index}
-                        onClick={() =>
-                          result.type === "consultant" &&
-                          handleConsultantClick(result)
-                        }
+                        key={consultant.id}
+                        onClick={() => handleConsultantClick(consultant)}
                         className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
                       >
-                        {getTypeIcon(result.type)}
+                        {getTypeIcon()}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
                             <span className="font-medium text-gray-900 truncate text-sm">
-                              {result.title}
+                              {consultant.name}
                             </span>
                             <span className="px-1.5 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full whitespace-nowrap">
-                              {getTypeName(result.type)}
+                              {getTypeName()}
                             </span>
                           </div>
                           <p className="text-xs text-gray-500 truncate">
-                            {result.subtitle}
+                            {consultant.team} - {consultant.position}
                           </p>
                         </div>
                       </div>
@@ -417,12 +429,6 @@ export default function QCDashboardPage() {
                           }`}
                         >
                           {calculateDaysDiff(recommendation.lastInspection)}일
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="text-gray-600">담당 QC</span>
-                        <span className="text-gray-800 truncate">
-                          {recommendation.qcManager}
                         </span>
                       </div>
                     </div>
@@ -582,7 +588,7 @@ export default function QCDashboardPage() {
                 </h3>
               </div>
 
-              {/* 팀 선택 드롭다운 */}
+              {/* 팀 선택 드롭다운 (동적 teams 사용) */}
               <div className="mb-3">
                 <label className="block text-xs font-medium text-gray-700 mb-2">
                   팀 선택
@@ -638,27 +644,24 @@ export default function QCDashboardPage() {
                     {getCurrentTeamMembers().length}명)
                   </h4>
                   <div className="space-y-3 flex-1 overflow-y-auto">
-                    {paginatedTeamMembers.map((member) => (
-                      <div
-                        key={member.id}
-                        onClick={() => handleConsultantClick(member)}
-                        className="p-3 border border-gray-200 rounded-lg hover:shadow-md transition-all cursor-pointer hover:border-pink-300"
-                      >
-                        <div className="flex items-center justify-between mb-1">
-                          <h5 className="font-semibold text-gray-900 truncate text-sm">
-                            {member.name}
-                          </h5>
+                    {paginatedTeamMembers.map((member) => {
+                      return (
+                        <div
+                          key={member.id}
+                          onClick={() => handleConsultantClick(member)}
+                          className="p-3 border border-gray-200 rounded-lg hover:shadow-md transition-all cursor-pointer hover:border-pink-300"
+                        >
+                          <div className="flex flex-col gap-0.5">
+                            <h5 className="font-semibold text-gray-900 truncate text-sm">
+                              {member.name}
+                            </h5>
+                            <span className="text-xs text-gray-600 truncate">
+                              {member.position}
+                            </span>
+                          </div>
                         </div>
-                        <p className="text-xs text-gray-600 mb-1 truncate">
-                          {member.position}
-                        </p>
-                        <div className="flex justify-between text-xs">
-                          <span className="text-gray-500 truncate">
-                            오늘 통화: {member.callsToday}건
-                          </span>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
 
                   {/* 팀별 상담원 페이지네이션 */}
