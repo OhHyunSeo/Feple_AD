@@ -6,9 +6,9 @@ import Pagination from "./Pagination";
 import { ConsultationData } from "../../../data/consultationData";
 import { useState as useLocalState, useEffect, useCallback } from "react";
 import {
-  getMockEvaluationsByConsultant,
-  getAllMockEvaluations,
-} from "../../../data/qcMockData";
+  getFixedEvaluationsByConsultant,
+  getAllFixedEvaluations,
+} from "../../../data/fixedQcMockData";
 
 interface ConsultationTableProps {
   startDate: string;
@@ -179,13 +179,13 @@ export default function ConsultationTable({
 
       if (consultantId) {
         // 특정 상담사의 데이터만 조회
-        data = getMockEvaluationsByConsultant(consultantId);
+        data = getFixedEvaluationsByConsultant(consultantId);
         console.log(
           `👤 상담사 ${consultantId}: ${data.length}개 Mock 데이터 로드`
         );
       } else {
         // 모든 상담사 데이터 조회
-        data = getAllMockEvaluations();
+        data = getAllFixedEvaluations();
         console.log(`👥 전체 상담사: ${data.length}개 Mock 데이터 로드`);
       }
     } else {
