@@ -7,7 +7,9 @@ import {
   useEffect,
   ReactNode,
 } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
+import { User } from "@supabase/supabase-js";
 
 interface UserInfo {
   name: string;
@@ -19,11 +21,13 @@ interface UserInfo {
 interface UserContextType {
   userInfo: UserInfo;
   isLoading: boolean;
+  logout: () => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: ReactNode }) {
+  const router = useRouter();
   const [userInfo, setUserInfoState] = useState<UserInfo>({
     name: "사용자",
     initial: "사",
@@ -32,75 +36,77 @@ export function UserProvider({ children }: { children: ReactNode }) {
   });
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchUserData = async () => {
-    setIsLoading(true);
-    try {
-      let {
-        data: { user },
-      } = await supabase.auth.getUser();
+  // 사용자 정보 설정 함수
+  const setUserInfo = (user: User | null) => {
+    if (user) {
+      const name = user.user_metadata?.name || "사용자";
+      const role = user.user_metadata?.role || null;
+      const initial = name ? name.charAt(0).toUpperCase() : "사";
+      const email = user.email || "No email";
 
-      // localStorage에 업데이트할 이름이 있는지 확인
-      const nameFromStorage = localStorage.getItem("userNameForUpdate");
-
-      if (user && nameFromStorage && user.user_metadata?.name !== nameFromStorage) {
-        // 이름이 다른 경우, user_metadata를 업데이트
-        const { data: updatedUserData, error: updateError } =
-          await supabase.auth.updateUser({
-            data: { name: nameFromStorage },
-          });
-
-        if (updateError) throw updateError;
-
-        // 업데이트된 user 객체를 사용
-        user = updatedUserData.user;
-
-        // 사용 후 localStorage에서 제거
-        localStorage.removeItem("userNameForUpdate");
-      }
-
-      if (user) {
-        const name = user.user_metadata?.name || "사용자";
-        const role = user.user_metadata?.role || null;
-        const initial = name ? name.charAt(0).toUpperCase() : "사";
-        const email = user.email || "No email";
-
-        setUserInfoState({ name, initial, email, role });
-      } else {
-        setUserInfoState({
-          name: "사용자",
-          initial: "사",
-          email: "Not logged in",
-          role: null,
-        });
-      }
-    } catch (error) {
-      console.error("Error fetching user data:", error);
+      setUserInfoState({ name, initial, email, role });
+    } else {
       setUserInfoState({
         name: "사용자",
         initial: "사",
-        email: "Error fetching data",
+        email: "Not logged in",
         role: null,
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchUserData();
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        try {
+          let user = session?.user;
 
-    const { data: authListener } = supabase.auth.onAuthStateChange(() => {
-      // 세션 정보가 변경될 때마다 사용자 데이터를 다시 가져옴
-      fetchUserData();
-    });
+          if (event === "SIGNED_IN") {
+            const nameToUpdate = localStorage.getItem("userNameForUpdate");
+            if (
+              nameToUpdate &&
+              user &&
+              user.user_metadata?.name !== nameToUpdate
+            ) {
+              try {
+                const { data: updated, error } = await supabase.auth.updateUser(
+                  {
+                    data: { name: nameToUpdate },
+                  }
+                );
+                if (error) throw error;
+                user = updated.user;
+              } catch (error) {
+                console.error("Error updating user metadata:", error);
+              } finally {
+                localStorage.removeItem("userNameForUpdate");
+              }
+            }
+          }
+
+          setUserInfo(user || null);
+        } catch (error) {
+          console.error("Error in onAuthStateChange:", error);
+          setUserInfo(null);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    );
 
     return () => {
       authListener.subscription.unsubscribe();
     };
   }, []);
 
+  const logout = async () => {
+    setIsLoading(true);
+    await supabase.auth.signOut();
+    router.push("/");
+  };
+
   return (
-    <UserContext.Provider value={{ userInfo, isLoading }}>
+    <UserContext.Provider value={{ userInfo, isLoading, logout }}>
       {children}
     </UserContext.Provider>
   );
