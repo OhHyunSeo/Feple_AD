@@ -9,11 +9,13 @@ import {
   Mail,
   Settings,
   Loader2,
+  User, // User 아이콘 추가
 } from "lucide-react";
 
 export default function LoginPage() {
   const [role, setRole] = useState<"consultant" | "qc" | null>(null);
   const [email, setEmail] = useState("");
+  const [name, setName] = useState(""); // 이름 상태 추가
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -28,15 +30,27 @@ export default function LoginPage() {
       setLoading(false);
       return;
     }
+    if (!name.trim()) {
+      setError("이름을 입력해주세요.");
+      setLoading(false);
+      return;
+    }
 
-    // 프로덕션 환경을 고려하여 window.location.origin 사용
     const redirectUrl = `${window.location.origin}/${role}`;
 
     try {
+      // 업데이트를 위해 사용자가 입력한 이름을 localStorage에 임시 저장
+      localStorage.setItem("userNameForUpdate", name.trim());
+
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
           emailRedirectTo: redirectUrl,
+          // user_metadata에 이름과 역할 저장 (신규 가입 시에만 적용됨)
+          data: {
+            name: name.trim(),
+            role: role,
+          },
         },
       });
 
@@ -123,7 +137,7 @@ export default function LoginPage() {
         {role === "consultant" ? "상담사" : "QC팀"} 로그인
       </h1>
       <p className="text-base text-gray-600 mb-6">
-        이메일 주소를 입력하시면, 해당 주소로 로그인 링크를 보내드립니다.
+        이름과 이메일 주소를 입력하시면, 해당 주소로 로그인 링크를 보내드립니다.
       </p>
 
       {submitted ? (
@@ -143,6 +157,17 @@ export default function LoginPage() {
           onSubmit={handleLogin}
           className="bg-white rounded-lg p-6 shadow-md border border-gray-200 space-y-4"
         >
+          <div className="relative">
+            <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <input
+              type="text"
+              placeholder="이름을 입력하세요"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition"
+            />
+          </div>
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
             <input
@@ -184,6 +209,7 @@ export default function LoginPage() {
           setSubmitted(false);
           setError(null);
           setEmail("");
+          setName(""); // 이름 상태 초기화
         }}
         className="mt-6 text-sm text-gray-600 hover:text-pink-600 transition"
       >

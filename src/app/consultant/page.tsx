@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import DashboardLayout from "@/components/DashboardLayout";
 import { RadarChart } from "@/components/charts/RadarChart";
@@ -11,16 +11,7 @@ import { useUser } from "@/context/UserContext";
 export default function ConsultantDashboardPage() {
   const router = useRouter();
   const { setDateRange } = useDateRange();
-  const { setUserInfo } = useUser();
-
-  // 상담사 정보 (이름, 이니셜)
-  const userName = "마교준석";
-  const userInitial = userName[0];
-
-  // UserContext에 사용자 정보 설정
-  useEffect(() => {
-    setUserInfo({ name: `${userName} 상담사`, initial: userInitial });
-  }, [setUserInfo, userName, userInitial]);
+  const { userInfo } = useUser(); // useUser 훅에서 userInfo 직접 가져오기
 
   // 기간 선택 상태
   const [selectedPeriod, setSelectedPeriod] = useState<
@@ -216,11 +207,11 @@ export default function ConsultantDashboardPage() {
             {/* 인사말 카드 */}
             <div className="bg-gradient-to-r from-pink-400 to-purple-400 rounded-xl p-4 shadow-lg flex items-center gap-3 animate-pulse-glow">
               <div className="h-10 w-10 rounded-full bg-white/30 flex items-center justify-center text-lg font-bold text-white shadow">
-                {userInitial}
+                {userInfo.initial}
               </div>
               <div>
                 <div className="text-base font-bold text-white flex items-center gap-2">
-                  {userName} 상담사님 <span className="animate-bounce">👋🏻</span>
+                  {userInfo.name} 상담사님 <span className="animate-bounce">👋🏻</span>
                 </div>
                 <div className="text-xs text-pink-100 mt-1">
                   오늘도 힘내세요! Feple이 함께합니다 :)
@@ -322,3 +313,4 @@ export default function ConsultantDashboardPage() {
     </DashboardLayout>
   );
 }
+
