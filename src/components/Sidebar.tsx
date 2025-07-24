@@ -4,11 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, Users, BarChart3, Upload } from "lucide-react";
 import { useSidebar } from "../context/SidebarContext";
+import { useUser } from "@/context/UserContext";
 
 export default function Sidebar() {
   const pathname = usePathname();
   const { setIsHovered, setIsMenuClicked, shouldShowContent, sidebarWidth } =
     useSidebar();
+  const { userInfo, isLoading } = useUser();
 
   // 현재 경로가 상담사용 대시보드인지 확인 (정확한 매칭)
   const isConsultantMode =
@@ -113,18 +115,16 @@ export default function Sidebar() {
           }`}
         >
           <div className="sidebar-user-avatar">
-            <span>{isConsultantMode ? "상" : "관"}</span>
+            <span>{isLoading ? "..." : userInfo.initial}</span>
           </div>
           {/* 사용자 정보 텍스트 - 확장 시에만 렌더링 */}
           {shouldShowContent && (
             <div className="transition-all duration-300 opacity-100 translate-x-0 flex-1 ml-2">
               <p className="text-xs font-medium text-gray-900 korean-text whitespace-nowrap">
-                {isConsultantMode ? "상담사" : "관리자"}
+                {isLoading ? "Loading..." : userInfo.name}
               </p>
               <p className="text-xs text-pink-600 korean-text whitespace-nowrap">
-                {isConsultantMode
-                  ? "consultant@company.com"
-                  : "admin@company.com"}
+                {isLoading ? "Loading..." : userInfo.email}
               </p>
             </div>
           )}

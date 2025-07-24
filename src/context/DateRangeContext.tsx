@@ -15,8 +15,8 @@ const DateRangeContext = createContext<DateRangeContextType | undefined>(
 
 // 어제 날짜 계산 함수 (한국 시간 기준) - 테스트용 고정 날짜
 const getYesterdayDate = () => {
-  // 테스트를 위해 고정된 오늘 날짜 사용 (2025-07-17)
-  const today = new Date("2025-07-17");
+  // 테스트를 위해 고정된 오늘 날짜 사용
+  const today = new Date(Date.now());
 
   const yesterday = new Date(today);
   yesterday.setDate(today.getDate() - 1);
