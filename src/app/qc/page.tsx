@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import {
   Users,
@@ -42,7 +42,7 @@ const teams = Object.entries(teamConsultantMapping).map(([id, ids]) => ({
 }));
 
 export default function QCDashboardPage() {
-  const { setUserInfo } = useUser();
+  const { userInfo } = useUser(); // useUser 훅에서 userInfo 직접 가져오기
   const [searchTerm, setSearchTerm] = useState("");
   const [showResults, setShowResults] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState<string>("");
@@ -50,15 +50,6 @@ export default function QCDashboardPage() {
   const [riskAlertPage, setRiskAlertPage] = useState(0);
   const [inspectionPage, setInspectionPage] = useState(0);
   const [teamMemberPage, setTeamMemberPage] = useState(0);
-
-  // QC 정보
-  const qcName = "오현서";
-  const qcInitial = qcName[0];
-
-  // UserContext에 사용자 정보 설정
-  useEffect(() => {
-    setUserInfo({ name: `${qcName} QC님`, initial: qcInitial });
-  }, [setUserInfo, qcName, qcInitial]);
 
   // 오늘 날짜
   const today = new Date(Date.now());
@@ -312,11 +303,11 @@ export default function QCDashboardPage() {
           {/* 인사말 카드 */}
           <div className="bg-gradient-to-r from-pink-400 to-purple-400 rounded-xl p-4 shadow-lg flex items-center gap-3 animate-pulse-glow">
             <div className="h-10 w-10 rounded-full bg-white/30 flex items-center justify-center text-lg font-bold text-white shadow">
-              {qcInitial}
+              {userInfo.initial}
             </div>
             <div>
               <div className="text-base font-bold text-white flex items-center gap-2">
-                {qcName} QC님 <span className="animate-bounce">👋🏻</span>
+                {userInfo.name} QC님 <span className="animate-bounce">👋🏻</span>
               </div>
               <div className="text-xs text-pink-100 mt-1">
                 오늘도 힘내세요! Feple이 함께합니다 :)
