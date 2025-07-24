@@ -1,25 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import DashboardLayout from "@/components/DashboardLayout";
 import { RadarChart } from "@/components/charts/RadarChart";
 import { ChevronRight } from "lucide-react";
 import { useDateRange } from "@/context/DateRangeContext";
+import { useUser } from "@/context/UserContext";
 
 export default function ConsultantDashboardPage() {
   const router = useRouter();
   const { setDateRange } = useDateRange();
+  const { setUserInfo } = useUser();
+
+  // 상담사 정보 (이름, 이니셜)
+  const userName = "마교준석";
+  const userInitial = userName[0];
+
+  // UserContext에 사용자 정보 설정
+  useEffect(() => {
+    setUserInfo({ name: `${userName} 상담사`, initial: userInitial });
+  }, [setUserInfo, userName, userInitial]);
 
   // 기간 선택 상태
   const [selectedPeriod, setSelectedPeriod] = useState<
     "yesterday" | "lastWeek" | "lastMonth"
   >("yesterday");
 
-  // 날짜 계산 함수들 (한국 시간 기준) - 테스트용 고정 날짜
+  // 날짜 계산 함수들 (한국 시간 기준)
   const getDateRange = (period: "yesterday" | "lastWeek" | "lastMonth") => {
-    // 테스트를 위해 고정된 오늘 날짜 사용 (2025-07-17)
-    const today = new Date("2025-07-17");
+    // 테스트를 위해 고정된 오늘 날짜 사용
+    const today = new Date(Date.now());
 
     const formatDate = (date: Date) => {
       const year = date.getFullYear();
@@ -185,10 +196,6 @@ export default function ConsultantDashboardPage() {
   const lowIndicators = [...currentData.indicators]
     .sort((a, b) => a.score - b.score)
     .slice(0, 2);
-
-  // 상담사 정보 (이니셜, 이름)
-  const userName = "마교준석";
-  const userInitial = userName[0];
 
   // 기간 변경 핸들러
   const handlePeriodChange = (
