@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import {
   Users,
@@ -16,6 +16,7 @@ import {
   fixedConsultantInfo,
   teamConsultantMapping,
 } from "@/data/fixedQcMockData";
+import { useUser } from "@/context/UserContext";
 
 // 18명 전체 상담사 배열 생성
 const getAllConsultants = () =>
@@ -41,6 +42,7 @@ const teams = Object.entries(teamConsultantMapping).map(([id, ids]) => ({
 }));
 
 export default function QCDashboardPage() {
+  const { setUserInfo } = useUser();
   const [searchTerm, setSearchTerm] = useState("");
   const [showResults, setShowResults] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState<string>("");
@@ -50,8 +52,13 @@ export default function QCDashboardPage() {
   const [teamMemberPage, setTeamMemberPage] = useState(0);
 
   // QC 정보
-  const qcName = "점소이현서";
+  const qcName = "오현서";
   const qcInitial = qcName[0];
+
+  // UserContext에 사용자 정보 설정
+  useEffect(() => {
+    setUserInfo({ name: `${qcName} QC님`, initial: qcInitial });
+  }, [setUserInfo, qcName, qcInitial]);
 
   // 오늘 날짜
   const today = new Date(Date.now());

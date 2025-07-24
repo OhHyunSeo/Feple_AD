@@ -30,9 +30,16 @@ function QCMonitoringContent() {
     null
   );
   const [hasSearched, setHasSearched] = useState(false); // 조회 여부 상태
+  const [isInitialAutoSearchDone, setIsInitialAutoSearchDone] =
+    useState(false); // 자동 조회 완료 여부 플래그
 
   // URL 파라미터에서 자동 조회 처리
   useEffect(() => {
+    // 자동 조회가 이미 한 번 실행되었다면, 더 이상 URL 파라미터를 확인하지 않음
+    if (isInitialAutoSearchDone) {
+      return;
+    }
+
     const startDateParam = searchParams.get("startDate");
     const endDateParam = searchParams.get("endDate");
     const departmentParam = searchParams.get("department");
@@ -58,6 +65,8 @@ function QCMonitoringContent() {
       // 자동 조회 실행
       setHasSearched(true);
       setSelectedSessionNo(null);
+      // 자동 조회가 완료되었음을 표시
+      setIsInitialAutoSearchDone(true);
 
       console.log(
         "자동 조회 실행:",
@@ -70,7 +79,7 @@ function QCMonitoringContent() {
         consultantParam
       );
     }
-  }, [searchParams, setDateRange]);
+  }, [searchParams, setDateRange, isInitialAutoSearchDone]);
 
   // 부서 데이터
   const departments = [
