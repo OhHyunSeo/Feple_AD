@@ -39,11 +39,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
         const {
           data: { user },
         } = await supabase.auth.getUser();
-        if (user && user.email) {
-          setUserInfoState((prev) => ({ ...prev, email: user.email }));
-        } else {
-          setUserInfoState((prev) => ({ ...prev, email: "Not logged in" }));
-        }
+        // user.email이 undefined일 경우를 대비하여 fallback 값 제공
+        const userEmail = user?.email || "Not logged in";
+        setUserInfoState((prev) => ({ ...prev, email: userEmail }));
       } catch (error) {
         console.error("Error fetching user email:", error);
         setUserInfoState((prev) => ({
@@ -59,9 +57,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (event, session) => {
-        const user = session?.user;
         // user.email이 undefined일 경우를 대비하여 fallback 값 제공
-        const userEmail = user?.email || "Not logged in";
+        const userEmail = session?.user?.email || "Not logged in";
         setUserInfoState((prev) => ({ ...prev, email: userEmail }));
       }
     );
