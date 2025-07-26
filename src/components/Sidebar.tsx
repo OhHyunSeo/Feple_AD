@@ -2,7 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Users, BarChart3, Upload } from "lucide-react";
+import {
+  LayoutDashboard,
+  Users,
+  BarChart3,
+  Upload,
+  LogOut, // 로그아웃 아이콘 추가
+} from "lucide-react";
 import { useSidebar } from "../context/SidebarContext";
 import { useUser } from "@/context/UserContext";
 
@@ -10,7 +16,7 @@ export default function Sidebar() {
   const pathname = usePathname();
   const { setIsHovered, setIsMenuClicked, shouldShowContent, sidebarWidth } =
     useSidebar();
-  const { userInfo, isLoading } = useUser();
+  const { userInfo, isLoading, logout } = useUser(); // logout 함수 가져오기
 
   // 현재 경로가 상담사용 대시보드인지 확인 (정확한 매칭)
   const isConsultantMode =
@@ -115,18 +121,44 @@ export default function Sidebar() {
           }`}
         >
           <div className="sidebar-user-avatar">
-            <span>{isLoading ? "..." : userInfo.initial}</span>
+            {isLoading ? (
+              <div className="w-full h-full bg-gray-200 animate-pulse rounded-full"></div>
+            ) : (
+              <span>{userInfo.initial}</span>
+            )}
           </div>
           {/* 사용자 정보 텍스트 - 확장 시에만 렌더링 */}
-          {shouldShowContent && (
-            <div className="transition-all duration-300 opacity-100 translate-x-0 flex-1 ml-2">
-              <p className="text-xs font-medium text-gray-900 korean-text whitespace-nowrap">
-                {isLoading ? "Loading..." : userInfo.name}
-              </p>
-              <p className="text-xs text-pink-600 korean-text whitespace-nowrap">
-                {isLoading ? "Loading..." : userInfo.email}
-              </p>
-            </div>
+          {shouldShowContent &&
+            (isLoading ? (
+              <div className="flex-1 ml-2 space-y-1.5">
+                <div className="h-3 w-24 bg-gray-200 animate-pulse rounded"></div>
+                <div className="h-3 w-32 bg-gray-200 animate-pulse rounded"></div>
+              </div>
+            ) : (
+              <div className="transition-all duration-300 opacity-100 translate-x-0 flex-1 ml-2 overflow-hidden">
+                <p
+                  className="text-xs font-medium text-gray-900 korean-text whitespace-nowrap truncate"
+                  title={userInfo.name}
+                >
+                  {userInfo.name}
+                </p>
+                <p
+                  className="text-xs text-pink-600 korean-text whitespace-nowrap truncate"
+                  title={userInfo.email}
+                >
+                  {userInfo.email}
+                </p>
+              </div>
+            ))}
+          {/* 로그아웃 버튼 - 확장 시에만 렌더링 */}
+          {shouldShowContent && !isLoading && (
+            <button
+              onClick={logout}
+              className="ml-2 p-1.5 rounded-full text-gray-500 hover:bg-red-100 hover:text-red-600 transition-colors"
+              title="로그아웃"
+            >
+              <LogOut className="h-4 w-4" />
+            </button>
           )}
         </div>
       </div>
