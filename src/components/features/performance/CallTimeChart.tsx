@@ -45,9 +45,27 @@ export default function CallTimeChart({
 
   const dates = getDatesInRange(startDate, endDate);
 
-  // 빈 배열인 경우 기본값 사용
-  const safeDates =
-    dates.length > 0 ? dates : [new Date().toISOString().split("T")[0]];
+  // 데이터가 없는 경우 처리
+  if (dates.length === 0) {
+    return (
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3">
+        <div className="mb-2">
+          <h3 className="text-sm font-semibold performance-header flex items-center gap-1">
+            <Clock className="h-3 w-3 text-green-500" />
+            평균 통화 시간
+          </h3>
+        </div>
+        <div className="text-center py-8">
+          <p className="text-sm text-gray-500">
+            선택된 기간에 조회된 데이터가 없습니다.
+          </p>
+        </div>
+        <div className="text-xs performance-text-gray-light text-center pt-1 border-gray-100">
+          {startDate} ~ {endDate}
+        </div>
+      </div>
+    );
+  }
 
   // 고정된 더미 데이터 (hydration 오류 방지)
   const getFixedCallTimeData = (dates: string[]) => {
@@ -67,10 +85,10 @@ export default function CallTimeChart({
   };
 
   const { myTimes: myCallTimes, teamTimes: teamCallTimes } =
-    getFixedCallTimeData(safeDates);
+    getFixedCallTimeData(dates);
 
   // 날짜 라벨 처리
-  const displayDates = safeDates.map((date, index) => `${index + 1}일차`);
+  const displayDates = dates.map((date, index) => `${index + 1}일차`);
 
   // 평균값 계산
   const myAverage =
