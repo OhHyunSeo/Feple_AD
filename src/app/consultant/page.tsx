@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import DashboardLayout from "@/components/DashboardLayout";
 import { RadarChart } from "@/components/charts/RadarChart";
@@ -12,11 +12,26 @@ export default function ConsultantDashboardPage() {
   const router = useRouter();
   const { setDateRange } = useDateRange();
   const { userInfo } = useUser(); // useUser 훅에서 userInfo 직접 가져오기
+  const [startAnimation, setStartAnimation] = useState(false);
 
   // 기간 선택 상태
   const [selectedPeriod, setSelectedPeriod] = useState<
     "yesterday" | "lastWeek" | "lastMonth"
   >("yesterday");
+
+  // selectedPeriod가 변경될 때마다 애니메이션을 재동기화
+  useEffect(() => {
+    // 1. 애니메이션 클래스를 제거하기 위해 상태를 false로 설정
+    setStartAnimation(false);
+
+    // 2. DOM 업데이트가 반영된 후, 다음 프레임에서 애니메이션을 다시 시작
+    const timer = setTimeout(() => {
+      setStartAnimation(true);
+    }, 50); // 짧은 지연으로 브라우저가 클래스 제거를 처리할 시간을 줌
+
+    // 클린업 함수
+    return () => clearTimeout(timer);
+  }, [selectedPeriod]); // selectedPeriod가 바뀔 때마다 이 효과를 재실행
 
   // 날짜 계산 함수들 (한국 시간 기준)
   const getDateRange = (period: "yesterday" | "lastWeek" | "lastMonth") => {
@@ -206,25 +221,45 @@ export default function ConsultantDashboardPage() {
           <div className="flex flex-col gap-3">
             {/* 인사말 카드 */}
             <div className="bg-gradient-to-r from-pink-400 to-purple-400 rounded-xl p-4 shadow-lg flex items-center gap-3 animate-pulse-glow">
-              <div className="h-10 w-10 rounded-full bg-white/30 flex items-center justify-center text-lg font-bold text-white shadow">
+              <div className="h-10 w-10 rounded-full bg-white/30 flex items-center justify-center text-xl font-bold text-white shadow">
                 {userInfo.initial}
               </div>
               <div>
-                <div className="text-base font-bold text-white flex items-center gap-2">
-                  {userInfo.name} 상담사님 <span className="animate-bounce">👋🏻</span>
+                <div className="text-lg font-bold text-white flex items-center gap-2">
+                  {userInfo.name} 상담사님{" "}
+                  <span className="animate-bounce">👋🏻</span>
                 </div>
-                <div className="text-xs text-pink-100 mt-1">
+                <div className="text-sm text-pink-100 mt-1">
                   오늘도 힘내세요! Feple이 함께합니다 :)
                 </div>
               </div>
             </div>
 
+            {/* 평균 점수 카드 */}
+            <div className="bg-white rounded-xl p-4 shadow-md border border-gray-100 flex flex-col items-center justify-center relative">
+              <div className="text-base text-gray-500 mb-1">
+                {currentData.scoreTitle}
+              </div>
+              <div className="text-4xl font-bold text-pink-600">
+                {currentData.avgScore}점
+              </div>
+
+              {/* 상세 보기 버튼 */}
+              <button
+                onClick={handleDetailView}
+                className="absolute bottom-2 right-2 flex items-center gap-1 px-2 py-1 text-sm text-gray-500 hover:text-pink-600 hover:bg-pink-50 rounded transition-colors group"
+              >
+                <span>상세 보기</span>
+                <ChevronRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+              </button>
+            </div>
+
             {/* 상담 분석 카드 */}
             <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 flex flex-col gap-2">
-              <div className="text-base font-semibold text-pink-600 mb-2">
+              <div className="text-lg font-semibold text-pink-600 mb-2">
                 {currentData.title}
               </div>
-              <ul className="text-xs text-gray-700 list-disc pl-4 space-y-1">
+              <ul className="text-sm text-gray-700 list-disc pl-4 space-y-1">
                 <li>
                   <span className="font-bold">강점:</span>{" "}
                   {currentData.analysis.strengths}
@@ -240,38 +275,22 @@ export default function ConsultantDashboardPage() {
               </ul>
             </div>
 
-            {/* 평균 점수 카드 */}
-            <div className="bg-white rounded-xl p-4 shadow-md border border-gray-100 flex flex-col items-center justify-center relative">
-              <div className="text-sm text-gray-500 mb-1">
-                {currentData.scoreTitle}
-              </div>
-              <div className="text-3xl font-bold text-pink-600">
-                {currentData.avgScore}점
-              </div>
-
-              {/* 상세 보기 버튼 */}
-              <button
-                onClick={handleDetailView}
-                className="absolute bottom-2 right-2 flex items-center gap-1 px-2 py-1 text-xs text-gray-500 hover:text-pink-600 hover:bg-pink-50 rounded transition-colors group"
-              >
-                <span>상세 보기</span>
-                <ChevronRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform" />
-              </button>
-            </div>
-
             {/* 위험 지표 카드 2개 */}
             {lowIndicators.map((item) => (
               <div
                 key={item.label}
                 className="bg-white rounded-xl p-3 shadow-md border border-gray-100 flex items-center gap-3"
               >
-                <div className="text-sm font-semibold">{item.label}</div>
+                <div className="text-base font-semibold">{item.label}</div>
                 <div className="ml-auto flex items-center gap-2">
-                  <span className="text-xl font-bold">{item.grade}</span>
+                  <span className="text-2xl font-bold">{item.grade}</span>
                   <span
-                    className={
-                      "h-3 w-3 rounded-full inline-block border border-white animate-blink"
-                    }
+                    className={`h-3 w-3 rounded-full inline-block border border-white ${
+                      startAnimation &&
+                      ["C", "D", "E", "F", "G"].includes(item.grade)
+                        ? "animate-blink"
+                        : ""
+                    }`}
                     style={{
                       backgroundColor:
                         item.grade === "G"
@@ -290,7 +309,7 @@ export default function ConsultantDashboardPage() {
 
           {/* 오른쪽 차트 */}
           <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-100 flex flex-col justify-center h-full">
-            <div className="text-base font-semibold text-gray-800 mb-2 text-center">
+            <div className="text-lg font-semibold text-gray-800 mb-2 text-center">
               종합 역량 분석
             </div>
             <div className="h-full flex items-center justify-center">
@@ -300,11 +319,11 @@ export default function ConsultantDashboardPage() {
             <div className="flex justify-center items-center gap-4 mt-2">
               <div className="flex items-center gap-1">
                 <div className="w-3 h-3 rounded-full bg-purple-500"></div>
-                <span className="text-xs text-gray-600">내 점수</span>
+                <span className="text-sm text-gray-600">내 점수</span>
               </div>
               <div className="flex items-center gap-1">
                 <div className="w-3 h-3 rounded-full bg-gray-400 border border-gray-300"></div>
-                <span className="text-xs text-gray-600">동료 평균</span>
+                <span className="text-sm text-gray-600">동료 평균</span>
               </div>
             </div>
           </div>
@@ -313,4 +332,3 @@ export default function ConsultantDashboardPage() {
     </DashboardLayout>
   );
 }
-

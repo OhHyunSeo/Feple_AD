@@ -128,8 +128,8 @@ function getResultFromScore(finalScore: number | null): string {
   if (!finalScore) return "미분류";
 
   if (finalScore >= 80) return "만족";
-  if (finalScore >= 60) return "미흡";
-  if (finalScore >= 40) return "추가 상담 필요";
+  if (finalScore >= 70) return "미흡";
+  if (finalScore >= 60) return "추가 상담 필요";
   return "해결 불가";
 }
 

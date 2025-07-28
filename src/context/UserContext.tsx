@@ -4,12 +4,10 @@ import {
   createContext,
   useContext,
   useState,
-  useEffect,
   ReactNode,
+  useEffect,
 } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabaseClient";
-import { User } from "@supabase/supabase-js";
 
 interface UserInfo {
   name: string;
@@ -21,92 +19,69 @@ interface UserInfo {
 interface UserContextType {
   userInfo: UserInfo;
   isLoading: boolean;
-  logout: () => Promise<void>;
+  login: (name: string, email: string, role: "consultant" | "qc") => void;
+  logout: () => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
+const defaultUserInfo: UserInfo = {
+  name: "게스트",
+  initial: "게",
+  email: "",
+  role: null,
+};
+
 export function UserProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
-  const [userInfo, setUserInfoState] = useState<UserInfo>({
-    name: "사용자",
-    initial: "사",
-    email: "loading...",
-    role: null,
-  });
+  const [userInfo, setUserInfo] = useState<UserInfo>(defaultUserInfo);
   const [isLoading, setIsLoading] = useState(true);
 
-  // 사용자 정보 설정 함수
-  const setUserInfo = (user: User | null) => {
-    if (user) {
-      const name = user.user_metadata?.name || "사용자";
-      const role = user.user_metadata?.role || null;
-      const initial = name ? name.charAt(0).toUpperCase() : "사";
-      const email = user.email || "No email";
+  // 페이지 로드 시 localStorage에서 사용자 정보 복원
+  useEffect(() => {
+    try {
+      const storedUserInfo = localStorage.getItem("userInfo");
+      if (storedUserInfo) {
+        setUserInfo(JSON.parse(storedUserInfo));
+      }
+    } catch (error) {
+      console.error("Failed to parse user info from localStorage", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
-      setUserInfoState({ name, initial, email, role });
-    } else {
-      setUserInfoState({
-        name: "사용자",
-        initial: "사",
-        email: "Not logged in",
-        role: null,
-      });
+  const login = (name: string, email: string, role: "consultant" | "qc") => {
+    setIsLoading(true);
+    const initial = name ? name.charAt(0).toUpperCase() : "사";
+    const newUserInfo = { name, initial, email, role };
+
+    try {
+      localStorage.setItem("userInfo", JSON.stringify(newUserInfo));
+      setUserInfo(newUserInfo);
+      router.push(role === "consultant" ? "/consultant" : "/qc");
+    } catch (error) {
+      console.error("Failed to save user info to localStorage", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  useEffect(() => {
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        try {
-          let user = session?.user;
-
-          if (event === "SIGNED_IN") {
-            const nameToUpdate = localStorage.getItem("userNameForUpdate");
-            if (
-              nameToUpdate &&
-              user &&
-              user.user_metadata?.name !== nameToUpdate
-            ) {
-              try {
-                const { data: updated, error } = await supabase.auth.updateUser(
-                  {
-                    data: { name: nameToUpdate },
-                  }
-                );
-                if (error) throw error;
-                user = updated.user;
-              } catch (error) {
-                console.error("Error updating user metadata:", error);
-              } finally {
-                localStorage.removeItem("userNameForUpdate");
-              }
-            }
-          }
-
-          setUserInfo(user || null);
-        } catch (error) {
-          console.error("Error in onAuthStateChange:", error);
-          setUserInfo(null);
-        } finally {
-          setIsLoading(false);
-        }
-      }
-    );
-
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, []);
-
-  const logout = async () => {
+  const logout = () => {
     setIsLoading(true);
-    await supabase.auth.signOut();
-    router.push("/");
+    try {
+      localStorage.removeItem("userInfo");
+      setUserInfo(defaultUserInfo);
+      router.push("/");
+    } catch (error) {
+      console.error("Failed to clear user info from localStorage", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <UserContext.Provider value={{ userInfo, isLoading, logout }}>
+    <UserContext.Provider value={{ userInfo, isLoading, login, logout }}>
       {children}
     </UserContext.Provider>
   );

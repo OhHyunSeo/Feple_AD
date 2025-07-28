@@ -36,7 +36,7 @@ export function RadarChart({
             dataKey="subject"
             tick={{
               fill: "#4B5563",
-              fontSize: 12,
+              fontSize: 14,
               fontWeight: 500,
             }}
           />

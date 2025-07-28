@@ -40,6 +40,7 @@ export default function ScoreChart({
     avg: 0,
     max: 0,
   });
+  const [noData, setNoData] = useState(false); // 데이터 없음 상태 추가
 
   // 기간별 점수 계산 (개별 상담사 + 팀)
   useEffect(() => {
@@ -47,6 +48,7 @@ export default function ScoreChart({
       console.log(
         `📊 점수 계산 시작: 상담사 ${consultantId}, 기간 ${startDate} ~ ${endDate}`
       );
+      setNoData(false); // 계산 시작 시 초기화
 
       try {
         // Mock 데이터 조회
@@ -80,8 +82,11 @@ export default function ScoreChart({
           console.log(`📊 계산된 개별 점수:`, newScores);
           setCalculatedScores(newScores);
         } else {
-          console.log("📊 해당 기간에 개별 데이터가 없어 기본값 사용");
-          setCalculatedScores({ min: 0, avg: 0, max: 0 });
+          console.log(
+            "📊 해당 기간에 개별 데이터가 없어 '데이터 없음'으로 처리"
+          );
+          setNoData(true); // 데이터 없음 상태 설정
+          setCalculatedScores({ min: 0, avg: 0, max: 0 }); // 점수 초기화
         }
 
         // 팀 점수 동적 계산 (teamScores prop이 없을 때만)
@@ -109,6 +114,7 @@ export default function ScoreChart({
       } catch (error) {
         console.error("📊 점수 계산 오류:", error);
         setCalculatedScores({ min: 0, avg: 0, max: 0 });
+        setNoData(true);
       }
     }
   }, [consultantId, startDate, endDate, useMockData, teamScores]);
@@ -116,6 +122,30 @@ export default function ScoreChart({
   // 표시할 점수 결정 (props로 받은 것 우선, 없으면 계산된 값)
   const displayScores = myScores || calculatedScores;
   const displayTeamScores = teamScores || calculatedTeamScores;
+
+  // 데이터가 없는 경우 표시할 UI
+  if (noData) {
+    return (
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3">
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-sm font-semibold performance-header flex items-center gap-1">
+            <BarChart3 className="h-3 w-3 text-blue-500" />
+            상담 점수
+          </h3>
+        </div>
+        <div className="text-center py-8">
+          <p className="text-sm text-gray-500">
+            선택된 기간에 조회된 <br />
+            데이터가 없습니다
+          </p>
+        </div>
+        <div className="text-xs performance-text-gray-light text-center pt-1">
+          {startDate} ~ {endDate}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3">
       <div className="flex items-center justify-between mb-2">
