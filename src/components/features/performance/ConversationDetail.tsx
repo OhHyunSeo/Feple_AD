@@ -286,7 +286,7 @@ export default function ConversationDetail({
             </span>
           </div>
           <div className="text-center">
-            <div className="text-gray-600 mb-1">결과</div>
+            <div className="text-gray-600 mb-1">해결상태</div>
             <span
               className={`px-1.5 py-1 rounded text-[10px] font-medium ${
                 conversationData.result === "만족"

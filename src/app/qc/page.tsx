@@ -307,7 +307,7 @@ export default function QCDashboardPage() {
             </div>
             <div>
               <div className="text-base font-bold text-white flex items-center gap-2">
-                {userInfo.name} QC님 <span className="animate-bounce">👋🏻</span>
+                {userInfo.name} 품질 관리자님 <span className="animate-bounce">👋🏻</span>
               </div>
               <div className="text-xs text-pink-100 mt-1">
                 오늘도 힘내세요! Feple이 함께합니다 :)

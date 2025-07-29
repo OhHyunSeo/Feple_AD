@@ -266,7 +266,7 @@ function QCMonitoringContent() {
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3">
                   <h3 className="text-sm font-semibold text-gray-800 mb-2 flex items-center gap-2">
                     <PhoneCall className="h-4 w-4 text-purple-500" />
-                    선택된 상담사
+                    상담사명
                   </h3>
                   <div className="text-center bg-purple-50 rounded p-2">
                     <div className="text-lg font-bold text-purple-600">
