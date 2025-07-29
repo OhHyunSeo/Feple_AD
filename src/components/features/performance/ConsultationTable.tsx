@@ -299,7 +299,7 @@ export default function ConsultationTable({
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <FileText className="h-4 w-4 text-blue-500" />
-          <h3 className="text-lg font-semibold text-gray-800">상담 세션</h3>
+          <h3 className="text-lg font-semibold text-gray-800">상담 내역</h3>
           <div className="text-[10px] text-gray-500 text-center">
             {startDate} ~ {endDate}
           </div>
@@ -385,7 +385,7 @@ export default function ConsultationTable({
                 </div>
               </th>
               <th className="text-center p-2 font-medium text-gray-700 text-[10px]">
-                상담 결과
+                해결 상태
               </th>
             </tr>
           </thead>

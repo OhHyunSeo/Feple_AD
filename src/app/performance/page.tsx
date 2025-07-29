@@ -730,7 +730,7 @@ export default function MonitoringPage() {
                         대화 흐름 및 응대 태도
                       </th>
                       <th className="text-left py-2 px-3 text-xs font-medium text-gray-600">
-                        상담 결과
+                        해결 상태
                       </th>
                     </tr>
                   </thead>
