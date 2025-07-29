@@ -122,7 +122,7 @@ export default function QCDashboardPage() {
       서민정: "c16",
       조현우: "c17",
       배수진: "c18",
-      // 위험 등급 알림 상담사들
+      // 긴급 점검 대상 상담사들
       김철호: "c13",
       이수정: "c14",
     };
@@ -264,7 +264,7 @@ export default function QCDashboardPage() {
     setInspectionPage((prev) => Math.min(inspectionTotalPages - 1, prev + 1));
   };
 
-  // 위험 등급 알림(18명만, mockData에서 동적 생성)
+  // 긴급 점검 대상(18명만, mockData에서 동적 생성)
   const riskAlerts = getRiskAlerts();
   const totalPages = Math.ceil(riskAlerts.length / ITEMS_PER_PAGE);
   const paginatedRiskAlerts = riskAlerts.slice(
@@ -474,12 +474,12 @@ export default function QCDashboardPage() {
               )}
             </div>
 
-            {/* 두 번째: 위험 등급 알림 (페이지네이션 적용) */}
+            {/* 두 번째: 긴급 점검 대상 (페이지네이션 적용) */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 flex flex-col h-[calc(100vh-17rem)]">
               <div className="flex items-center gap-2 mb-3">
                 <AlertTriangle className="h-4 w-4 text-red-500 flex-shrink-0" />
                 <h3 className="text-sm mt-0.5 font-semibold text-gray-800">
-                  위험 등급 알림
+                  긴급 점검 대상
                 </h3>
                 <span className="bg-red-100 text-red-800 text-xs font-medium px-1.5 py-0.5 rounded-full">
                   {riskAlerts.length}건

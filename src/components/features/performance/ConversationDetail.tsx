@@ -147,7 +147,10 @@ export default function ConversationDetail({
     return (
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-semibold text-gray-800">상담 상세</h3>
+          <div className="flex items-center gap-1.5">
+            <FileText className="h-4 w-4 text-blue-500" />
+            <h3 className="text-sm font-semibold text-gray-800">상담 상세</h3>
+          </div>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 text-sm"
@@ -172,7 +175,10 @@ export default function ConversationDetail({
     return (
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-semibold text-gray-800">상담 상세</h3>
+          <div className="flex items-center gap-1.5">
+            <FileText className="h-4 w-4 text-blue-500" />
+            <h3 className="text-sm font-semibold text-gray-800">상담 상세</h3>
+          </div>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 text-sm"
@@ -203,7 +209,10 @@ export default function ConversationDetail({
     return (
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-semibold text-gray-800">상담 상세</h3>
+          <div className="flex items-center gap-1.5">
+            <FileText className="h-4 w-4 text-blue-500" />
+            <h3 className="text-sm font-semibold text-gray-800">상담 상세</h3>
+          </div>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 text-sm"
@@ -222,9 +231,7 @@ export default function ConversationDetail({
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-1.5">
           <FileText className="h-4 w-4 text-blue-500" />
-          <h3 className="text-sm font-semibold text-gray-800">
-            상담 세션 {conversationData.no}
-          </h3>
+          <h3 className="text-sm font-semibold text-gray-800">상담 상세</h3>
         </div>
         <button
           onClick={onClose}

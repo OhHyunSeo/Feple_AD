@@ -265,7 +265,7 @@ export const mockInspectionRecommendations: InspectionRecommendation[] = [
   },
 ];
 
-// ===== 위험 등급 알림 데이터 =====
+// ===== 긴급 점검 대상 데이터 =====
 export const mockRiskAlerts: RiskAlert[] = [
   {
     id: "c12",
@@ -531,7 +531,7 @@ export function getInspectionRecommendations() {
     }));
 }
 
-// 위험 등급 알림: 상담사별로 riskCategories 등 다르게
+// 긴급 점검 대상: 상담사별로 riskCategories 등 다르게
 export function getRiskAlerts() {
   const config: Record<
     string,
