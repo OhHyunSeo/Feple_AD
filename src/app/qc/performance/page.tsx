@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, Suspense, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import DashboardLayout from "@/components/DashboardLayout";
-import { ChevronDown, PhoneCall } from "lucide-react";
+import { ChevronDown, PhoneCall, FileStack } from "lucide-react";
 import {
   DateFilter,
   CallTimeChart,
@@ -11,6 +11,8 @@ import {
   ConversationDetail,
 } from "@/components/features/performance";
 import { ScoreChart } from "@/components/features/performance";
+import PeriodicSummary from "@/components/features/performance/PeriodicSummary";
+import { getAllFixedEvaluations } from "@/data/fixedQcMockData";
 import { useDateRange } from "@/context/DateRangeContext";
 
 function QCMonitoringContent() {
@@ -30,8 +32,7 @@ function QCMonitoringContent() {
     null
   );
   const [hasSearched, setHasSearched] = useState(false); // 조회 여부 상태
-  const [isInitialAutoSearchDone, setIsInitialAutoSearchDone] =
-    useState(false); // 자동 조회 완료 여부 플래그
+  const [isInitialAutoSearchDone, setIsInitialAutoSearchDone] = useState(false); // 자동 조회 완료 여부 플래그
 
   // URL 파라미터에서 자동 조회 처리
   useEffect(() => {
@@ -181,6 +182,24 @@ function QCMonitoringContent() {
     setSelectedSessionNo(null);
   };
 
+  // 기간별 요약 데이터 생성
+  const summaryData = useMemo(() => {
+    const allEvaluations = getAllFixedEvaluations(); // 전체 목업 데이터 가져오기
+    // 현재 선택된 기간의 데이터만 필터링 (실제 구현 시)
+    // 지금은 전체 데이터로 고정
+    return {
+      strengths: [
+        ...new Set(allEvaluations.flatMap((e) => e.feedback.strengths)),
+      ].slice(0, 5), // 최대 5개만 표시
+      improvements: [
+        ...new Set(allEvaluations.flatMap((e) => e.feedback.improvements)),
+      ].slice(0, 5),
+      coaching: [
+        ...new Set(allEvaluations.flatMap((e) => e.feedback.coaching)),
+      ].slice(0, 5),
+    };
+  }, []);
+
   return (
     <DashboardLayout>
       <div className="min-h-screen w-full bg-gray-50 p-3">
@@ -297,14 +316,28 @@ function QCMonitoringContent() {
                 />
               </div>
 
-              {/* 두 번째 열 (2.5): 상담 세션 목록 (ConsultationTable 컴포넌트 사용) */}
-              <div className="h-full">
+              {/* 두 번째 열 (2.5): 상담 세션 목록 + 요약 */}
+              <div className="space-y-3 h-full overflow-y-auto">
+                {/* 기간별 상담 요약 섹션 */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <FileStack className="h-4 w-4 text-blue-500" />
+                    <h3 className="text-sm font-semibold text-gray-800">
+                      기간별 상담 요약
+                    </h3>
+                  </div>
+                  <PeriodicSummary summary={summaryData} />
+                </div>
+
+                {/* 상담 세션 목록 (ConsultationTable 컴포넌트 사용) */}
                 <ConsultationTable
                   startDate={contextStartDate}
                   endDate={contextEndDate}
                   onSessionSelect={handleSessionSelect}
                   consultantId={selectedConsultant}
-                  useMockData={true} // QC 대시보드: Mock 데이터 사용
+                  useMockData={true}
+                  isQcView={true}
+                  selectedSessionNo={selectedSessionNo}
                 />
               </div>
 
@@ -314,6 +347,7 @@ function QCMonitoringContent() {
                   sessionNo={selectedSessionNo}
                   onClose={handleCloseDetail}
                   showAudioWhenMissing={true}
+                  isQcView={true}
                 />
               </div>
             </div>

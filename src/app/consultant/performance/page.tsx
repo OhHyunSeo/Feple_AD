@@ -120,6 +120,8 @@ function ConsultantPerformanceContent() {
                 endDate={contextEndDate}
                 onSessionSelect={handleSessionSelect}
                 useMockData={false} // 상담사 대시보드: API 데이터 사용
+                selectedSessionNo={selectedSessionNo}
+                isQcView={false}
               />
             </div>
           </div>
@@ -134,6 +136,7 @@ function ConsultantPerformanceContent() {
                   setSelectedSessionNo(null);
                   setSelectedSessionId(null);
                 }}
+                isQcView={false}
               />
             </div>
           </div>
