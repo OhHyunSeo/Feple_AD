@@ -370,7 +370,7 @@ export const mockSessionData: SessionData[] = [
     problemSolving: "B",
     emotionalStability: "A",
     conversationFlow: "A",
-    result: "양호",
+    result: "미흡",
     feedback: {
       strengths: ["문제 해결 접근이 체계적", "감정 안정성 우수"],
       improvements: ["정중함 표현 개선", "더 적극적인 공감 표현"],

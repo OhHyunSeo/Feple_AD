@@ -1,5 +1,8 @@
 // 고정된 Mock 데이터 import
-import { generateFixedMockSession, fixedConsultantSessionMapping } from './fixedQcMockData';
+import {
+  generateFixedMockSession,
+  fixedConsultantSessionMapping,
+} from "./fixedQcMockData";
 
 export interface FeedbackData {
   strengths: string[];
@@ -367,7 +370,7 @@ export const consultationRawData: ConsultationData[] = [
     problemSolving: "B",
     emotionalStability: "C",
     communicationFlow: "B",
-    result: "만족",
+    result: "미흡",
     feedback: {
       strengths: ["문제 해결 과정이 논리적이고 체계적이었습니다."],
       improvements: [
@@ -449,7 +452,7 @@ export const consultationRawData: ConsultationData[] = [
     problemSolving: "C",
     emotionalStability: "B",
     communicationFlow: "C",
-    result: "만족",
+    result: "미흡",
     feedback: {
       strengths: ["고객과의 기본적인 소통은 원활했습니다."],
       improvements: [
@@ -690,7 +693,9 @@ const getCustomSessionData = (sessionNo: number): ConsultationData | null => {
   // 고정된 세션 범위 체크 (1101-1280)
   if (sessionNo >= 1101 && sessionNo <= 1280) {
     // 해당 세션이 어느 상담사에 속하는지 찾기
-    for (const [consultantId, sessions] of Object.entries(fixedConsultantSessionMapping)) {
+    for (const [consultantId, sessions] of Object.entries(
+      fixedConsultantSessionMapping
+    )) {
       if (sessions.includes(sessionNo)) {
         return generateFixedMockSession(sessionNo, consultantId);
       }
@@ -802,7 +807,7 @@ const getCustomSessionData = (sessionNo: number): ConsultationData | null => {
           ],
         },
       };
-    
+
     // 새로운 1100번대 세션 데이터 (사용자 제공)
     case 1101: // 김민수 (c1)
       return {
@@ -840,7 +845,7 @@ const getCustomSessionData = (sessionNo: number): ConsultationData | null => {
         problemSolving: "A",
         emotionalStability: "B",
         communicationFlow: "B",
-        result: "만족",
+        result: "미흡",
         feedback: {
           strengths: [
             "문제 해결 역량(A): 복잡한 문제도 체계적으로 분석하여 효과적인 해결책을 제시합니다.",
@@ -872,9 +877,7 @@ const getCustomSessionData = (sessionNo: number): ConsultationData | null => {
             "정중함(A): 항상 예의를 갖추고 친절하게 응대했습니다.",
             "공감적 소통(A): 고객의 어려움을 깊이 이해했습니다.",
           ],
-          improvements: [
-            "문제 해결(B): 더 빠른 대안 제시를 연습해보세요.",
-          ],
+          improvements: ["문제 해결(B): 더 빠른 대안 제시를 연습해보세요."],
           coaching: [
             "즉각적인 해결책을 제공하기 위한 시뮬레이션을 추천합니다.",
           ],
@@ -892,16 +895,12 @@ const getCustomSessionData = (sessionNo: number): ConsultationData | null => {
         communicationFlow: "C",
         result: "미흡",
         feedback: {
-          strengths: [
-            "안정적 어조로 고객을 편안하게 만들었습니다.",
-          ],
+          strengths: ["안정적 어조로 고객을 편안하게 만들었습니다."],
           improvements: [
             "공감 표현(C): 좀 더 적극적인 공감 언어 사용이 필요합니다.",
             "문제 해결(D): 근본 원인 분석 연습이 필요합니다.",
           ],
-          coaching: [
-            "다양한 시나리오 기반 문제 해결 트레이닝을 권장합니다.",
-          ],
+          coaching: ["다양한 시나리오 기반 문제 해결 트레이닝을 권장합니다."],
         },
       };
     case 1105: // 박성호 (c2)
@@ -916,15 +915,9 @@ const getCustomSessionData = (sessionNo: number): ConsultationData | null => {
         communicationFlow: "B",
         result: "만족",
         feedback: {
-          strengths: [
-            "명확한 해결책 제시로 고객 만족도가 높았습니다.",
-          ],
-          improvements: [
-            "의사 전달 속도를 조금만 더 올려보세요.",
-          ],
-          coaching: [
-            "스피치 훈련을 병행하시면 더욱 좋아집니다.",
-          ],
+          strengths: ["명확한 해결책 제시로 고객 만족도가 높았습니다."],
+          improvements: ["의사 전달 속도를 조금만 더 올려보세요."],
+          coaching: ["스피치 훈련을 병행하시면 더욱 좋아집니다."],
         },
       };
     case 1106: // 박성호 (c2)
@@ -939,16 +932,12 @@ const getCustomSessionData = (sessionNo: number): ConsultationData | null => {
         communicationFlow: "D",
         result: "추가 상담 필요",
         feedback: {
-          strengths: [
-            "문제 인식 능력: 고객의 요구사항을 정확히 파악했습니다.",
-          ],
+          strengths: ["문제 인식 능력: 고객의 요구사항을 정확히 파악했습니다."],
           improvements: [
             "공감 부족(E): 감정 이입 연습이 필요합니다.",
             "정중함(D): 더욱 예의를 갖춘 언어 사용이 필요합니다.",
           ],
-          coaching: [
-            "감정 이입 워크숍 참여를 권장합니다.",
-          ],
+          coaching: ["감정 이입 워크숍 참여를 권장합니다."],
         },
       };
     case 1107: // 최미연 (c7)
@@ -963,13 +952,9 @@ const getCustomSessionData = (sessionNo: number): ConsultationData | null => {
         communicationFlow: "A",
         result: "만족",
         feedback: {
-          strengths: [
-            "정중함(A)과 안정감(A)이 매우 우수했습니다.",
-          ],
+          strengths: ["정중함(A)과 안정감(A)이 매우 우수했습니다."],
           improvements: [],
-          coaching: [
-            "현재 페이스를 유지하며 더 발전을 도모하세요.",
-          ],
+          coaching: ["현재 페이스를 유지하며 더 발전을 도모하세요."],
         },
       };
     case 1108: // 최미연 (c7)
@@ -984,15 +969,9 @@ const getCustomSessionData = (sessionNo: number): ConsultationData | null => {
         communicationFlow: "F",
         result: "해결 불가",
         feedback: {
-          strengths: [
-            "상담 의지는 보였으나 전반적 스킬 부족.",
-          ],
-          improvements: [
-            "기본 매너와 프로세스부터 재학습 필요.",
-          ],
-          coaching: [
-            "기본 교육 프로그램 즉시 수강 권장.",
-          ],  
+          strengths: ["상담 의지는 보였으나 전반적 스킬 부족."],
+          improvements: ["기본 매너와 프로세스부터 재학습 필요."],
+          coaching: ["기본 교육 프로그램 즉시 수강 권장."],
         },
       };
     case 1109: // 노준석 (c12)
@@ -1007,15 +986,9 @@ const getCustomSessionData = (sessionNo: number): ConsultationData | null => {
         communicationFlow: "C",
         result: "미흡",
         feedback: {
-          strengths: [
-            "상담 태도는 안정적이었습니다.",
-          ],
-          improvements: [
-            "공감 언어 사용을 늘려보세요.",
-          ],
-          coaching: [
-            "공감 표현 연습 세션을 추천합니다.",
-          ],
+          strengths: ["상담 태도는 안정적이었습니다."],
+          improvements: ["공감 언어 사용을 늘려보세요."],
+          coaching: ["공감 표현 연습 세션을 추천합니다."],
         },
       };
     case 1110: // 노준석 (c12)
@@ -1030,13 +1003,9 @@ const getCustomSessionData = (sessionNo: number): ConsultationData | null => {
         communicationFlow: "A",
         result: "만족",
         feedback: {
-          strengths: [
-            "우수한 문제 해결 능력과 친절함.",
-          ],
+          strengths: ["우수한 문제 해결 능력과 친절함."],
           improvements: [],
-          coaching: [
-            "지금처럼 계속 성장하시길 바랍니다.",
-          ],  
+          coaching: ["지금처럼 계속 성장하시길 바랍니다."],
         },
       };
 
@@ -1053,9 +1022,14 @@ const getCustomSessionData = (sessionNo: number): ConsultationData | null => {
         communicationFlow: "A",
         result: "만족",
         feedback: {
-          strengths: ["문제 해결이 신속하고 정확했습니다.", "전문적인 지식으로 고객 신뢰도를 높였습니다."],
+          strengths: [
+            "문제 해결이 신속하고 정확했습니다.",
+            "전문적인 지식으로 고객 신뢰도를 높였습니다.",
+          ],
           improvements: ["공감 표현을 더 풍부하게 사용하면 좋겠습니다."],
-          coaching: ["감정적 소통 기법 연습을 통해 더 따뜻한 서비스를 제공해보세요."],
+          coaching: [
+            "감정적 소통 기법 연습을 통해 더 따뜻한 서비스를 제공해보세요.",
+          ],
         },
       };
     case 1104:
@@ -1070,7 +1044,10 @@ const getCustomSessionData = (sessionNo: number): ConsultationData | null => {
         communicationFlow: "B",
         result: "만족",
         feedback: {
-          strengths: ["고객의 감정을 잘 파악하고 공감했습니다.", "안정적인 상담 진행이 인상적이었습니다."],
+          strengths: [
+            "고객의 감정을 잘 파악하고 공감했습니다.",
+            "안정적인 상담 진행이 인상적이었습니다.",
+          ],
           improvements: ["정중함 표현을 더 세련되게 개선할 수 있습니다."],
           coaching: ["고급 언어 사용법 훈련을 권장합니다."],
         },
@@ -1088,7 +1065,9 @@ const getCustomSessionData = (sessionNo: number): ConsultationData | null => {
         result: "만족",
         feedback: {
           strengths: ["모든 영역에서 균형 잡힌 우수한 성과를 보여주었습니다."],
-          improvements: ["문제 해결 속도를 조금 더 개선하면 완벽할 것 같습니다."],
+          improvements: [
+            "문제 해결 속도를 조금 더 개선하면 완벽할 것 같습니다.",
+          ],
           coaching: ["현재 수준을 유지하며 지속적으로 발전하세요."],
         },
       };
@@ -1177,7 +1156,7 @@ const getCustomSessionData = (sessionNo: number): ConsultationData | null => {
           coaching: ["현재의 우수한 감성 능력에 논리적 사고를 더해보세요."],
         },
       };
-    
+
     default:
       return null;
   }

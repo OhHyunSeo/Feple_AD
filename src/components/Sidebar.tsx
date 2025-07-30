@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
-  Users,
   BarChart3,
   Upload,
   LogOut, // 로그아웃 아이콘 추가
@@ -35,7 +34,6 @@ export default function Sidebar() {
       ]
     : [
         { href: "/qc", icon: LayoutDashboard, label: "대시보드" },
-        { href: "/consultants", icon: Users, label: "상담사 관리" },
         { href: "/qc/performance", icon: BarChart3, label: "상담 모니터링" },
       ];
 
